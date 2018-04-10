@@ -1,1 +1,3 @@
-# learn-study
+# JS&&learn-study
+daily notes
+

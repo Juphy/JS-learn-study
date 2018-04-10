@@ -45,15 +45,33 @@ console.log(divideByAny(10, 3));
 // 队列，先进先出
 function Queue() {
     let items = [];
+    // 入队
     this.enqueue = (ele) => {
         items.push(ele);
     }
+    // 出列
     this.dequeue = () => {
         return items.shift()
     }
+    // 返回队列的第一个元素
     this.front = () => {
         return items[0];
     }
+    /*清空队列*/
+    this.clear = function () {
+        items = [];
+    }
+
+    /*判断队列长度*/
+    this.size = function () {
+        return items.length;
+    }
+
+    /*打印队列*/
+    this.print = function () {
+        console.log(items);
+    }
+
 }
 
 function hotPotato(nameList, num) {
@@ -148,4 +166,3 @@ function LinkedList() {
         }
     }
 }
-

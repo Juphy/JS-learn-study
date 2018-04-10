@@ -168,16 +168,17 @@ console.log(isBracketBalanced("(()))")); // false
 // 通用括号匹配
 let generalBalanced = (str) => {
     let stack = new Stack();
+    // 设置匹配的对照表
     let types = {
         "(": ")",
         "[": "]",
         "{": "}",
-    }
+    };
     let temp = '';
     for (let i = 0; i < str.length; i++) {
         if (str[i] in types) {
             stack.push(str[i]);
-        } else if(Object.values(types).includes(str[i])){
+        } else if (Object.values(types).includes(str[i])) {
             temp = stack.pop();
             if (types[temp] !== str[i]) {
                 return false;
