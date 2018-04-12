@@ -1,5 +1,5 @@
 // 队列，先进先出，最新添加的元素在队列的末尾
-let Queue = () => {
+function Queue() {
     let items = []; // 模拟队列
     this.enqueue = (item) => {
         items.push(item);
@@ -57,7 +57,7 @@ let Queue2 = (function () {
     }
 
     return Queue2;
-})()
+})();
 
 // 优先级队列
 function PriorityQueue() {
@@ -109,3 +109,23 @@ priorityQueue.enqueue('Jim', 1);
 priorityQueue.enqueue('Jerry', 1);
 priorityQueue.print();
 
+// 循环队列--Hot Potato
+function hotPotato(nameList, num) {
+    let queue = new Queue();
+    for (let i = 0; i < nameList.length; i++) {
+        queue.enqueue(nameList[i]); // 删除队列的头添加到队列的末尾
+    }
+    let eliminated = '';
+    while (queue.size() > 1) {
+        for (let i = 0; i < num; i++) {
+            queue.enqueue(queue.dequeue());
+        }
+        eliminated = queue.dequeue();
+        console.log(eliminated + '在游戏中被淘汰！');
+    }
+    return queue.dequeue();
+}
+
+let names = ['John', 'Jack', 'Camila', 'Ingrid', 'Carl'];
+let winner = hotPotato(names, 7);
+console.log('the winner is:' + winner);
