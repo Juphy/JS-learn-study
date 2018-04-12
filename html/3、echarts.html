@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="display: flex;flex-wrap: wrap">
+<div id="box1" style="width: 800px;height: 600px"></div>
+</body>
+</html>
+<script src="../js/echarts.js"></script>
+<script>
+    let myChart = echarts.init(document.getElementById('box1'), null, {render: 'svg'});
+    myChart.setOption({
+        title: {
+            show: true, //是否显示组件标题
+            text: '测试标题', // 标题文本
+            left: 'left',
+            link: '', // 标题链接
+            target: 'blank', // self 当前窗口打开  blank 新窗口打开
+            borderWidth: 1,
+            borderRadius: 5
+        },
+        tooltip: {
+            show: true, // 是否显示提示组件框，包括提示框浮层，axisPointer
+            trigger: 'axis', // 触发类型
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎', '测试']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '邮件营销',
+                type: 'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '联盟广告',
+                type: 'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name: '视频广告',
+                type: 'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data: [150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+                name: '直接访问',
+                type: 'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data: [320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+                name: '搜索引擎',
+                type: 'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data: [820, 932, 901, 934, 1290, 1330, 1320]
+            },
+            {
+                name: '测试',
+                type: 'line',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                },
+                areaStyle: {normal: {}},
+                data: [100, 300, 250, 340, 600, 450, 380]
+            }]
+    }, true);
+</script>
