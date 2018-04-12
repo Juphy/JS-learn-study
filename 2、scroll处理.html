@@ -36,8 +36,8 @@
         }
 
         .box {
-            width: 20px;
-            height: 20px;
+            width: 100px;
+            height: 100px;
             background-color: aqua;
             position: absolute;
         }
@@ -65,47 +65,47 @@
             background-color: chartreuse;
         }
 
-        /*        !* 外层轨道 *!
-                ::-webkit-scrollbar-track {
-                    -webkit-box-shadow: inset 0 0 6px transparent;
-                    border: 10px
-                }
+        /* 外层轨道 */
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px transparent;
+            border: 10px
+        }
 
-                !*  滚动条整体部分，可以设置宽度 *!
-                ::-webkit-scrollbar {
-                    width: 6px;
-                    height: 6px;
-                    background-color: transparent;
-                }
+        /*  滚动条整体部分，可以设置宽度 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+            background-color: transparent;
+        }
 
-                !* 滚动的滑块 *!
-                ::-webkit-scrollbar-thumb:horizontal:hover, ::-webkit-scrollbar-thumb:vertical:hover {
-                    background-color: rgba(0, 0, 0, 0.2) !important;
-                    border-radius: 6px;
-                }
+        /* 滚动的滑块 */
+        ::-webkit-scrollbar-thumb:horizontal, ::-webkit-scrollbar-thumb:vertical {
+            background-color: rgba(0, 0, 0, 0.2) !important;
+            border-radius: 6px;
+        }
 
-                !* 滚动条两端的按钮 *!
-                ::-webkit-scrollbar-button {
+        /* 滚动条两端的按钮 */
+        ::-webkit-scrollbar-button {
 
-                }
+        }
 
-                !* 内层滚动槽 *!
-                ::-webkit-scrollbar-thumb {
+        /* 内层滚动槽 */
+        ::-webkit-scrollbar-thumb {
 
-                }
+        }
 
-                !* 边角 *!
-                ::-webkit-scrollbar-corner {
+        /* 边角 */
+        ::-webkit-scrollbar-corner {
 
-                }
+        }
 
-                !* 定义右下角拖动快的样式 *!
-                ::-webkit-scrollbar-thumb {
-                }*/
+        /* 定义右下角拖动快的样式 */
+        ::-webkit-scrollbar-thumb {
+        }
     </style>
 </head>
 <body>
-<div class="mCustomScrollbar" data-mcs-theme="dark">
+<div>
     <div class="wrapper">
         <div class="inner">
             <div class="box1 box">1</div>
@@ -118,13 +118,14 @@
 </body>
 </html>
 <script>
-    (function ($) {
-        $(window).ready(function () {
-            $('.wrapper').mCustomScrollbar({
-                axis: 'yx',
-                theme: "dark"
-            })
-        })
-    })(jQuery)
+    // 使用mCustomScrollbar插件
+    // (function ($) {
+    //     $(window).ready(function () {
+    //         $('.wrapper').mCustomScrollbar({
+    //             axis: 'yx',
+    //             theme: "dark"
+    //         })
+    //     })
+    // })(jQuery)
 
 </script>
