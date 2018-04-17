@@ -1,4 +1,4 @@
-### Dynamic routes
+## angular路由
 
 /routeUrl/:params
 
