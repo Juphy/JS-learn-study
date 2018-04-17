@@ -1,4 +1,4 @@
-JS&&learn-study
+# JavaScript&learn-study by [Juphy](gaojuphy@gmail.com)
 
 ## 目录
 * [Angular](./angular/README.md)
@@ -18,3 +18,4 @@ JS&&learn-study
 * [封装ajax](./ajax.js)
 * [滚动条样式处理](./html/2、scroll处理)
 * [echarts的使用](./html/3、echarts)
+* [BayMax](./html/4、BayMax.html)
