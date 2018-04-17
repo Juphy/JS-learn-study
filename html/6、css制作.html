@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div {
+            float: left;
+            margin-left: 24px;
+        }
+
+        #traingle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 100px solid yellowgreen;
+        }
+
+        #notching {
+            width: 20px;
+            height: 20px;
+            padding: 40px;
+            background: linear-gradient(135deg, transparent 15px, yellowgreen 15px, yellowgreen 0) top left,
+            linear-gradient(-135deg, transparent 15px, yellowgreen 15px, yellowgreen 0) top right,
+            linear-gradient(-45deg, transparent 15px, yellowgreen 15px, yellowgreen 0) bottom right,
+            linear-gradient(45deg, transparent 15px, yellowgreen 15px, yellowgreen 0) bottom left;
+            background-size: 50px 50px;
+            background-repeat: no-repeat;
+        }
+
+        #trapezoid {
+            width: 40px;
+            padding: 20px;
+            border-bottom: 60px solid yellowgreen;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+        }
+
+        #pentagon {
+            position: relative;
+            width: 60px;
+            border-bottom: 60px solid yellowgreen;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+        }
+
+        #pentagon::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: -40px;
+            border-top: 60px solid yellowgreen;
+            border-left: 70px solid transparent;
+            border-right: 70px solid transparent;
+        }
+
+        #_pentagon {
+            position: relative;
+            width: 60px;
+            border-bottom: 60px solid yellowgreen;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+        }
+
+        #_pentagon::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            top: 60px;
+            left: -40px;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-top: 60px solid yellowgreen;
+        }
+
+        #octagon {
+            position: relative;
+            top: 40px;
+            width: 140px;
+            height: 60px;
+            background: yellowgreen;
+        }
+
+        #octagon::before {
+            content: '';
+            top: -40px;
+            position: absolute;
+            width: 60px;
+            border-bottom: 40px solid yellowgreen;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+        }
+
+        #octagon::after {
+            content: '';
+            top: 60px;
+            width: 60px;
+            position: absolute;
+            border-top: 40px solid yellowgreen;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+        }
+
+        #circle {
+            width: 100px;
+            height: 100px;
+            background-color: yellowgreen;
+            clip-path: circle(50% at 50% 50%);
+        }
+
+        #polygon {
+            width: 100px;
+            height: 100px;
+            background-color: yellowgreen;
+            clip-path: polygon(50px 0, 100px 50px, 50px 100px, 0 50px);
+        }
+
+        /*
+        clip-path: 裁剪路径, 以元素的左上角为坐标点
+        clip-path: circle(50px at 50px 50px) 表示在元素的(50px, 50px)处，裁剪生成一个半径为 50px 的圆
+        clip-path: polygon(50px 0, 100px 50px, 50px 100px, 0 50px)，按照给定的位置裁剪，生成任意多边形
+        裁剪的大小和位置都可以使用px或者百分比
+        clip-path动画
+        */
+
+        #polygon-animation {
+            display: inline-block;
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 300px;
+            left: 200px;
+            transform: translate(-50%, -50%); /*位移*/
+            background-color: crimson;
+            transition: 5s;
+            /*三角*/
+            clip-path: polygon(
+                    50% 0%,
+                    0% 100%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%,
+                    100% 100%
+            );
+            animation: polygon-ani 10s linear infinite;
+        }
+
+        @keyframes polygon-ani {
+            5% {
+                background-color: darkorange;
+                clip-path: polygon(
+                        50% 0%,
+                        100% 50%,
+                        50% 100%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%
+                );
+            }
+            7% {
+                clip-path: polygon(
+                        50% 0%,
+                        100% 50%,
+                        50% 100%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%
+                );
+            }
+            12% {
+                background-color: lemonchiffon;
+                clip-path: polygon(
+                        100% 38%,
+                        82% 100%,
+                        82% 100%,
+                        18% 100%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        50% 0%
+                );
+            }
+            14% {
+                clip-path: polygon(
+                        100% 38%,
+                        82% 100%,
+                        82% 100%,
+                        18% 100%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        50% 0%
+                );
+            }
+            19% {
+                background-color: darkturquoise;
+                clip-path: polygon(
+                        50% 0%,
+                        100% 25%,
+                        100% 75%,
+                        100% 75%,
+                        50% 100%,
+                        0% 75%,
+                        0% 75%,
+                        0% 25%,
+                        0% 25%
+                );
+            }
+            21% {
+                clip-path: polygon(
+                        50% 0%,
+                        100% 25%,
+                        100% 75%,
+                        100% 75%,
+                        50% 100%,
+                        0% 75%,
+                        0% 75%,
+                        0% 25%,
+                        0% 25%
+                );
+            }
+            26% {
+                background-color: darkcyan;
+                clip-path: polygon(
+                        50% 0%,
+                        90% 20%,
+                        100% 60%,
+                        75% 100%,
+                        25% 100%,
+                        25% 100%,
+                        0% 60%,
+                        10% 20%,
+                        50% 0%
+                );
+            }
+            28% {
+                clip-path: polygon(
+                        50% 0%,
+                        90% 20%,
+                        100% 60%,
+                        75% 100%,
+                        25% 100%,
+                        25% 100%,
+                        0% 60%,
+                        10% 20%,
+                        50% 0%
+                );
+            }
+            33% {
+                background-color: deepskyblue;
+                clip-path: polygon(
+                        30% 0%,
+                        70% 0%,
+                        70% 0%,
+                        100% 30%,
+                        100% 70%,
+                        70% 100%,
+                        30% 100%,
+                        0% 70%,
+                        0% 30%
+                );
+            }
+            35% {
+                clip-path: polygon(
+                        30% 0%,
+                        70% 0%,
+                        70% 0%,
+                        100% 30%,
+                        100% 70%,
+                        70% 100%,
+                        30% 100%,
+                        0% 70%,
+                        0% 30%
+                );
+            }
+            40% {
+                background-color: indigo;
+                clip-path: polygon(
+                        83% 12%,
+                        100% 43%,
+                        94% 78%,
+                        68% 100%,
+                        32% 100%,
+                        6% 78%,
+                        0% 43%,
+                        17% 12%,
+                        50% 0%
+                );
+            }
+            42% {
+                clip-path: polygon(
+                        83% 12%,
+                        100% 43%,
+                        94% 78%,
+                        68% 100%,
+                        32% 100%,
+                        6% 78%,
+                        0% 43%,
+                        17% 12%,
+                        50% 0%
+                );
+            }
+            49% {
+                background-color: skyblue;
+                clip-path: circle(50% at 50% 50%);
+            }
+            56% {
+                clip-path: polygon(
+                        83% 12%,
+                        100% 43%,
+                        94% 78%,
+                        68% 100%,
+                        32% 100%,
+                        6% 78%,
+                        0% 43%,
+                        17% 12%,
+                        50% 0%
+                );
+            }
+            61% {
+                background-color: indigo;
+                clip-path: polygon(
+                        83% 12%,
+                        100% 43%,
+                        94% 78%,
+                        68% 100%,
+                        32% 100%,
+                        6% 78%,
+                        0% 43%,
+                        17% 12%,
+                        50% 0%
+                );
+            }
+            63% {
+                clip-path: polygon(
+                        30% 0%,
+                        70% 0%,
+                        70% 0%,
+                        100% 30%,
+                        100% 70%,
+                        70% 100%,
+                        30% 100%,
+                        0% 70%,
+                        0% 30%
+                );
+            }
+            68% {
+                clip-path: polygon(
+                        30% 0%,
+                        70% 0%,
+                        70% 0%,
+                        100% 30%,
+                        100% 70%,
+                        70% 100%,
+                        30% 100%,
+                        0% 70%,
+                        0% 30%
+                );
+            }
+            70% {
+                background-color: deepskyblue;
+                clip-path: polygon(
+                        30% 0%,
+                        70% 0%,
+                        70% 0%,
+                        100% 30%,
+                        100% 70%,
+                        70% 100%,
+                        30% 100%,
+                        0% 70%,
+                        0% 30%
+                );
+            }
+            75% {
+                clip-path: polygon(
+                        50% 0%,
+                        90% 20%,
+                        100% 60%,
+                        75% 100%,
+                        25% 100%,
+                        25% 100%,
+                        0% 60%,
+                        10% 20%,
+                        50% 0%
+                );
+            }
+            77% {
+                background-color: darkcyan;
+                clip-path: polygon(
+                        50% 0%,
+                        90% 20%,
+                        100% 60%,
+                        75% 100%,
+                        25% 100%,
+                        25% 100%,
+                        0% 60%,
+                        10% 20%,
+                        50% 0%
+                );
+            }
+            82% {
+                clip-path: polygon(
+                        50% 0%,
+                        100% 25%,
+                        100% 75%,
+                        100% 75%,
+                        50% 100%,
+                        0% 75%,
+                        0% 75%,
+                        0% 25%,
+                        0% 25%
+                );
+            }
+            84% {
+                background-color: darkturquoise;
+                clip-path: polygon(
+                        50% 0%,
+                        100% 25%,
+                        100% 75%,
+                        100% 75%,
+                        50% 100%,
+                        0% 75%,
+                        0% 75%,
+                        0% 25%,
+                        0% 25%
+                );
+            }
+            89% {
+                clip-path: polygon(
+                        100% 38%,
+                        82% 100%,
+                        82% 100%,
+                        18% 100%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        50% 0%
+                );
+            }
+            91% {
+                background-color: lemonchiffon;
+                clip-path: polygon(
+                        100% 38%,
+                        82% 100%,
+                        82% 100%,
+                        18% 100%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        0% 38%,
+                        50% 0%
+                );
+            }
+            93% {
+                clip-path: polygon(
+                        50% 0%,
+                        100% 50%,
+                        50% 100%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%
+                );
+            }
+            98% {
+                background-color: darkorange;
+                clip-path: polygon(
+                        50% 0%,
+                        100% 50%,
+                        50% 100%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%,
+                        0% 50%
+                );
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="traingle"></div>
+<div id="notching"></div>
+<div id="trapezoid"></div>
+<div id="pentagon"></div>
+<div id="_pentagon"></div>
+<div id="octagon"></div>
+<div id="circle"></div>
+<div id="polygon"></div>
+<br/>
+<div id="polygon-animation"></div>
+</body>
+</html>
