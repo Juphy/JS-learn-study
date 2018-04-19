@@ -6,3 +6,4 @@
 - [3、ServiceWorker](./3、ServiceWorker.md)
 - [4、angular路由](./4、angular路由.md)
 - [5、angular路由之history&locationStrategy](./5、angular路由之history&locationStrategy.md)
+- [6、TypeScript](./TypeScript.md)
