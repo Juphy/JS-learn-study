@@ -86,3 +86,79 @@ nums = [-12, 23, 34, 56, 25, 35, 46];
 // 堆排序
 // 计数排序
 // 基数排序
+
+// 多条件排序
+
+var items = [
+    {name: "linc", age: 28, num: 1234},
+    {name: "linc", age: 28, num: 12345},
+    {name: "kiki", age: 20, num: 12345},
+    {name: "高峰", age: 26, num: 123},
+    {name: "高峰", age: 27, num: 101},
+    {name: "高峰", age: 26, num: 111},
+    {name: "安迪", age: 29, num: 110},
+    {name: "安迪", age: 30, num: 110}
+];
+
+
+// ascending 升序  descending 降序
+(function _default() {
+    items.sort(function (a, b) {
+        return SortByProps(a, b, ['num', 'age', 'name'], {name: 'ascending'});
+    });
+    console.log(items)
+})();
+
+function SortByProps(item1, item2, attr, obj) {
+    /**
+     * @type {Array}
+     * attr: Array 按照数组的顺序排序
+     * obj: { attr[index]: 'ascending'/ 'descending' } ascending '升序' descending '降序'
+     */
+    var props = [];
+    if (obj) {
+        props.push(obj)
+    }
+    var cps = []; // 存储排序属性比较结果。
+    // 如果未指定排序属性(即obj不存在)，则按照全属性升序排序。
+    // 记录下两个排序项按照各个排序属性进行比较得到的结果
+    var asc = true; // 记录升序还是降序，升序 true  降序 false
+    if (props.length < 1) {
+        for (var p of attr) {
+            if (item1[p] > item2[p]) {
+                cps.push(1);
+                break; // 大于时跳出循环。
+            } else if (item1[p] === item2[p]) {
+                cps.push(0);
+            } else {
+                cps.push(-1);
+                break; // 小于时跳出循环。
+            }
+        }
+    }
+    else {
+        for (var i = 0; i < props.length; i++) {
+            var prop = props[i];
+            for (var o in prop) {
+                asc = prop[o] === "ascending";
+                if (item1[o] > item2[o]) {
+                    cps.push(asc ? 1 : -1);
+                    break; // 大于时跳出循环。
+                } else if (item1[o] === item2[o]) {
+                    cps.push(0);
+                } else {
+                    cps.push(asc ? -1 : 1);
+                    break; // 小于时跳出循环。
+                }
+            }
+        }
+    }
+
+    // 根据各排序属性比较结果综合判断得出两个比较项的最终大小关系
+    for (var j = 0; j < cps.length; j++) {
+        if (cps[j] === 1 || cps[j] === -1) {
+            return cps[j]; // 返回比较结果不为0的值
+        }
+    }
+    return false; // 如果比较值都是0，返回false
+}
