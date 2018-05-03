@@ -96,9 +96,9 @@ import { APP_BASE_HREF, LocationStrategy, PathLocationStrategy } from '@angular/
 })
 ```
 
-示例代码中的 APP_BASE_HREF，用于设置资源 (图片、脚本、样式) 加载的基础路径。除了在 NgModule 中配置 provider 外，我们也可以在入口文件，如 index.html 文件 <base> 标签中设置基础路径。
+示例代码中的 APP_BASE_HREF，用于设置资源 (图片、脚本、样式) 加载的基础路径。除了在 NgModule 中配置 provider 外，我们也可以在入口文件，如 index.html 文件 &lt;base&gt; 标签中设置基础路径。
 
-<base> 标签为页面上的所有链接规定默认地址或默认目标。通常情况下，浏览器会从当前文档的 URL 中提取相应的路径来补全相对 URL 中缺失的部分。使用 <base> 标签可以改变这一点。浏览器随后将不再使用当前文档的 URL，而使用指定的基本 URL 来解析所有的相对 URL。这其中包括 <a>、<img>、<link>、<form> 标签中的 URL。具体使用示例如下：
+&lt;base&gt; 标签为页面上的所有链接规定默认地址或默认目标。通常情况下，浏览器会从当前文档的 URL 中提取相应的路径来补全相对 URL 中缺失的部分。使用 &lt;base&gt; 标签可以改变这一点。浏览器随后将不再使用当前文档的 URL，而使用指定的基本 URL 来解析所有的相对 URL。这其中包括 &lt;a&gt;、&lt;img&gt;、&lt;link&gt;、&lt;form&gt; 标签中的 URL。具体使用示例如下：
 
 ```
 <base href="/">
