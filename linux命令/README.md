@@ -1,3 +1,3 @@
 ## linux命令
 
-* [cat](./1、cat.md)
+* [cat、rm](./1、cat、rm.md)
