@@ -74,6 +74,8 @@ console.log(stack[objSymbols[0]]);
 stack[objSymbols[0]].push(1);
 stack.print();
 
+// 任意数字转为任意2-16进制
+
 let baseConvert = (decNumber, base) => {
     let stack = new Stack(),
         rem,
