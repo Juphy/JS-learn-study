@@ -1,4 +1,4 @@
-# JavaScript&learn-study by [Juphy](gaojuphy@gmail.com)
+# JavaScript&learn-study by [Juphy](http://www.juphy.cn)
 
 ## 目录
 * [Angular](./angular/README.md)
@@ -8,6 +8,7 @@
     - [4、angular路由](./angular//4、angular路由.md)
     - [5、angular路由之history&locationStrategy](./angular/5、angular路由之history&locationStrategy.md)
     - [6、TypeScript](./angular/6、TypeScript.md)
+* [Angular常见问题汇总](https://github.com/semlinker/angular-faq)
 * [node](./node/README.md)
     * [node之发起http请求](./node/node之发起http请求.js)
     * [EventEmitter](./node/EventEmitter.md)
