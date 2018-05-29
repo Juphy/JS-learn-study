@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>点击文本实现复制</title>
+    <style>
+        a {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<a id="text_1" onclick="copyText(event)">测试复制功能1</a>
+<br/>
+<a id="text_2" onclick="copyText(event)">测试复制功能2</a>
+<br/>
+<a id="text_3" onclick="copyText(event)">测试复制功能3</a>
+<br/>
+<a id="text_4" onclick="copyText(event)">测试复制功能4</a>
+<br/>
+<a id="text_5" onclick="copyText(event)">测试复制功能5</a>
+<br/>
+<input type="text">
+</body>
+</html>
+<script>
+    function copyText(evt) {
+        var _id = evt.srcElement.id;
+        let ele = document.getElementById(_id);
+        let aux = document.createElement('input');
+        aux.setAttribute('value', ele.innerText);
+        document.body.appendChild(aux);
+        aux.select();
+        document.execCommand('copy');
+        document.body.removeChild(aux);
+    }
+</script>
