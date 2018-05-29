@@ -24,6 +24,7 @@
     * [滚动条样式处理](./html/2、scroll处理.html)
     * [echarts的使用](./html/3、echarts.html)
     * [BayMax](./html/4、BayMax.html)
+    * [文本点击复制](./html/13、点击文本复制.html)
 * [封装ajax](./ajax.js)
 * [原生封装event](./event.js)
 * [linux命令](./linux命令/README.md)
