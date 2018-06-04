@@ -1,6 +1,4 @@
-# JavaScript&learn-study by [Juphy](http://www.juphy.cn)
 
-## 目录
 * [Angular](./angular/README.md)
     - [1、路由缓存](./angular/1、angular路由缓存.md)
     - [2、hash模式](./angular//2、angular的hash模式.md)

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /*
+         * 行高 h
+         * 最大行数 n
+         * ...更多容器的宽 w
+         * 字号 f
+         */
+
+        /*@-webkit-keyframes width-change {*/
+            /*0%, 100% {*/
+                /*width: 320px*/
+            /*}*/
+            /*50% {*/
+                /*width: 260px*/
+            /*}*/
+        /*}*/
+
+        .ellipsis {
+            position: relative;
+            background: rgb(230, 230, 230);
+            max-height: 108px; /* h*n */
+            line-height: 18px; /* h */
+            overflow: hidden;
+            width: 260px;
+            /*-webkit-animation: width-change 8s ease infinite;*/
+        }
+
+        .ellipsis-container {
+            position: relative;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 6; /* n */
+            font-size: 50px; /* w */
+            color: transparent;
+        }
+
+        .ellipsis-content {
+            color: #000;
+            display: inline;
+            vertical-align: top;
+            font-size: 12px; /* f */
+        }
+
+        .ellipsis-ghost {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            color: #000;
+        }
+
+        .ellipsis-ghost:before {
+            content: "";
+            display: block;
+            float: right;
+            width: 50%;
+            height: 100%;
+        }
+
+        .ellipsis-placeholder {
+            content: "";
+            display: block;
+            float: right;
+            width: 50%;
+            height: 108px; /* h*n */
+        }
+
+        .ellipsis-more {
+            position: relative;
+            float: right;
+            font-size: 12px; /* f */
+            width: 50px; /* w */
+            height: 18px; /* h */
+            margin-top: -18px; /* -h */
+        }
+    </style>
+</head>
+<body>
+<div class="ellipsis">
+    <div class="ellipsis-container">
+        <div class="ellipsis-content">
+            腾讯成立于1998年11月，是目前中国领先的互联网增值服务提供商之一。成立10多年来，腾讯一直秉承“一切以用户价值为依归”的经营理念，为亿级海量用户提供稳定优质的各类服务，始终处于稳健发展状态。2004年6月16日，腾讯控股有限公司在香港联交所主板公开上市(股票代号700)。
+        </div>
+        <div class="ellipsis-ghost">
+            <div class="ellipsis-placeholder"></div>
+            <div class="ellipsis-more">...更多</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
