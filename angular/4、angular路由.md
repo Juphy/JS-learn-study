@@ -1,5 +1,23 @@
 ## angular路由
 
+> Base href
+
+index.html中存在`<`base`>`标签,路由需要根据这个来确定应用程序的根目录。例如，当我们转到`http://example.com/page1`时，如果我们没有定义应用程序的基础路径，路由将无法知道我们的应用的托管地址是`http://example.com`还是`http://example.com/page1`。
+```
+<!doctype html>
+<html>
+  <head>
+    <base href="/">
+    <title>Application</title>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>
+```
+> Using the router
+
+
 /routeUrl/:params
 
 :params是路由参数，而不是URL的实际部分
