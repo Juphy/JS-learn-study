@@ -1,4 +1,3 @@
-
 ### [Angular](./angular/README.md)
 - [1、路由缓存](./angular/1、angular路由缓存.md)
 - [2、hash模式](./angular//2、angular的hash模式.md)
@@ -28,3 +27,4 @@
 ### [封装ajax](./ajax.js)
 ### [原生封装event](./event.js)
 ### [linux命令](./linux命令/README.md)
+### [笔记](./notes/README.md)
