@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>设置点标注的文本标签</title>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <script src="http://webapi.amap.com/maps?v=1.4.6&key=155016dd6facf4801e22fac4509fff4e"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <style>
+        .amap-marker-label {
+            padding: 0;
+            position: relative;
+            left: -45% !important;
+            border: 1px solid #02c2b2;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<div id="tip" class="tip">鼠标移入点标记试试</div>
+<script>
+    var map = new AMap.Map('container', {
+        resizeEnable: true,
+        center: [116.397428, 39.90923],
+        zoom: 13
+    });
+    var markers = [];
+    var i = 0;
+    while (i < 10) {
+        var marker = new AMap.Marker({
+            position: [116.397428 - .01 * i, 39.90923 - .01 * i]
+        });
+        markers.push(marker);
+        i++;
+    }
+    markers.forEach((marker, i) => {
+        marker.setMap(map);
+        marker.setLabel({
+            offset: new AMap.Pixel(0, 0),
+            content: "<div style='padding: 3px 5px;background-color: #02c2b2'><span style='position: absolute;left: 48%;top:20px;border-left: 4px solid transparent;border-right: 4px solid transparent; border-top: 12px solid #02c2b2'></span>我是第" + (i + 1) + "个marker的label标签</div>"
+        })
+    })
+    // var marker = new AMap.Marker({
+    //     position: map.getCenter()
+    // });
+    // marker.setMap(map);
+    // // 设置鼠标划过点标记显示的文字提示
+    // marker.setTitle('我是marker的title');
+    //
+    // // 设置label标签
+    // marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+    //     offset: new AMap.Pixel(20, 20),//修改label相对于maker的位置
+    //     content: "我是marker的label标签"
+    // });
+</script>
+</body>
+</html>
