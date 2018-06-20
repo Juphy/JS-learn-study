@@ -43,7 +43,6 @@ export class AppModule {}
 
 RouterModule.forRoot() 方法用于在主模块中定义主要的路由信息，通过调用该方法使得我们的主模块可以访问路由模块中定义的所有指令。
 ```
-// ...
 import { Routes, RouterModule } from '@angular/router';
 
 export const ROUTES: Routes = []; // 便于我们在需要的时候导出ROUTES到其他模块中
@@ -53,7 +52,6 @@ export const ROUTES: Routes = []; // 便于我们在需要的时候导出ROUTES�
     BrowserModule,
     RouterModule.forRoot(ROUTES)
   ],
-  // ...
 })
 export class AppModule {}
 ```
@@ -160,54 +158,58 @@ import { Component } from '@angular/core';
 })
 export class SettingsComponent {}
 ```
+> loadChildren
 
-
-如果存在多层路由，在访问路由的时候，需要在路由的起始位置加上'/'。
-
-['/routerUrl', params]，使用路由传递动态的路由地址。
-
+SettingsModule 模块，用来保存所有 setttings 相关的路由信息：
 ```
-<nav>
-  <a routerLink="/settings" routerLinkActive="active">Home</a>
-  <a routerLink="/settings/password" routerLinkActive="active">Change password</a>
-  <a routerLink="/settings/profile" routerLinkActive="active">Profile Settings</a>
-</nav>
-```
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Routes, RouterModule } from '@angular/router';
 
-通过使用 routerLinkActive 指令，当 a 元素对应的路由处于激活状态时，active 类将会自动添加到 a 元素上。
-
-```
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
-@Component({
-  selector: 'app-root',
-  template: `
-    <div class="app">
-      <h3>Users</h3>
-      <div *ngFor="let user of users">
-        <user-component
-          [user]="user"
-          (select)="handleSelect($event)">
-        </user-component>
-      </div>
-      <router-outlet></router-outlet>
-    </div>
-  `
-})
-export class AppComponent implements OnInit {
-  users: Username[] = [
-    { name: 'toddmotto', id: 0 },
-    { name: 'travisbarker', id: 1 },
-    { name: 'tomdelonge', id: 2 }
-  ];
-
-  constructor(private router: Router) {}
-
-  handleSelect(event) {
-    this.router.navigate(['/profile', event.name]);
+export const ROUTES: Routes = [
+  {
+    path: '',
+    component: SettingsComponent,
+    children: [
+      { path: 'profile', component: ProfileSettingsComponent },
+      { path: 'password', component: PasswordSettingsComponent }
+    ]
   }
-}
-```
+];
 
-@angular/router上的navigate(['routerUrl'])，navigate(['routerUrl', params])，navigateBuUrl('routerUrl')
+@NgModule({
+  imports: [
+    CommonModule,
+    RouterModule.forChild(ROUTES)
+  ],
+})
+export class SettingsModule {}
+```
+在 SettingsModule 模块中我们使用 forChild() 方法，因为 SettingsModule 不是我们应用的主模块。
+
+另一个主要的区别是我们将 SettingsModule 模块的主路径设置为空路径 ('')。因为如果我们路径设置为 /settings ，它将匹配 /settings/settings ，很明显这不是我们想要的结果。通过指定一个空的路径，它就会匹配 /settings 路径，这就是我们想要的结果。
+
+AppModule
+```
+export const ROUTES: Routes = [
+  {
+    path: 'settings',
+    loadChildren: './settings/settings.module#SettingsModule'
+  }
+];
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(ROUTES)
+  ],
+  // ...
+})
+export class AppModule {}
+```
+通过 loadChildren 属性，告诉 Angular 路由依据 loadChildren 属性配置的路径去加载 SettingsModule 模块。这就是模块懒加载功能的具体应用，当用户访问 /settings/** 路径的时候，才会加载对应的 SettingsModule 模块，这减少了应用启动时加载资源的大小。
+
+- loadChildren 的属性值，该字符串由三部分组成：
+    - 需要导入模块的相对路径
+    - # 分隔符
+    - 导出模块类的名称

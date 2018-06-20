@@ -1,4 +1,4 @@
-### 1、通过yum安装
+﻿## 1、通过yum安装
 > 直接通过 yum install nginx 肯定是不行的,因为yum没有nginx，所以首先把 nginx 的源加入 yum 中。
 
 - 将nginx放到yum repro库中
@@ -32,7 +32,7 @@
     ps aux | grep nginx
 
 
-### 2、手动下载安装包
+## 2、手动下载安装包
 - 1、下载nginx包
 
     wget http://nginx.org/download/nginx-1.10.1.tar.gz

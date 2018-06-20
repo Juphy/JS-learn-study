@@ -6,3 +6,5 @@
 - [4、angular路由](./4、angular路由.md)
 - [5、angular路由之history&locationStrategy](./5、angular路由之history&locationStrategy.md)
 - [6、TypeScript](./6、TypeScript.md)
+- [7、websocket](./7、websocket.md)
+- [8、Angular组件通信](./8、Angular组件通信.md)

@@ -5,6 +5,8 @@
 - [4、angular路由](./angular//4、angular路由.md)
 - [5、angular路由之history&locationStrategy](./angular/5、angular路由之history&locationStrategy.md)
 - [6、TypeScript](./angular/6、TypeScript.md)
+- [7、websocket](./angular/7、websocket.md)
+- [8、Angular组件通信](./angular/8、Angular组件通信.md)
 ### [Angular常见问题汇总](https://github.com/semlinker/angular-faq)
 ### [node](./node/README.md)
 * [node之发起http请求](./node/node之发起http请求.js)
