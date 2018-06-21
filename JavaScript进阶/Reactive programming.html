@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 10px;
+        }
+
+        h2 {
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .refresh {
+            font-size: 80%;
+            margin-left: 10px;
+        }
+
+        .header {
+            background: #ECECEC;
+            padding: 5px;
+        }
+
+        .suggestions {
+            border: 2px solid #ECECEC;
+        }
+
+        li {
+            padding: 5px;
+        }
+
+        li img {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+        }
+
+        li .username, li .close {
+            display: inline-block;
+            position: relative;
+            bottom: 15px;
+            left: 5px;
+        }
+    </style>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/@reactivex/rxjs@5.0.0/dist/global/Rx.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Who to follow</h2><a href="#" class="refresh">Refresh</a>
+    </div>
+    <ul class="suggestions">
+        <li class="suggestion1">
+            <img/>
+            <a href="#" target="_blank" class="username">this will not be displayed</a>
+            <a href="#" class="close close1">x</a>
+        </li>
+        <li class="suggestion2">
+            <img/>
+            <a href="#" target="_blank" class="username">neither this</a>
+            <a href="#" class="close close2">x</a>
+        </li>
+        <li class="suggestion3">
+            <img/>
+            <a href="#" target="_blank" class="username">nor this</a>
+            <a href="#" class="close close3">x</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
+<script src="Reactive%20Programming.js"></script>
