@@ -12,7 +12,7 @@ ReactiveX 结合了 观察者模式、迭代器模式 和 使用集合的函数�
 - Schedulers (调度器): 用来控制并发并且是中央集权的调度员，允许我们在发生计算时进行协调，例如 setTimeout 或 requestAnimationFrame 或其他。
 
 ## 特性
-- `纯净性`（Purity） 使得 RxJS 强大的正是它使用纯函数来产生值的能力
+- `纯净性（Purity）` 使得 RxJS 强大的正是它使用纯函数来产生值的能力
 
     ```
     通常你会创建一个非纯函数，这个函数之外也使用了共享变量的代码会把将你的应用状态搞得一团糟。
@@ -28,7 +28,7 @@ ReactiveX 结合了 观察者模式、迭代器模式 和 使用集合的函数�
     ```
     `scan`操作符的工作原理与数组的`reduce`类似。它需要一个暴露给回调函数当参数的初始值。每次回调函数运行后的返回值会作为下次回调函数运行时的参数。
 
-- `流动性`（Flow） RxJS 提供了一整套操作符来帮助你控制事件如何流经 observables 。
+- `流动性（Flow）` RxJS 提供了一整套操作符来帮助你控制事件如何流经 observables 。
 
     ```
     普通JavaScript
@@ -51,7 +51,7 @@ ReactiveX 结合了 观察者模式、迭代器模式 和 使用集合的函数�
       .subscribe(count => console.log(`Clicked ${count} times`));
     ```
     其他流程控制操作符有`filter`、`delay`、`debounceTime`、`take`、`takeUntil`、`distinct`、`distinctUntilChanged`等等
-- 值（Values）对于流经 observables 的值，你可以对其进行转换。
+- `值（Values）`对于流经 observables 的值，你可以对其进行转换。
 
     ```
     普通JavaScript
@@ -155,3 +155,208 @@ Observable 执行可以传递三种类型的值：
 "Next" 通知是最重要，也是最常见的类型：它们表示传递给观察者的实际数据。"Error" 和 "Complete" 通知可能只会在 Observable 执行期间发生一次，并且只会执行其中的一个。
 
 > 在 Observable 执行中, 可能会发送零个到无穷多个 "Next" 通知。如果发送的是 "Error" 或 "Complete" 通知的话，那么之后不会再发送任何通知了。
+
+### 清理
+因为 Observable 执行可能会是无限的，并且观察者通常希望能在有限的时间内中止执行，所以我们需要一个 API 来取消执行。因为每个执行都是其对应观察者专属的，一旦观察者完成接收值，它必须要一种方法来停止执行，以避免浪费计算能力或内存资源。
+
+当调用了 observable.subscribe ，观察者会被附加到新创建的 Observable 执行中。这个调用还返回一个对象，即 Subscription (订阅)：
+```
+var subscription = observable.subscribe(x => console.log(x));
+```
+
+> 当你订阅了 Observable，你会得到一个 Subscription ，它表示进行中的执行。只要调用 unsubscribe() 方法就可以取消执行。
+
+当我们使用 create() 方法创建 Observable 时，Observable 必须定义如何清理执行的资源。你可以通过在 function subscribe() 中返回一个自定义的 unsubscribe 函数。
+```
+// 如何清理使用了 setInterval 的 interval 执行集合
+var observable = Rx.Observable.create(function subscribe(observer) {
+  // 追踪 interval 资源
+  var intervalID = setInterval(() => {
+    observer.next('hi');
+  }, 1000);
+
+  // 提供取消和清理 interval 资源的方法
+  return function unsubscribe() {
+    clearInterval(intervalID);
+  };
+});
+```
+
+## Observer (观察者)
+`什么是观察者？`  观察者是由 Observable 发送的值的消费者。观察者只是一组回调函数的集合，每个回调函数对应一种 Observable 发送的通知类型：next、error 和 complete 。下面的示例是一个典型的观察者对象：
+
+```
+var observer = {
+  next: x => console.log('Observer got a next value: ' + x),
+  error: err => console.error('Observer got an error: ' + err),
+  complete: () => console.log('Observer got a complete notification'),
+};
+```
+要使用观察者，需要把它提供给 Observable 的 subscribe 方法：
+```
+observable.subscribe(observer);
+```
+> 观察者只是有三个回调函数的对象，每个回调函数对应一种 Observable 发送的通知类型。
+
+RxJS 中的观察者也可能是部分的。如果你没有提供某个回调函数，Observable 的执行也会正常运行，只是某些通知类型会被忽略，因为观察者中没有没有相对应的回调函数。
+
+## Subscription (订阅)
+`什么是 Subscription ？`  Subscription 是表示可清理资源的对象，通常是 Observable 的执行。Subscription 有一个重要的方法，即 unsubscribe，它不需要任何参数，只是用来清理由 Subscription 占用的资源。在上一个版本的 RxJS 中，Subscription 叫做 "Disposable" (可清理对象)。
+
+```
+var observable = Rx.Observable.interval(1000);
+var subscription = observable.subscribe(x => console.log(x));
+// 稍后：
+// 这会取消正在进行中的 Observable 执行
+// Observable 执行是通过使用观察者调用 subscribe 方法启动的
+subscription.unsubscribe();
+```
+> Subscription 基本上只有一个 unsubscribe() 函数，这个函数用来释放资源或去取消 Observable 执行。
+
+Subscription 还可以合在一起，这样一个 Subscription 调用 unsubscribe() 方法，可能会有多个 Subscription 取消订阅 。你可以通过把一个 Subscription 添加到另一个上面来做这件事：
+```
+var observable1 = Rx.Observable.interval(400);
+var observable2 = Rx.Observable.interval(300);
+
+var subscription = observable1.subscribe(x => console.log('first: ' + x));
+var childSubscription = observable2.subscribe(x => console.log('second: ' + x));
+
+subscription.add(childSubscription);
+
+setTimeout(() => {
+  // subscription 和 childSubscription 都会取消订阅
+  subscription.unsubscribe();
+}, 1000);
+
+// 执行结果
+second: 0
+first: 0
+second: 1
+first: 1
+second: 2
+```
+Subscriptions 还有一个 remove(otherSubscription) 方法，用来撤销一个已添加的子 Subscription。
+
+## Subject (主体)
+`什么是 Subject？`  RxJS Subject 是一种特殊类型的 Observable，它允许将值多播给多个观察者，所以 Subject 是多播的，而普通的 Observables 是单播的(每个已订阅的观察者都拥有 Observable 的独立执行)。
+
+> Subject 像是 Observable，但是可以多播给多个观察者。Subject 还像是 EventEmitters，维护着多个监听器的注册表。
+
+*每个 Subject 都是 Observable。* - 对于 Subject，你可以提供一个观察者并使用 subscribe 方法，就可以开始正常接收值。从观察者的角度而言，它无法判断 Observable 执行是来自普通的 Observable 还是 Subject 。在 Subject 的内部，subscribe 不会调用发送值的新执行。它只是将给定的观察者注册到观察者列表中，类似于其他库或语言中的 addListener 的工作方式。
+
+*每个 Subject 都是观察者。* - Subject 是一个有如下方法的对象： next(v)、error(e) 和 complete() 。要给 Subject 提供新值，只要调用 next(theValue)，它会将值多播给已注册监听该 Subject 的观察者们。
+
+```
+var subject = new Rx.Subject();
+
+subject.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+subject.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+
+// 输出结果
+observerA: 1
+observerB: 1
+observerA: 2
+observerB: 2
+```
+
+因为 Subject 是观察者，这也就在意味着你可以把 Subject 作为参数传给任何 Observable 的 subscribe 方法。
+```
+var subject = new Rx.Subject();
+
+subject.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+subject.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+var observable = Rx.Observable.from([1, 2, 3]);
+
+observable.subscribe(subject); // 你可以提供一个 Subject 进行订阅
+
+// 执行结果
+observerA: 1
+observerB: 1
+observerA: 2
+observerB: 2
+observerA: 3
+observerB: 3
+```
+## 多播的 Observables
+“多播 Observable” 通过 Subject 来发送通知，这个 Subject 可能有多个订阅者，然而普通的 “单播 Observable” 只发送通知给单个观察者。
+
+> 多播 Observable 在底层是通过使用 Subject 使得多个观察者可以看见同一个 Observable 执行。
+
+multicast 操作符的工作原理：观察者订阅一个基础的 Subject，然后 Subject 订阅源 Observable。
+
+```
+var source = Rx.Observable.from([1, 2, 3]);
+var subject = new Rx.Subject();
+var multicasted = source.multicast(subject);
+
+// 在底层使用了 `subject.subscribe({...})`:
+multicasted.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+multicasted.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+// 在底层使用了 `source.subscribe(subject)`:
+multicasted.connect();
+```
+
+multicast 操作符返回一个 Observable，它看起来和普通的 Observable 没什么区别，但当订阅时就像是 Subject 。multicast 返回的是 ConnectableObservable，它只是一个有 connect() 方法的 Observable 。
+
+connect() 方法十分重要，它决定了何时启动共享的 Observable 执行。因为 connect() 方法在底层执行了 source.subscribe(subject)，所以它返回的是 Subscription，你可以取消订阅以取消共享的 Observable 执行。
+
+## 引用计数
+手动调用 connect() 并处理 Subscription 通常太笨重。通常，当第一个观察者到达时我们想要自动地连接，而当最后一个观察者取消订阅时我们想要自动地取消共享执行。
+
+> refCount 的作用是，当有第一个订阅者时，多播 Observable 会自动地启动执行，而当最后一个订阅者离开时，多播 Observable 会自动地停止执行。
+
+```
+var source = Rx.Observable.interval(500);
+var subject = new Rx.Subject();
+var refCounted = source.multicast(subject).refCount();
+var subscription1, subscription2, subscriptionConnect;
+
+// 这里其实调用了 `connect()`，
+// 因为 `refCounted` 有了第一个订阅者
+console.log('observerA subscribed');
+subscription1 = refCounted.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+
+setTimeout(() => {
+  console.log('observerB subscribed');
+  subscription2 = refCounted.subscribe({
+    next: (v) => console.log('observerB: ' + v)
+  });
+}, 600);
+
+setTimeout(() => {
+  console.log('observerA unsubscribed');
+  subscription1.unsubscribe();
+}, 1200);
+
+// 这里共享的 Observable 执行会停止，
+// 因为此后 `refCounted` 将不再有订阅者
+setTimeout(() => {
+  console.log('observerB unsubscribed');
+  subscription2.unsubscribe();
+}, 2000);
+```
+
+
+
+
+
+

@@ -1,3 +1,0 @@
-## BookNotes
-
-- [SheetJS](./SheetJS.md)
