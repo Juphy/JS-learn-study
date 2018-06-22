@@ -49,7 +49,7 @@
     <script src="https://unpkg.com/@reactivex/rxjs@5.0.0/dist/global/Rx.js"></script>
 </head>
 <body>
-<div class="container">
+<!--<div class="container">
     <div class="header">
         <h2>Who to follow</h2><a href="#" class="refresh">Refresh</a>
     </div>
@@ -70,7 +70,23 @@
             <a href="#" class="close close3">x</a>
         </li>
     </ul>
+</div>-->
+
+<button id="getAllBtn">Get All Users</button>
+
+<form onsubmit="return false;">
+    <input id="search-input" type="text" placeholder="search">
+</form>
+
+<div>
+    <ul id="user-lists">
+    </ul>
 </div>
+
+<div id="user-info">
+</div>
+
+
 </body>
 </html>
 <script src="Reactive%20Programming.js"></script>

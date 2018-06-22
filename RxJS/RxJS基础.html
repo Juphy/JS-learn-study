@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/@reactivex/rxjs@5.0.0/dist/global/Rx.js"></script>
 </head>
 <body>
 <button>点击</button>
+<input type="text">
 </body>
 </html>
 <script>
@@ -50,4 +52,19 @@
         .subscribe(x => {
             console.log(`···click ${x}`);
         })
+</script>
+<script>
+    let $input = document.querySelector('input');
+    console.log($input);
+    Rx.Observable.fromEvent($input, 'keyup')
+        .map(e => {
+            console.log(e.taget.value);
+            return e.target.value;
+        })
+        .filter(text => {
+            console.log(text);
+            return text.length > 2;
+        })
+        .debounce(750)
+        .distinctUntilChanged();
 </script>
