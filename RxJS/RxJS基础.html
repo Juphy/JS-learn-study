@@ -9,4 +9,45 @@
 <button>点击</button>
 </body>
 </html>
-<script src="RxJS基础.js"></script>
+<script>
+    var btn = document.querySelector('button');
+    var observable = Rx.Observable.fromEvent(btn, 'click');
+    observable.subscribe(() => {
+        console.log('Clicked!');
+    });
+
+    // var count = 0;
+    // btn.addEventListener('click', () => {
+    //    console.log(`Click ${++count} times`)
+    // });
+
+    Rx.Observable.fromEvent(btn, 'click')
+        .scan(count => count + 1, 0)
+        .subscribe(count => {
+            console.log(`Click ${count} times`);
+        });
+
+    // var count = 0;
+    // var lastClick = Date.now();
+    // btn.addEventListener('click', () => {
+    //     if (Date.now() - lastClick >= 1000) {
+    //         console.log(`****Click ${++count} times`);
+    //         lastClick = Date.now();
+    //     }
+    // });
+
+    Rx.Observable.fromEvent(btn, 'click')
+        .throttleTime(1000)
+        .scan(count => count + 1, 0)
+        .subscribe(count => {
+            console.log(`****Click ${count} times`);
+        });
+
+    Rx.Observable.fromEvent(btn, 'click')
+        .throttleTime(1000)
+        .map(e => e.pageX)
+        .scan((count, pageX) => count + pageX, 0)
+        .subscribe(x => {
+            console.log(`···click ${x}`);
+        })
+</script>

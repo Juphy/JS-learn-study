@@ -1,7 +1,9 @@
 ## 入门
 RxJS 是一个库，它通过使用 observable 序列来编写异步和基于事件的程序。它提供了一个核心类型 Observable，附属类型 (Observer、 Schedulers、 Subjects) 和受 [Array#extras] 启发的操作符 (map、filter、reduce、every, 等等)，这些数组操作符可以把异步事件作为集合来处理。
 
-ReactiveX 结合了 观察者模式、迭代器模式 和 使用集合的函数式编程，以满足以一种理想方式来管理事件序列所需要的一切。
+> 可以把 RxJS 当做是用来处理事件的`Lodash`。
+
+ReactiveX 结合了`观察者模式`、`迭代器模式`和`使用集合的函数式编程`，以满足以一种理想方式来管理事件序列所需要的一切。
 
 在 RxJS 中用来解决异步事件管理的的基本概念是：
 - Observable (可观察对象): 表示一个概念，这个概念是一个可调用的未来值或事件的集合。
@@ -84,7 +86,7 @@ Observables 是多个值的惰性推送集合。它填补了下面表格中的�
 |拉取|Function|Iterator|
 |推送|Promise|Observable|
 
-## 拉取（pull）推送（push）
+### 拉取（pull）推送（push）
 拉取和推送是两种不同的协议，用来描述数据生产者 (Producer)如何与数据消费者 (Consumer)如何进行通信的。
 
 `什么是拉取？` 在拉取体系中，由消费者来决定何时从生产者那接收数据。生产者本身不知道数据是何时交付到消费者手中的。每个 JavaScript 函数都是拉取体系。函数是数据的生产者，调用该函数的代码通过从函数调用中“取出”一个单个返回值来对该函数进行消费。
@@ -102,7 +104,7 @@ RxJS 引入了 Observables，一个新的 JavaScript 推送体系。Observable �
 - Promise 是最终可能(或可能不)返回单个值的运算。
 - Observable 是惰性的评估运算，它可以从它被调用的时刻起同步或异步地返回零到(有可能的)无限多个值。
 
-## Observables 作为函数的泛化
+### Observables 作为函数的泛化
 Observables 既不像 EventEmitters，也不像多个值的 Promises 。在某些情况下，即当使用 RxJS 的 Subjects 进行多播时， Observables 的行为可能会比较像 EventEmitters，但通常情况下 Observables 的行为并不像 EventEmitters 。
 
 > `Observables 像是没有参数, 但可以泛化为多个值的函数。`
@@ -113,15 +115,15 @@ Observables 既不像 EventEmitters，也不像多个值的 Promises 。在某�
 
 Observable 和 函数的区别是什么呢？Observable可以随着时间的推移“返回”多个值，这是函数所做不到的。
 
-## Observable 剖析
+### Observable 剖析
 Observables 是使用 Rx.Observable.create 或创建操作符创建的，并使用观察者来订阅它，然后执行它并发送 next / error / complete 通知给观察者，而且执行可能会被清理。这四个方面全部编码在 Observables 实例中，但某些方面是与其他类型相关的，像 Observer (观察者) 和 Subscription (订阅)。
 Observable 的核心关注点：
-- [创建](###创建)
-- [订阅](###订阅)
-- [执行](###执行)
-- [清理](###清理)
+- [创建](####创建)
+- [订阅](####订阅)
+- [执行](####执行)
+- [清理](####清理)
 
-### 创建
+#### 创建
 Rx.Observable.create是Observable构造函数的别名，它接受一个参数。
 ```
 var observable = Rx.Observable.create(function subscribe(observer) {
@@ -132,7 +134,7 @@ var observable = Rx.Observable.create(function subscribe(observer) {
 ```
 > Observables 可以使用 create 来创建, 但通常我们使用所谓的创建操作符, 像 of、from、interval、等等。
 
-### 订阅
+#### 订阅
 ```
 observable.subscribe(x => console.log(x));
 ```
@@ -144,7 +146,7 @@ observable.subscribe 和 Observable.create(function subscribe(observer) {...}) �
 
 subscribe 调用是启动 “Observable 执行”的一种简单方式， 并将值或事件传递给本次执行的观察者。
 
-### 执行
+#### 执行
 Observable.create(function subscribe(observer) {...}) 中...的代码表示 “Observable 执行”，它是惰性运算，只有在每个观察者订阅后才会执行。随着时间的推移，执行会以同步或异步的方式产生多个值。
 
 Observable 执行可以传递三种类型的值：
@@ -156,7 +158,7 @@ Observable 执行可以传递三种类型的值：
 
 > 在 Observable 执行中, 可能会发送零个到无穷多个 "Next" 通知。如果发送的是 "Error" 或 "Complete" 通知的话，那么之后不会再发送任何通知了。
 
-### 清理
+#### 清理
 因为 Observable 执行可能会是无限的，并且观察者通常希望能在有限的时间内中止执行，所以我们需要一个 API 来取消执行。因为每个执行都是其对应观察者专属的，一旦观察者完成接收值，它必须要一种方法来停止执行，以避免浪费计算能力或内存资源。
 
 当调用了 observable.subscribe ，观察者会被附加到新创建的 Observable 执行中。这个调用还返回一个对象，即 Subscription (订阅)：
@@ -289,7 +291,7 @@ observerB: 2
 observerA: 3
 observerB: 3
 ```
-## 多播的 Observables
+### 多播的 Observables
 “多播 Observable” 通过 Subject 来发送通知，这个 Subject 可能有多个订阅者，然而普通的 “单播 Observable” 只发送通知给单个观察者。
 
 > 多播 Observable 在底层是通过使用 Subject 使得多个观察者可以看见同一个 Observable 执行。
@@ -317,10 +319,10 @@ multicast 操作符返回一个 Observable，它看起来和普通的 Observable
 
 connect() 方法十分重要，它决定了何时启动共享的 Observable 执行。因为 connect() 方法在底层执行了 source.subscribe(subject)，所以它返回的是 Subscription，你可以取消订阅以取消共享的 Observable 执行。
 
-## 引用计数
+### 引用计数
 手动调用 connect() 并处理 Subscription 通常太笨重。通常，当第一个观察者到达时我们想要自动地连接，而当最后一个观察者取消订阅时我们想要自动地取消共享执行。
 
-> refCount 的作用是，当有第一个订阅者时，多播 Observable 会自动地启动执行，而当最后一个订阅者离开时，多播 Observable 会自动地停止执行。
+> refCount 的作用是，当有第一个订阅者时，多播 Observable 会自动地启动执行，而当最后一个订阅者离开时，多播 Observable 会自动地停止执行。refCount的执行顺序要晚于其他订阅者。
 
 ```
 var source = Rx.Observable.interval(500);
@@ -353,10 +355,192 @@ setTimeout(() => {
   console.log('observerB unsubscribed');
   subscription2.unsubscribe();
 }, 2000);
+
+// 执行结果
+observerA subscribed
+observerA: 0
+observerB subscribed
+observerA: 1
+observerB: 1
+observerA unsubscribed
+observerB: 2
+observerB unsubscribed
+```
+refCount() 只存在于 ConnectableObservable，它返回的是 Observable，而不是另一个 ConnectableObservable 。
+
+### BehaviorSubject
+Subject 的其中一个变体就是 BehaviorSubject，它有一个“当前值”的概念。它保存了发送给消费者的最新值。并且当有新的观察者订阅时，会立即从 BehaviorSubject 那接收到“当前值”。
+
+> BehaviorSubjects 适合用来表示“随时间推移的值”。举例来说，生日的流是一个 Subject，但年龄的流应该是一个 BehaviorSubject。
+
+BehaviorSubject 使用值0进行初始化，当第一个观察者订阅时会得到0。第二个观察者订阅时会得到值2，尽管它是在值2发送之后订阅的。
+```
+var subject = new Rx.BehaviorSubject(0); // 0是初始值
+
+subject.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+
+subject.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(3);
+
+// 输出结果，始终保留当前最新的值。
+observerA: 0
+observerA: 1
+observerA: 2
+observerB: 2
+observerA: 3
+observerB: 3
 ```
 
+### ReplaySubject
+ReplaySubject 类似于 BehaviorSubject，它可以发送旧值给新的订阅者，但它还可以记录 Observable 执行的一部分。
 
+> ReplaySubject 记录 Observable 执行中的多个值并将其回放给新的订阅者。
 
+当创建 ReplaySubject 时，你可以指定回放多少个值：
+```
+var subject = new Rx.ReplaySubject(3); // 为新的订阅者缓冲3个值
 
+subject.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+subject.next(3);
+subject.next(4);
+
+subject.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(5);
+
+// 执行结果
+observerA: 1
+observerA: 2
+observerA: 3
+observerA: 4
+observerB: 2
+observerB: 3
+observerB: 4
+observerA: 5
+observerB: 5
+```
+除了缓冲数量，你还可以指定 window time (以毫秒为单位)来确定多久之前的值可以记录。在下面的示例中，我们使用了较大的缓存数量100，但 window time 参数只设置了500毫秒。
+
+### AsyncSubject
+AsyncSubject 是另一个 Subject 变体，只有当 Observable 执行完成时(执行 complete())，它才会将执行的最后一个值发送给观察者。
+
+```
+var subject = new Rx.AsyncSubject();
+
+subject.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+subject.next(3);
+subject.next(4);
+
+subject.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(5);
+subject.complete();
+
+// 输出
+observerA: 5
+observerB: 5
+```
+AsyncSubject 和 last() 操作符类似，因为它也是等待 complete 通知，以发送一个单个值。
+
+## Operators (操作符)
+尽管 RxJS 的根基是 Observable，但最有用的还是它的操作符。操作符是允许复杂的异步代码以声明式的方式进行轻松组合的基础代码单元。
+
+### 什么是操作符？
+操作符是 Observable 类型上的方法，比如 .map(...)、.filter(...)、.merge(...)，等等。当操作符被调用时，它们不会改变已经存在的 Observable 实例。相反，它们返回一个新的 Observable ，它的 subscription 逻辑基于第一个 Observable 。
+
+> 操作符是函数，它基于当前的 Observable 创建一个新的 Observable。这是一个无副作用的操作：前面的 Observable 保持不变。
+
+操作符本质上是一个纯函数 (pure function)，它接收一个 Observable 作为输入，并生成一个新的 Observable 作为输出。订阅输出 Observalbe 同样会订阅输入 Observable 。
+```
+function multiplyByTen(input) {
+  var output = Rx.Observable.create(function subscribe(observer) {
+    input.subscribe({
+      next: (v) => observer.next(10 * v),
+      error: (err) => observer.error(err),
+      complete: () => observer.complete()
+    });
+  });
+  return output;
+}
+
+var input = Rx.Observable.from([1, 2, 3, 4]);
+var output = multiplyByTen(input);
+output.subscribe(x => console.log(x));
+```
+*订阅 output 会导致 input Observable 也被订阅。我们称之为“操作符订阅链”*
+
+### 实例操作符和静态操作符
+`什么是实例操作符？` 通常提到操作符时，我们指的是实例操作符，它是 Observable 实例上的方法。举例来说，如果上面的 multiplyByTen 是官方提供的实例操作符，它看起来大致是这个样子的：
+
+```
+Rx.Observable.prototype.multiplyByTen = function multiplyByTen() {
+  var input = this;
+  return Rx.Observable.create(function subscribe(observer) {
+    input.subscribe({
+      next: (v) => observer.next(10 * v),
+      error: (err) => observer.error(err),
+      complete: () => observer.complete()
+    });
+  });
+}
+```
+> 实例运算符是使用 this 关键字来指代输入的 Observable 的函数。
+
+```
+var observable = Rx.Observable.from([1, 2, 3, 4]).multiplyByTen();
+observable.subscribe(x => console.log(x));
+```
+
+`什么是静态操作符？`  除了实例操作符，还有静态操作符，它们是直接附加到 Observable 类上的。静态操作符在内部不使用 this 关键字，而是完全依赖于它的参数。
+
+> 静态操作符是附加到 Observalbe 类上的纯函数，通常用来从头开始创建 Observalbe 。
+
+最常用的静态操作符类型是所谓的创建操作符。它们只接收非 Observable 参数，比如数字，然后创建一个新的 Observable ，而不是将一个输入 Observable 转换为输出 Observable 。
+
+interval函数：接收一个数字(非 Observable)作为参数，并生产一个 Observable 作为输出。
+
+```
+var observable = Rx.Observable.interval(1000 /* 毫秒数 */);
+```
+create函数。
+
+然而，有些静态操作符可能不同于简单的创建。一些`组合操作符`可能是静态的，比如 merge、combineLatest、concat，等等。这些作为静态运算符是有道理的，因为它们将多个Observables作为输入，而不仅仅是一个，例如：
+
+```
+var observable1 = Rx.Observable.interval(1000);
+var observable2 = Rx.Observable.interval(400);
+
+var merged = Rx.Observable.merge(observable1, observable2);
+```
+### Marble diagrams (弹珠图)
+
+> 在弹珠图中，时间流向右边，图描述了在 Observable 执行中值(“弹珠”)是如何发出的。
+
+![弹珠图](http://ww1.sinaimg.cn/large/8b2b1aafly1fsjxrgmgrtj20jg0b0q41.jpg)
+
+### 操作符分类
+创建、转换、过滤、组合、错误处理、工具，等等。。。
 
 
