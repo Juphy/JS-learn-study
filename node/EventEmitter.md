@@ -5,7 +5,8 @@
 观察者模式，它定义了一种一对多的关系，让多个观察者对象同时监听某一个主题对象，这个主题对象的状态发生变化时就会通知所有的观察者对象，使得它们能够自动更新自己。
 
 在观察者模式中也有两个主要角色：主题和观察者，分别对应期刊订阅例子中的期刊出版方和订阅者，它们之间的关系图如下：
- ![observer-pattern](../images/observer-pattern.png)
+
+ ![observer-pattern](http://ww1.sinaimg.cn/large/8b2b1aafly1fsjybdoi4jj20bi07lt8m.jpg)
 
 
 ### 发布/订阅模式
@@ -19,7 +20,8 @@
  - 在基于内容的系统中，订阅者定义其感兴趣的消息的条件，只有当消息的属性或内容满足订阅者定义的条件时，消息才会被投递到该订阅者。订阅者需要负责对消息进行分类。
 
  一些系统支持两者的混合：发布者发布消息到主题上，而订阅者将基于内容的订阅注册到一个或多个主题上。基于主题的通信基础结构图如下：
- ![pubsub-pattern](../images/pubsub-pattern.png)
+
+ ![pubsub-pattern](http://ww1.sinaimg.cn/large/8b2b1aafly1fsjyd7dupmg20ci07et8v.gif)
 
 
 ### 观察者模式与发布/订阅模式之间的区别：
