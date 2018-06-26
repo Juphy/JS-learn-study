@@ -67,5 +67,12 @@ got('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', {json: true})
     .then(res => {
         console.log(res.body);
     }).catch(err => {
-        console.log(err.reponse.body);
-})
+    console.log(err.reponse.body);
+});
+
+const fetch = require('node-fetch');
+fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')
+    .then(res => res.json())
+    .then(json => {
+        console.log(json);
+    });

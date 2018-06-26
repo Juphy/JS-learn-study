@@ -18,7 +18,7 @@
 * [4、链表](./js的数据结构/4、链表.js)
 * [5、集合](./js的数据结构/5、集合.js)
 ### [RxJS](./RxJS/README.md)
-* [RxJS基础](./RxJS/RxJS基础.md)
+* [RxJS基础知识](./RxJS/RxJS基础知识.md)
 * [functionalProgramming](./RxJS/functionalProgramming.md)
 ### html
 * [滚动条样式处理](./html/2、scroll处理.html)

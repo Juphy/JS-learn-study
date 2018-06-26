@@ -157,28 +157,72 @@ let Rx = require('rxjs');
 // subject.next(5);
 // subject.complete();
 
-let multiplyByTen = (input) => {
-    let output = Rx.Observable.create(observer => {
-        input.subscribe(
-            res => {
-                observer.next(10 * res);
-            },
-            error => {
-                observer.error(error);
-            },
-            () => {
-                observer.complete();
-            })
-    });
-    return output;
-};
+// let multiplyByTen = (input) => {
+//     let output = Rx.Observable.create(observer => {
+//         input.subscribe(
+//             res => {
+//                 observer.next(10 * res);
+//             },
+//             error => {
+//                 observer.error(error);
+//             },
+//             () => {
+//                 observer.complete();
+//             })
+//     });
+//     return output;
+// };
+//
+// let input = Rx.Observable.from([1, 2, 3, 4]);
+// let output = multiplyByTen(input);
+// output.subscribe(x => {
+//     console.log(x);
+// });
+// input.map(x => x * 10)
+//     .subscribe(y => {
+//         console.log(y);
+//     });
 
-let input = Rx.Observable.from([1, 2, 3, 4]);
-let output = multiplyByTen(input);
-output.subscribe(x => {
-    console.log(x);
+
+// 转换成 observables
+/*Rx.Observable.of('foo', 'bar').subscribe(res => {
+    console.log(res);
 });
-input.map(x => x * 10)
-    .subscribe(y => {
-        console.log(y);
+
+Rx.Observable.from([1, 2, 3]).subscribe(res => {
+    console.log(res);
+});
+
+const fetch = require('node-fetch');
+Rx.Observable
+    .fromPromise(fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY').then(res => res.json()))
+    .subscribe(json => {
+        console.log(json);
     });
+
+let fs = require('fs');
+let exists = Rx.Observable.bindCallback(fs.exists);
+exists('file.txt').subscribe(res => {
+    console.log('Does file exists？', res);
+});
+
+let rename = Rx.Observable.bindNodeCallback(fs.rename);
+rename('file.txt', 'users.txt').subscribe(() => {
+    console.log('Renamed');
+});*/
+
+// 外部产生新事件
+var myObservable = new Rx.Subject();
+myObservable.subscribe(val => console.log(val));
+myObservable.next('foo1');
+
+// 内部产生新事件
+var myObservable = Rx.Observable.create(observer => {
+    observer.next('foo2');
+    setTimeout(() => {
+        observer.next('bar');
+    }, 1000)
+});
+myObservable.subscribe(res => {
+    console.log(res);
+});

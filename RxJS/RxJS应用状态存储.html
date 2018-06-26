@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RxJS应用状态</title>
+    <script src="https://unpkg.com/@reactivex/rxjs@5.0.0/dist/global/Rx.js"></script>
+</head>
+<body>
+<button id="increase">+</button>
+<button id="decrease">-</button>
+<input id="input" type="text">
+<input id="count" type="text">
+<input id="hello" type="text">
+</body>
+</html>
+<script>
+    var increaseButton = document.querySelector('#increase');
+    var increase = Rx.Observable.fromEvent(increaseButton, 'click')
+        .map(() => state => Object.assign({}, state, {count: state.count + 1}));
+    var state = increase.scan((state, changeFn) => changeFn(state), {count: 0});
+
+    var increaseButton = document.querySelector('#increase');
+    var increase = Rx.Observable.fromEvent(increaseButton, 'click')
+        .map(() => state => Object.assign({}, state, {count: state.count + 1}));
+
+    var decreaseButton = document.querySelector('#decrease');
+    var decrease = Rx.Observable.fromEvent(decreaseButton, 'click')
+        .map(() => state => Object.assign({}, state, {count: state.count - 1}));
+
+    var inputElement = document.querySelector('#input');
+    var input = Rx.Observable.fromEvent(inputElement, 'keypress')
+    // 我们还将按键事件映射成一个函数，它会产生一个叫做 inputValue 状态
+        .map(event => state => Object.assign({}, state, {inputValue: event.target.value}));
+
+    // 我们将这三个改变状态的 observables 进行合并
+    var state = Rx.Observable.merge(
+        increase,
+        decrease,
+        input
+    ).scan((state, changeFn) => changeFn(state), {
+        count: 0,
+        inputValue: ''
+    });
+    console.log(state);
+    // 我们订阅状态的变化并更新 DOM
+    state.subscribe((state) => {
+        document.querySelector('#count').innerHTML = state.count;
+        document.querySelector('#hello').innerHTML = 'Hello ' + state.inputValue;
+    });
+
+    // 为了优化渲染，我们可以检查什么状态是实际上已经发生变化了的
+    var prevState = {};
+    state.subscribe(state => {
+        if (state.count !== prevState.count) {
+            document.querySelector('#count').innerHTML = state.count;
+        }
+        if (state.inputValue !== prevState.inputValue) {
+            document.querySelector('#hello').innerHTML = 'Hello ' + state.inputValue;
+        }
+        prevState = state;
+    })
+</script>

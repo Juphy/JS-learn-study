@@ -26,6 +26,7 @@
     "got": "^8.3.0",
     "jquery": "^3.3.1",
     "mathjs": "^4.4.2",
+    "node-fetch": "^2.1.2",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "rxjs": "^5.5.11",

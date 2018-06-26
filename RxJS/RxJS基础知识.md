@@ -543,4 +543,5 @@ var merged = Rx.Observable.merge(observable1, observable2);
 ### 操作符分类
 创建、转换、过滤、组合、错误处理、工具，等等。。。
 
+具体使用实例参见[node中使用RxJS](./RxJS.js)和[结合html中使用RxJS](./RxJS基础.html)
 
