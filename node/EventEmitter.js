@@ -1,4 +1,4 @@
-// # EventEmitter基本使用
+// EventEmitter基本使用
 const EventEmitter = require('events');
 
 class MyEmitter extends EventEmitter {
@@ -6,12 +6,14 @@ class MyEmitter extends EventEmitter {
 
 const myEmitter = new MyEmitter();
 myEmitter.on('event', () => {
-    console.log('订阅了一个事件');
+    console.log('触发了一个事件');
 });
 
 myEmitter.emit('event');
+// 定义 MyEmitter 类，该类继承于 EventEmitter 类，接着通过使用 new 关键字创建了 myEmitter 实例，然后使用 on() 方法监听 event 事件，最后利用 emit() 方法触发 event 事件。
 
-// # EventEmitter构造函数
+
+// EventEmitter构造函数
 
 function EventEmitter() {
     EventEmitter.init.call(this);

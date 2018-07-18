@@ -65,113 +65,130 @@
 //     renderSuggestion(suggestedUser, '.suggestion3');
 // });
 
-//
 // const getAllBtn = $('#getAllBtn');
 // const searchInput = $('#search-input');
+// const userLists = $('#user-lists');
 // let keyword = '';
 //
 // // 定义事件流
-// const clickEventStream = Rx.Observable.fromEvent(getAllBtn, 'click'); // 获取所有
-// const inputEventStream = Rx.Observable.fromEvent(searchInput, 'keyup').filter(event => event.keyCode !== 13); // 搜索过滤
-// const clickUserItemStream = Rx.Observable.fromEvent($('#user-lists'), 'click'); // 点击获取详细
 //
-// clickEventStream.subscribe(v => {
-//     console.log('getAllUsers btn click!');
+// let clickEventStream = Rx.Observable.fromEvent(getAllBtn, 'click');
+// let inputEventStream = Rx.Observable.fromEvent(searchInput, 'keyup').filter(event => event.keyCode !== 13);
+// let userEventStream = Rx.Observable.fromEvent(userLists, 'click');
+//
+// clickEventStream.subscribe(e => {
+//     console.log(e);
 // });
+//
 // inputEventStream.subscribe(e => {
 //     console.log(e);
-//     console.log(searchInput.val());
 //     keyword = searchInput.val();
 // });
-// clickUserItemStream.subscribe(e => {
-//     console.log(e.target);
+//
+// userEventStream.subscribe(e => {
+//     console.log(e);
 // });
 //
+// // 将事件流转换成api请求流
 //
-// // 将用户触发的事件流转换成API请求流
-// const getUserListStream = clickEventStream.mergeMap(() => {
-//     return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users'));
+// let getUsersStream = clickEventStream.mergeMap(e => {
+//     return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users'))
 // });
 //
-// const filterUserStream = inputEventStream.mergeMap(event => {
-//     return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users'));
+// let filterUsersStream = inputEventStream.mergeMap(event => {
+//     return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users'))
 // });
 //
-// const getUserInformation = clickUserItemStream.mergeMap(e => {
-//     console.log(e.target.innerText);
-//     return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users/' + e.target.innerText));
+// let userInfoStream = userEventStream.mergeMap(e => {
+//     return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users/' + e.target.innerText))
 // });
 //
-// let renderUserInfo = (user) => {
-//     $('#user-info').html('');
-//     for (var key in user) {
-//         $('#user-info').append(`<div>${key} ---> ${user[key]}</div>`);
-//     }
-// };
-// let renderUserLists = (users) => {
-//     console.log(users);
+// const renderUsersList = (users) => {
 //     $('#user-lists').html('');
 //     users.forEach(user => {
 //         $('#user-lists').append(`<li>${user.login}</li>`)
 //     })
 // };
 //
+// const renderUserInfo = (user) => {
+//     $('#user-info').html('');
+//     for (const key in user) {
+//         $('#user-info').append(`<div>${key}---->${user[key]}</div>`)
+//     }
+// };
 //
-// getUserInformation.subscribe(users => {
-//     console.log(users);
-//     renderUserInfo(users);
-// });
-// filterUserStream.subscribe(users => {
-//     console.log(users);
-//     renderUserLists(users.filter(user => user.login.includes(keyword)));
-// });
-// getUserListStream.catch(err => {
+// getUsersStream.catch(err => {
 //     Rx.Observable.of(err);
 // }).subscribe(users => {
-//    renderUserLists(users);
+//     renderUsersList(users);
+// });
+//
+// filterUsersStream.filter(err => {
+//     Rx.Observable.of(err);
+// }).subscribe(users => {
+//     renderUsersList(users.filter(user => user.includes(keyword)));
+// });
+//
+// userInfoStream.subscribe(user => {
+//     renderUserInfo(user);
 // });
 
-const getAllBtn = document.querySelector('getAllBtn');
-const searchInput = document.querySelector('search-input');
-let keyword;
+const refreshBtn = document.querySelector('.refresh');
+const clickClose1 = document.querySelector('.close1');
+const clickClose2 = document.querySelector('.close2');
+const clickClose3 = document.querySelector('.close3');
+// 定义事件流
+const refreshStream = Rx.Observable.fromEvent(refreshBtn, 'click');
+const close1Stream = Rx.Observable.fromEvent(clickClose1, 'click');
+const close2Stream = Rx.Observable.fromEvent(clickClose2, 'click');
+const close3Stream = Rx.Observable.fromEvent(clickClose3, 'click');
+// 刷新的请求流
+const requestStream = refreshStream
+    .startWith('startup click')
+    .map(() => {
+        const randomOffset = Math.floor(Math.random() * 500);
+        return 'https://api.github.com/users?since=' + randomOffset;
+    });
+// 刷新的响应流，这是一个流的流，即发送出的值还是流，需要发送出一个JSON对象的流，因此可以用flatMap将流的流扁平化成流。
+const responseStream = requestStream
+    .flatMap(url => {
+        return Rx.Observable.fromPromise($.getJSON(url));
+    });
 
-const clickEventStream = Rx.Observable.fromEvent(getAllBtn, 'click');
-const inputEventStream = Rx.Observable.fromEvent(searchInput, 'keyup').filter(event => event.keyCode !== 13);
-const clickUserStream = Rx.Observable.fromEvent($('#user-lists'), 'click');
+const createSuggestionStream = (closeStream) => {
+    return closeStream.startWith('startup click')
+        .combineLatest(responseStream,
+            (click, listUsers) => {
+                return listUsers[Math.floor(Math.random() * listUsers.length)]
+            })
+        .merge(refreshStream.map(() => null))
+        .startWith(null);
+};
 
-const getUserListsStream = clickEventStream.mergeMap(event => {
-    return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users'))
-});
-getUserListsStream.catch(err => {
-    Rx.Observable.of(err);
-}).subscribe(users => {
-    $('#user-lists').html('');
-    users.forEach(user => {
-        $('#user-lists').append(`<li>${user.login}</li>`)
-    })
-});
+const suggestion1Stream = createSuggestionStream(close1Stream);
+const suggestion2Stream = createSuggestionStream(close2Stream);
+const suggestion3Stream = createSuggestionStream(close3Stream);
 
-inputEventStream.subscribe(event => {
-    keyword = searchInput.val();
-});
-inputEventStream.mergeMap(event => {
-    return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users'))
-}).subscribe(users => {
-        users = users.filter(user => user.login.includes(keyword));
-        $('#user-lists').html('');
-        users.forEach(user => {
-            $('#user-lists').append(`<li>${user.login}</li>`)
-        })
+const renderUser = (user, selector) => {
+    const el = document.querySelector(selector);
+    if (user === null) {
+        el.style.visibility = 'hidden';
+    } else {
+        el.style.visibility = 'visible';
+        const usernameEl = el.querySelector('.username');
+        const imgEl = el.querySelector('img');
+        usernameEl.href = user.html_url;
+        usernameEl.textContent = user.login;
+        imgEl.src = '';
     }
-);
+};
 
-clickUserStream.mergeMap(e => {
-    console.log(e.target.innerText);
-    return Rx.Observable.fromPromise($.getJSON('https://api.github.com/users/' + e.target.innerText));
-}).subscribe(user => {
-    $('#user-info').html('');
-    for (var key in user) {
-        $('#user-info').append(`<div>${key} ---> ${user[key]}</div>`);
-    }
+suggestion1Stream.subscribe(user => {
+    renderUser(user, '.suggestion1')
 });
-
+suggestion2Stream.subscribe(user => {
+    renderUser(user, '.suggestion2')
+});
+suggestion3Stream.subscribe(user => {
+    renderUser(user, '.suggestion3')
+});
