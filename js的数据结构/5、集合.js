@@ -158,7 +158,7 @@ let intersection = (setA, setB) => {
         }
     });
     return interSet;
-}
-intersection = new Set([x for (x of setA) if (setB.has(x))]);
+};
+// intersection = new Set([x for (x of setA) if (setB.has(x))]);
 console.log(intersection(setA, setB));
 
