@@ -118,10 +118,10 @@ Observable 和 函数的区别是什么呢？Observable可以随着时间的推�
 ### Observable 剖析
 Observables 是使用 Rx.Observable.create 或创建操作符创建的，并使用观察者来订阅它，然后执行它并发送 next / error / complete 通知给观察者，而且执行可能会被清理。这四个方面全部编码在 Observables 实例中，但某些方面是与其他类型相关的，像 Observer (观察者) 和 Subscription (订阅)。
 Observable 的核心关注点：
-- [创建](####创建)
-- [订阅](####订阅)
-- [执行](####执行)
-- [清理](####清理)
+- [创建](#创建)
+- [订阅](#订阅)
+- [执行](#执行)
+- [清理](#清理)
 
 #### 创建
 Rx.Observable.create是Observable构造函数的别名，它接受一个参数。
