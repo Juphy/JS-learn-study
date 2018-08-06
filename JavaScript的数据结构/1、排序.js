@@ -90,21 +90,22 @@ nums = [-12, 23, 34, 56, 25, 35, 46];
 // 多条件排序
 
 var items = [
-    {name: "linc", age: 28, num: 1234},
     {name: "linc", age: 28, num: 12345},
+    {name: "linc", age: 28, num: 1234},
     {name: "kiki", age: 20, num: 12345},
     {name: "高峰", age: 26, num: 123},
     {name: "高峰", age: 27, num: 101},
     {name: "高峰", age: 26, num: 111},
-    {name: "安迪", age: 29, num: 110},
+    {name: "安迪", age: 29, num: 112},
     {name: "安迪", age: 30, num: 110}
 ];
 
 
 // ascending 升序  descending 降序
 (function _default() {
+    // sort函数返回小于或者等于0的不会调换顺序，如果返回值大于0主动调换顺序。
     items.sort(function (a, b) {
-        return SortByProps(a, b, ['num', 'age', 'name'], {name: 'ascending'});
+        return SortByProps(a, b, ['name', 'age', 'num'], {name: 'ascending', age: 'descending', num: 'ascending'});
     });
     console.log(items)
 })();
@@ -137,28 +138,20 @@ function SortByProps(item1, item2, attr, obj) {
         }
     }
     else {
-        for (var i = 0; i < props.length; i++) {
-            var prop = props[i];
-            for (var o in prop) {
-                asc = prop[o] === "ascending";
-                if (item1[o] > item2[o]) {
-                    cps.push(asc ? 1 : -1);
-                    break; // 大于时跳出循环。
-                } else if (item1[o] === item2[o]) {
-                    cps.push(0);
-                } else {
-                    cps.push(asc ? -1 : 1);
-                    break; // 小于时跳出循环。
-                }
+        // for (var i = 0; i < props.length; i++) {
+        for (var o of attr) {
+            obj[o] ? asc = (obj[o] === "ascending") : asc = true;
+            if (item1[o] > item2[o]) {
+                cps.push(asc ? 1 : -1);
+                break; // 大于时跳出循环。
+            } else if (item1[o] === item2[o]) {
+                cps.push(0);
+            } else {
+                cps.push(asc ? -1 : 1);
+                break; // 小于时跳出循环。
             }
         }
+        // }
     }
-
-    // 根据各排序属性比较结果综合判断得出两个比较项的最终大小关系
-    for (var j = 0; j < cps.length; j++) {
-        if (cps[j] === 1 || cps[j] === -1) {
-            return cps[j]; // 返回比较结果不为0的值
-        }
-    }
-    return false; // 如果比较值都是0，返回false
+    return cps[cps.length - 1]
 }
