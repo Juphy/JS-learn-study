@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .img img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="img">
+        <img src="../assets/images/1.jpg">
+    </div>
+    <div>
+        测试内容
+    </div>
+    <div>
+        测试内容
+    </div>
+    <div>
+        测试内容
+    </div>
+    <div>
+        测试内容
+    </div>
+    <div>
+        测试内容
+    </div>
+</div>
+</body>
+</html>
+<script src="../js/jquery.min.js"></script>
+<script>
+    const backImg = document.getElementsByClassName('img')[0];
+    window.onresize = () => {
+        const h = document.documentElement.clientHeight, w = document.documentElement.clientWidth;
+        backImg.style.height = h + 'px';
+        backImg.style.width = w + 'px';
+    };
+    window.onresize();
+</script>
