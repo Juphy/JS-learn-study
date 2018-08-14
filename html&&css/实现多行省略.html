@@ -10,13 +10,17 @@
          */
 
         /*@-webkit-keyframes width-change {*/
-            /*0%, 100% {*/
-                /*width: 320px*/
-            /*}*/
-            /*50% {*/
-                /*width: 260px*/
-            /*}*/
+        /*0%, 100% {*/
+        /*width: 320px*/
         /*}*/
+        /*50% {*/
+        /*width: 260px*/
+        /*}*/
+        /*}*/
+
+        /*
+        .ellipsis-placeholder和.ellipsis的高度要确保相等。
+        */
 
         .ellipsis {
             position: relative;
@@ -32,7 +36,7 @@
             position: relative;
             display: -webkit-box;
             -webkit-box-orient: vertical;
-            -webkit-line-clamp: 6; /* n */
+            -webkit-line-clamp: 7; /* n */
             font-size: 50px; /* w */
             color: transparent;
         }
@@ -84,7 +88,7 @@
 <div class="ellipsis">
     <div class="ellipsis-container">
         <div class="ellipsis-content">
-            腾讯成立于1998年11月，是目前中国领先的互联网增值服务提供商之一。成立10多年来，腾讯一直秉承“一切以用户价值为依归”的经营理念，为亿级海量用户提供稳定优质的各类服务，始终处于稳健发展状态。2004年6月16日，腾讯控股有限公司在香港联交所主板公开上市(股票代号700)。
+            腾讯成立于1998年11月，是目前中国领先的互联网增值服务提供商之一。成立10多年来，腾讯一直秉承“一切以用户价值为依归”的经营理念，为亿级海量用户提供稳定优质的各类服务，始终处于稳健发展状态。2004年6月16日，腾讯控股有限公司在香港联交所主板公开上市(股票代号700)。腾讯成立于1998年11月，是目前中国领先的互联网增值服务提供商之一。成立10多年来，腾讯一直秉承“一切以用户价值为依归”的经营理念，为亿级海量用户提供稳定优质的各类服务，始终处于稳健发展状态。2004年6月16日，腾讯控股有限公司在香港联交所主板公开上市(股票代号700)。
         </div>
         <div class="ellipsis-ghost">
             <div class="ellipsis-placeholder"></div>
