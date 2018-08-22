@@ -3,7 +3,7 @@
 
 - 将nginx放到yum repro库中
 
-    rpm -ivh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+    rpm -ivh `http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm`
 
 - 查看nginx信息
 
@@ -38,7 +38,7 @@
 ## 2、手动下载安装包
 - 1、下载nginx包
 
-    wget http://nginx.org/download/nginx-1.10.1.tar.gz
+    wget `http://nginx.org/download/nginx-1.10.1.tar.gz`
 
 - 2、复制包到安装目录
 
@@ -92,8 +92,8 @@
 
     kill -9 PID
 
-
 - systemctl status nginx.service
-- service nginx start
+
+- nginx -s reload 重启
 
 
