@@ -42,3 +42,4 @@ http://localhost:3000/static/hello.html
 ```
 app.use('/static', express.static(path.join(__dirname + '/public')));
 ```
+`现存问题`：node_modules文件在服务器上无法通过此种方式获取
