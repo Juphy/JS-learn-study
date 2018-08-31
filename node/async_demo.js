@@ -22,7 +22,7 @@ const fn1 = () => {
         console.log('final:');
         console.log(result);
     });
-}
+};
 
 async.waterfall([
     function (callback) {

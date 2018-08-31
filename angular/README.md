@@ -8,4 +8,4 @@
 - [6.TypeScript](./6.TypeScript.md)
 - [7.websocket](./7.websocket.md)
 - [8.Angular组件通信](./8.Angular组件通信.md)
-- [8.Angular如何使用第三方库](./9.Angular如何使用第三方库.md)
+- [9.Angular如何使用第三方库](./9.Angular如何使用第三方库.md)

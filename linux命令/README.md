@@ -1,3 +1,5 @@
 ## linux命令
 
-* [cat、rm](./1.cat、rm.md)
+* [cat、rm](./cat、rm.md)
+* [nginx](./nginx.md)
+* [Referer](./Referer.md)

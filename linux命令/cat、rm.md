@@ -51,4 +51,4 @@ rm test 无法删除test目录
 
 rm -r test 删除目录test
 
-rm - r * 删除当前目录下所有文件及目录
+rm -r * 删除当前目录下所有文件及目录

@@ -32,23 +32,23 @@
 //     return sortByProps(a, b);
 // });
 // console.log(a);
-let _ = require('lodash');
-
-function priceLt(x) {
-    return function (item) {
-        return item.price < x
-    }
-}
-
-let gems = [
-    {name: 'Sunstone', price: 4},
-    {name: 'Amethyst', price: 15},
-    {name: 'Prehnite', price: 20},
-    {name: 'Sugilite', price: 7},
-    {name: 'Diopside', price: 3},
-    {name: 'Feldspar', price: 13},
-    {name: 'Dioptase', price: 2},
-    {name: 'Sapphire', price: 20}
-];
-let chosen = _(gems).filter(priceLt(10)).take(3).value();
-console.log(chosen);
+// let _ = require('lodash');
+//
+// function priceLt(x) {
+//     return function (item) {
+//         return item.price < x
+//     }
+// }
+//
+// let gems = [
+//     {name: 'Sunstone', price: 4},
+//     {name: 'Amethyst', price: 15},
+//     {name: 'Prehnite', price: 20},
+//     {name: 'Sugilite', price: 7},
+//     {name: 'Diopside', price: 3},
+//     {name: 'Feldspar', price: 13},
+//     {name: 'Dioptase', price: 2},
+//     {name: 'Sapphire', price: 20}
+// ];
+// let chosen = _(gems).filter(priceLt(10)).take(3).value();
+// console.log(chosen);

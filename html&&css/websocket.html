@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>测试WebSocket</h1>
+</body>
+</html>
+<script>
+    var ws = new WebSocket('wss://api2.huayingjuhe.top/ndc/reverse_connect');
+    switch (ws.readyState) {
+        case WebSocket.CONNECTING:
+            console.log(0);
+            break;
+        case WebSocket.OPEN:
+            console.log(1);
+            break;
+        case WebSocket.CLOSING:
+            console.log(2);
+            break;
+        case WebSocket.CLOSED:
+            console.log(3);
+            break;
+        default:
+            // this never happens
+            break;
+    }
+</script>

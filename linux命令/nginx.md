@@ -91,6 +91,16 @@
     systemctl status nginx.service
 
 - nginx -s reload 重启
+- systemctl start nginx.service 启动nginx
+- service nginx start
+
+- systemctl stop nginx.service 停止
+
+- systemctl restart nginx.service 重启
+- service nginx restart
+
+- systemctl enable nginx.service 设置开机启动
+
 ## nginx配置
 ### 静态资源
 指定路径对应的目录，location可以使用正则表达式指向图片所在的文件夹，root指向文件对应的硬盘中的目录。
