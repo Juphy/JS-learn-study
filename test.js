@@ -52,3 +52,28 @@
 // ];
 // let chosen = _(gems).filter(priceLt(10)).take(3).value();
 // console.log(chosen);
+console.time('*2');
+for (var i = 0; i < 10000000; i++) {
+    1.1 * 2
+}
+console.timeEnd('*2');
+
+console.time('<');
+for (var i = 0; i < 10000000; i++) {
+    1.1 << 1
+}
+console.timeEnd('<');
+
+console.time('/4');
+for (var i = 0; i < 10000000; i++) {
+    1.1 / 4
+}
+console.timeEnd('/4');
+
+console.time('>>2');
+for (var i = 0; i < 10000000; i++) {
+    1.1 >> 2
+}
+console.timeEnd('>>2');
+console.assert(1 > 2, 1);
+console.table(['a', 'b', 'c']);
