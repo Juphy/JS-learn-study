@@ -4,11 +4,6 @@
 ### [JavaScript的数据结构](./JavaScript的数据结构/README.md)
 ### [RxJS](./RxJS/README.md)
 ### html&&css
-* [滚动条样式处理](./html&&css/2、scroll处理.html)
-* [echarts的使用](./html&&css/3、echarts.html)
-* [BayMax](./html&&css/4、BayMax.html)
-* [文本点击复制](./html&&css/13、点击文本复制.html)
-* [CSS中animation和transition的性能](./html&&css/CSS中animation和transition的性能.md)
 ### [linux相关问题](./linux命令/README.md)
 ### [JavaScript基础](./JavaScript基础/README.md)
 ### [JavaScript进阶](./JavaScript进阶/README.md)
