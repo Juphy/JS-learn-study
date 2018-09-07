@@ -7,3 +7,5 @@
 ### [linux相关问题](./linux命令/README.md)
 ### [JavaScript基础](./JavaScript基础/README.md)
 ### [JavaScript进阶](./JavaScript进阶/README.md)
+
+以上部分类容已经梳理至[挽留之王小石](http://blog.juphy.cn)
