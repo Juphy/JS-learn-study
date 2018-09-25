@@ -1,143 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <!--<style>-->
-    <!--.loader,-->
-    <!--.loader:before,-->
-    <!--.loader:after {-->
-    <!--border-radius: 50%;-->
-    <!--width: 2.4em;-->
-    <!--height: 2.4em;-->
-    <!-- -webkit-animation-fill-mode: both;-->
-    <!--animation-fill-mode: both;-->
-    <!-- -webkit-animation: load 1.8s infinite ease-in-out;-->
-    <!--animation: load 1.8s infinite ease-in-out;-->
-    <!--}-->
+    <title>大图片加载从模糊到清晰</title>
+    <style type="text/css">
+        .content {
+            position: relative;
+        }
 
-    <!--.loader {-->
-    <!--color: #737373;-->
-    <!--font-size: 10px;-->
-    <!--top: 50%;-->
-    <!--left: 50%;-->
-    <!--margin-left: 0;-->
-    <!--margin-top: -40px;-->
-    <!--position: absolute;-->
-    <!-- -webkit-transform: translateZ(0);-->
-    <!-- -ms-transform: translateZ(0);-->
-    <!--transform: translateZ(0);-->
-    <!-- -webkit-animation-delay: -0.16s;-->
-    <!--animation-delay: -0.16s;-->
-    <!--}-->
-
-    <!--.loader:before,-->
-    <!--.loader:after {-->
-    <!--content: '';-->
-    <!--position: absolute;-->
-    <!--top: 0;-->
-    <!--}-->
-
-    <!--.loader:before {-->
-    <!--left: -3.5em;-->
-    <!-- -webkit-animation-delay: -0.32s;-->
-    <!--animation-delay: -0.32s;-->
-    <!--}-->
-
-    <!--.loader:after {-->
-    <!--left: 3.5em;-->
-    <!--}-->
-
-    <!--@-webkit-keyframes load {-->
-    <!--0%,-->
-    <!--100% {-->
-    <!--/*box-shadow: 0 2.4em 0 -1.3em;*/-->
-    <!--transform: scale(0);-->
-    <!--}-->
-    <!--50% {-->
-    <!--/*box-shadow: 0 2.4em 0 0;*/-->
-    <!--transform: scale(1);-->
-    <!--}-->
-    <!--}-->
-
-    <!--@keyframes load {-->
-    <!--0%,-->
-    <!--100% {-->
-    <!--/*box-shadow: 0 2.4em 0 -1.3em;*/-->
-    <!--transform: scale(0);-->
-    <!--}-->
-    <!--50% {-->
-    <!--/*box-shadow: 0 2.4em 0 0;*/-->
-    <!--transform: scale(1);-->
-    <!--}-->
-    <!--}-->
-    <!---->
-    <!---->
-    <!--</style>-->
-    <style>
-        .loader {
-            top: 50%;
-            left: 50%;
-            width: 162px;
-            height: 30px;
-            background: transparent;
-            margin-top: -15px;
-            margin-left: -81px;
+        .thumbnails {
+            width: 300px;
             position: absolute;
-            text-align: center;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            filter: blur(4px);
+            transition: all 0.7s;
         }
 
-        .loader div {
-            float: left;
-            width: 30px;
-            height: 30px;
-            background-color: #737373;
-            border-radius: 50%;
-            margin: 0 12px;
-            animation: spin 1.4s infinite linear;
-        }
-
-        .loader div:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .loader div:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @-moz-keyframes spin {
-            0%, 80%, 100% {
-                -moz-transform: scale(0);
-            }
-            40% {
-                -moz-transform: scale(1);
-            }
-        }
-
-        @-webkit-keyframes spin {
-            0%, 80%, 100% {
-                -webkit-transform: scale(0);
-            }
-            40% {
-                -webkit-transform: scale(1);
-            }
-        }
-
-        @keyframes spin {
-            0%, 80%, 100% {
-                transform: scale(0);
-            }
-            40% {
-                transform: scale(1);
-            }
+        .complete {
+            filter: blur(0);
         }
     </style>
 </head>
+
 <body>
+    <h3>大图片加载从模糊到清晰</h3>
+    <div class="content">
+        <img class="thumbnails" src="data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAA8AAD/4QMtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OTY3NjUwN0QyQjRBMTFFN0FCMjJERjYzMkVDMTQzRUEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OTY3NjUwN0UyQjRBMTFFN0FCMjJERjYzMkVDMTQzRUEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5Njc2NTA3QjJCNEExMUU3QUIyMkRGNjMyRUMxNDNFQSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5Njc2NTA3QzJCNEExMUU3QUIyMkRGNjMyRUMxNDNFQSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/uAA5BZG9iZQBkwAAAAAH/2wCEAAYEBAQFBAYFBQYJBgUGCQsI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">
+    </div>
+    <script type="text/javascript">
+        var ele = document.querySelector('.thumbnails');
+        // 为了看到效果加个延时
+        setTimeout(function () {
+            // 若图片URL失效请自行替换
+            var imgUrl = 'http://img8.zol.com.cn/bbs/upload/10569/10568721.jpg';
+            var imgObject = new Image();
+
+            imgObject.src = imgUrl;
+            imgObject.onload = function () {
+                ele.src = imgUrl;
+                ele.setAttribute('class', 'thumbnails complete');
+            }
+        }, 1000)
+    </script>
+    <script src='http://runjs.cn/gist/jwjikcng/all'></script>
 </body>
-<div class="loader">
-    <div></div>
-    <div></div>
-    <div></div>
-</div>
+
 </html>

@@ -39,6 +39,7 @@
     "rxjs": "^5.5.11",
     "serve-index": "^1.9.1",
     "superagent": "^3.8.2",
+    "underscore": "^1.9.1",
     "xlsx": "^0.13.5"
   }
 }
