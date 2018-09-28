@@ -14,3 +14,15 @@ a();
 f3();
 a();
 a();
+
+const fn1 = function (n) {
+    let fn2 = function () {
+        console.log(n++)
+    };
+    return fn2;
+};
+
+let next = fn1(0);
+next();
+next();
+next();
