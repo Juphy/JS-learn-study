@@ -6,3 +6,5 @@
 * [nodejs获取参数的方式](./nodejs获取参数的方式.md)
 * [nodejs控制异步并发](./nodejs控制异步并发.md)
 * [url编码](./URL编码.md)
+* [body-parser的使用](./body-parser的使用.md)
+* [options请求](./options请求.md)
