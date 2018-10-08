@@ -34,55 +34,91 @@
 
         .main {
             width: 100%;
-            overflow-x: scroll;
+            overflow-x: hidden;
         }
 
-        .inner{
+        .inner {
             width: 400%;
             height: 100%;
         }
+
         .img3 {
             float: left;
             width: 25%;
+            position: relative;
+        }
+
+        .img3::after {
+            content: '<';
+            font-size: 24px;
+            line-height: 24px;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            font-weight: bolder;
+            margin-top: -12px;
+        }
+
+        .img3::before {
+            content: '>';
+            font-size: 24px;
+            line-height: 24px;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            font-weight: bolder;
+            margin-top: -12px;
         }
     </style>
 </head>
 <body>
 <h2>background-attachment: fixed 实现滚动视差</h2>
 <section class="g-word">Header</section>
-<section class="g-img img1" style="background-image:url('../assets/images/background-attachment1.jpg') ">IMG1</section>
+<section class="g-img img1" style="background-image:url('../../assets/images/background-attachment1.jpg') ">IMG1
+</section>
 <section class="g-word">Content1</section>
-<section class="g-img img1" style="background-image:url('../assets/images/background-attachment2.jpg') ">IMG2</section>
+<section class="g-img img1" style="background-image:url('../../assets/images/background-attachment2.jpg') ">IMG2
+</section>
 <section class="g-word">Content2</section>
-<section class="g-img img1" style="background-image:url('../assets/images/background-attachment3.jpg') ">IMG3</section>
+<section class="g-img img1" style="background-image:url('../../assets/images/background-attachment3.jpg') ">IMG3
+</section>
 <section class="g-word">Footer</section>
-<section class="g-img img1" style="background-image:url('../assets/images/background-attachment4.jpg') ">IMG4</section>
+<section class="g-img img1" style="background-image:url('../../assets/images/background-attachment4.jpg') ">IMG4
+</section>
 <h2>background-attachment: fixed 实现滚动视差，去掉多余的文字</h2>
 <div class="main">
     <div class="inner">
-        <section class="g-img img1 img3" style="background-image:url('../assets/images/background-attachment1.jpg') ">
+        <section class="g-img img1 img3"
+                 style="background-image:url('../../assets/images/background-attachment1.jpg') ">
             IMG1
         </section>
-        <section class="g-img img1 img3" style="background-image:url('../assets/images/background-attachment2.jpg') ">
+        <section class="g-img img1 img3"
+                 style="background-image:url('../../assets/images/background-attachment2.jpg') ">
             IMG2
         </section>
-        <section class="g-img img1 img3" style="background-image:url('../assets/images/background-attachment3.jpg') ">
+        <section class="g-img img1 img3"
+                 style="background-image:url('../../assets/images/background-attachment3.jpg') ">
             IMG3
         </section>
-        <section class="g-img img1 img3" style="background-image:url('../assets/images/background-attachment4.jpg') ">
+        <section class="g-img img1 img3"
+                 style="background-image:url('../../assets/images/background-attachment4.jpg') ">
             IMG4
         </section>
     </div>
 </div>
 <h2>background-attachment: local 实现滚动视差</h2>
 <section class="g-word">Header</section>
-<section class="g-img img2" style="background-image:url('../assets/images/background-attachment1.jpg') ">IMG1</section>
+<section class="g-img img2" style="background-image:url('../../assets/images/background-attachment1.jpg') ">IMG1
+</section>
 <section class="g-word">Content1</section>
-<section class="g-img img2" style="background-image:url('../assets/images/background-attachment2.jpg') ">IMG2</section>
+<section class="g-img img2" style="background-image:url('../../assets/images/background-attachment2.jpg') ">IMG2
+</section>
 <section class="g-word">Content2</section>
-<section class="g-img img2" style="background-image:url('../assets/images/background-attachment3.jpg') ">IMG3</section>
+<section class="g-img img2" style="background-image:url('../../assets/images/background-attachment3.jpg') ">IMG3
+</section>
 <section class="g-word">Footer</section>
-<section class="g-img img2" style="background-image:url('../assets/images/background-attachment4.jpg') ">IMG4</section>
+<section class="g-img img2" style="background-image:url('../../assets/images/background-attachment4.jpg') ">IMG4
+</section>
 </body>
 </html>
 <!--

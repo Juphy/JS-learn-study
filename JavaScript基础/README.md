@@ -5,4 +5,4 @@
 - [封装ajax](./封装原生ajax.js)
 - [原生封装event](./发布-订阅模式event.js)
 - [浏览器性能优化](./浏览器性能优化.md)
-
+- [图片懒加载](./lazyload/lazyload.js)

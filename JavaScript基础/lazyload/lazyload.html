@@ -5,17 +5,38 @@
     <title>lazyload</title>
     <style>
         img {
-            width: 600px;
-            height: 400px;
+            width: 1200px;
+            height: 800px;
+            opacity: 0;
+        }
+
+        img.lazy_load {
+            opacity: 1;
+            transition: opacity 1s;
+        }
+
+        img[src=""], img:not([src]) {
+            opacity: 0;
         }
     </style>
 </head>
 <body>
-<img class="lazy_load" src="../../assets/images/loading.svg" data-src="../../assets/images/background-attachment1.jpg">
-<img class="lazy_load" src="../../assets/images/loading.svg" data-src="../../assets/images/background-attachment2.jpg">
-<img class="lazy_load" src="../../assets/images/loading.svg" data-src="../../assets/images/background-attachment3.jpg">
-<img class="lazy_load" src="../../assets/images/loading.svg" data-src="../../assets/images/background-attachment4.jpg">
-<img class="lazy_load" src="../../assets/images/loading.svg" data-src="../../assets/images/background-attachment5.jpg">
+<img lazyLoad
+     default-src="../../assets/images/loading.svg"
+     data-src="../../assets/images/background-attachment1.jpg">
+<img lazyLoad
+     data-src="../../assets/images/background-attachment2.jpg"
+     default-src="../../assets/images/loading.svg">
+<img lazyLoad
+     data-src="../../assets/images/background-attachment7.jpg">
+<img lazyLoad
+     data-src="../../assets/images/background-attachment4.jpg">
+<img lazyLoad
+     data-src="../../assets/images/background-attachment5.jpg"
+     default-src="../../assets/images/loading.svg">
 </body>
 </html>
 <script src="lazyload.js"></script>
+<script>
+    lazyLoad('../../assets/images/loading.svg');
+</script>
