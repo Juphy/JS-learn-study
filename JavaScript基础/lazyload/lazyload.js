@@ -2,7 +2,7 @@
 // default-src 还未加载真实图片时的展示，如果没有使用渐显的效果
 // data-src 真实图片的地址
 // offset 图片scroll多少需要加载，可正负
-let lazyLoad = function (url) {
+var lazyLoad = function (url) {
     let imgs = document.getElementsByTagName('img');
     // lazyLoad区分懒加载
     imgs = [...imgs].filter(item => {
@@ -51,7 +51,7 @@ let lazyLoad = function (url) {
         }
     };
 
-    // 防抖：让函数延迟执行
+    // 防抖：任务频繁触发时，只有在任务触发的间隔超过指定间隔的时候，任务才会执行。事件被触发n秒后在执行回调函数，如果在这n秒内又被触发，则重新记时。
     const debounce = function (fn, delay) {
         let timeout;
         return function () {
@@ -63,7 +63,7 @@ let lazyLoad = function (url) {
             }, delay);
         }
     };
-
+    // main();
     // window.addEventListener('scroll', debounce(main, 800));
 
     // 节流函数：直接将函数绑定在window的scroll事件上，当页面滚动时，函数会被高频触发，非常影响浏览器的性能。因此只允许一个函数在一段时间内只执行一次。
@@ -80,8 +80,9 @@ let lazyLoad = function (url) {
             } else {
                 // 没达到触发间隔，重新设定定时器
                 timeout = setTimeout(() => {
+                    console.log('节流');
                     fn.apply(context, args);
-                }, delay)
+                }, delay);
             }
         }
     };
@@ -89,4 +90,55 @@ let lazyLoad = function (url) {
     window.addEventListener('scroll', throttle(main, 500, 1000));
 };
 
+var debounce = function (fn, delay, flag) {
+    // flag控制初始触发
+    let timer;
+    return function () {
+        if (!timer && flag) {
+            fn.call(this, arguments);
+        }
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fn.apply(this, arguments);
+        }, delay);
+    }
+};
 
+var _debounce = function (fn, wait, immediate) {
+    var timer, args, context, timestamp, result;
+    var later = function () {
+        var last = new Date() - timestamp;
+        if (last >= wait) {
+            timer = null;
+            if (!immediate) {
+                result = fn.apply(context, args);
+            }
+        } else {
+            timer = setTimeout(later, wait - last);
+        }
+    };
+    return function () {
+        context = this;
+        args = arguments;
+        timestamp = new Date();
+        if (!timer) {
+            timer = setTimeout(later, wait);
+        }
+        if (immediate && !timer) {
+            // 立即触发
+            result = fn.apply(context, args);
+            context = args = null;
+        }
+        return result;
+    }
+};
+
+let fn = () => {
+    console.log(new Date());
+};
+
+window.addEventListener('scroll', _debounce(fn, 3000, true));
+
+function throttle(fn, delay) {
+
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>H5拖拽</title>
+    <style>
+        .box1, .box2, .box3 {
+            width: 198px;
+            height: 66px;
+            padding: 10px;
+            border: 1px solid #eee;
+            box-sizing: border-box;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h2>拖动图片</h2>
+</header>
+<div class="box1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<div class="img">
+    <img draggable="true" id="drag" ondragstart="drag(event)" src="../../assets/images/eg_dragdrop_w3school.gif">
+</div>
+<div class="box2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<header>
+    <h2>拖动文字</h2>
+</header>
+<div class="box3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<p id="drag1" draggable="true" ondragstart="drag(event)">
+    这是一段可移动的段落。请把该段落拖入上面的矩形。
+</p>
+
+<header>
+    <h2>默认拖放源</h2>
+</header>
+<input type="text" value="文字可拖动">
+<>
+<img src="../../assets/images/eg_dragdrop_w3school.gif">
+<a href="#">链接可拖动</a>
+<div>元素不可拖动</div>
+<div draggable="true" style="height: 20px;width: 100px;background: skyblue"></div>
+</body>
+</html>
+<script>
+    let allowDrop = function (e) {
+        e.preventDefault();
+    };
+
+    // 拖动前触发
+    let drag = function (e) {
+        // 相当于存储数据
+        e.dataTransfer.setData('Text', e.target.id); // 设置被拖动的数据的数据类型和值
+    };
+
+    let drop = function (e) {
+        e.preventDefault(); // 避免默认处理（drop事件的默认处理是以链接形式打开）
+        let data = e.dataTransfer.getData('Text'); // 获取被拖动的数据，该方法将返回setData()方法中设置为相同类型的任何数据。
+        e.target.appendChild(document.getElementById(data)); // 将被拖动的数据追加到放置元素（目标元素）中
+    }
+</script>
