@@ -80,7 +80,6 @@ var lazyLoad = function (url) {
             } else {
                 // 没达到触发间隔，重新设定定时器
                 timeout = setTimeout(() => {
-                    console.log('节流');
                     fn.apply(context, args);
                 }, delay);
             }
@@ -90,55 +89,4 @@ var lazyLoad = function (url) {
     window.addEventListener('scroll', throttle(main, 500, 1000));
 };
 
-var debounce = function (fn, delay, flag) {
-    // flag控制初始触发
-    let timer;
-    return function () {
-        if (!timer && flag) {
-            fn.call(this, arguments);
-        }
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            fn.apply(this, arguments);
-        }, delay);
-    }
-};
 
-var _debounce = function (fn, wait, immediate) {
-    var timer, args, context, timestamp, result;
-    var later = function () {
-        var last = new Date() - timestamp;
-        if (last >= wait) {
-            timer = null;
-            if (!immediate) {
-                result = fn.apply(context, args);
-            }
-        } else {
-            timer = setTimeout(later, wait - last);
-        }
-    };
-    return function () {
-        context = this;
-        args = arguments;
-        timestamp = new Date();
-        if (!timer) {
-            timer = setTimeout(later, wait);
-        }
-        if (immediate && !timer) {
-            // 立即触发
-            result = fn.apply(context, args);
-            context = args = null;
-        }
-        return result;
-    }
-};
-
-let fn = () => {
-    console.log(new Date());
-};
-
-window.addEventListener('scroll', _debounce(fn, 3000, true));
-
-function throttle(fn, delay) {
-
-}
