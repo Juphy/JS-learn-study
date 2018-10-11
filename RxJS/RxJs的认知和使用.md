@@ -39,3 +39,4 @@ mapTo实现流的转化，merge将流合并，然后scan将数据累加
 
 ![合并流](http://ww1.sinaimg.cn/large/8b2b1aafly1fw4gnoqga2g20a7063myb.gif)
 
+http://anata.me/2018/02/28/RxJS%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/
