@@ -2,12 +2,16 @@ let debounce = function (fn, delay, flag) {
     // flag控制初始触发
     let timer;
     return function () {
-        if (!timer && flag) {
+        clearTimeout(timer);
+        if (flag && !timer) {
             fn.apply(this, arguments);
         }
-        clearTimeout(timer);
         timer = setTimeout(() => {
-            fn.apply(this, arguments);
+            if (!flag) {
+                fn.apply(this, arguments);
+            } else {
+                timer = null;
+            }
         }, delay);
     }
 };
@@ -41,7 +45,8 @@ let _debounce = function (fn, delay, flag) {
     }
 };
 
-function throttle(fn, delay) {
+// options={leading: true, trailing: true}
+function throttle(fn, delay, options) {
     let timer, start_time = new Date();
     return function () {
         let cur_time = new Date(), last = cur_time - start_time;
@@ -51,10 +56,16 @@ function throttle(fn, delay) {
             fn.apply(this, arguments);
             start_time = cur_time;
         } else {
-            timer = setTimeout(() => {
+            if (!timer && options.leading) {
                 fn.apply(this, arguments);
+                options.leading = false;
                 start_time = cur_time;
-            }, delay - last)
+            }
+            if (options.trailing) {
+                timer = setTimeout(() => {
+                    fn.apply(this, arguments);
+                }, delay - last);
+            }
         }
     }
 }
@@ -62,7 +73,7 @@ function throttle(fn, delay) {
 function _throttle(fn, delay, options = {}) {
     /*
     * options{leading: [false,true]} 是否马上触发（否：等待delay后才第一次触发）
-    * options{trailing: [false,true]} 是否马上触发
+    * options{trailing: [false,true]} 最后一次是否触发
     * */
     var timer, context, args, result;
     var previous = 0; // 上次执行的时间点
@@ -101,6 +112,6 @@ let fn = () => {
     console.log(new Date());
 };
 
-// window.addEventListener('scroll', _debounce(fn, 1000, false));
+window.addEventListener('scroll', _debounce(fn, 3000, true));
 
-window.addEventListener('scroll', _throttle(fn, 1000));
+// window.addEventListener('scroll', throttle(fn, 3000, {leading: false, trailing: true}));
