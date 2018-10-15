@@ -46,7 +46,7 @@ var lazyLoad = function (url) {
                 // 将图片地址的真是地址放在自定义属性上
                 imgs[i].src = imgs[i].getAttribute('data-src');
                 imgs[i].className = imgs[i].className + ' lazy_load'; //class="lazy_load" {opacity: 1, transition: opacity 1s}
-                n = i + 1;
+                n++;
             }
         }
     };

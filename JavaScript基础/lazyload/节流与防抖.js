@@ -10,7 +10,7 @@ let debounce = function (fn, delay, flag) {
             if (!flag) {
                 fn.apply(this, arguments);
             } else {
-                timer = null;
+                timer = null; // 将timer清掉，以便下次使用，存在bug如果两次操作的间隔小于delay，会导致flag=true的效果不会触发
             }
         }, delay);
     }
@@ -64,6 +64,7 @@ function throttle(fn, delay, options) {
             if (options.trailing) {
                 timer = setTimeout(() => {
                     fn.apply(this, arguments);
+                    start_time = new Date();
                 }, delay - last);
             }
         }
@@ -112,6 +113,6 @@ let fn = () => {
     console.log(new Date());
 };
 
-window.addEventListener('scroll', _debounce(fn, 3000, true));
+// window.addEventListener('scroll', _debounce(fn, 3000, true));
 
-// window.addEventListener('scroll', throttle(fn, 3000, {leading: false, trailing: true}));
+window.addEventListener('scroll', throttle(fn, 3000, {leading: true, trailing: true}));
