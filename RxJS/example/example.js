@@ -47,4 +47,24 @@ mouseDown
     .subscribe(pos => {
         dragDOM.style.left = pos.x + 'px';
         dragDOM.style.top = pos.y + 'px';
-    })
+    });
+
+var observable = Rx.Observable.create(observer => {
+    observer.next(1);
+    observer.next(2);
+    observer.next(3);
+    observer.next(4);
+    setTimeout(() => {
+        observer.next(4);
+        observer.complete();
+    }, 1000);
+});
+
+console.log('just before subscribe');
+observable.subscribe({
+    next: x => console.log('Got value ' + x),
+    error: err => console.log('something wrong occurred: ' + err),
+    complete: () => console.log('done')
+});
+
+console.log('just after subscribe');
