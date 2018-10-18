@@ -2,7 +2,7 @@
 // default-src 还未加载真实图片时的展示，如果没有使用渐显的效果
 // data-src 真实图片的地址
 // offset 图片scroll多少需要加载，可正负
-var lazyLoad = function (url) {
+var lazyLoad = function (url = '../../assets/images/loading.svg') {
     let imgs = document.getElementsByTagName('img');
     // lazyLoad区分懒加载
     imgs = [...imgs].filter(item => {
@@ -88,5 +88,4 @@ var lazyLoad = function (url) {
     main(); // 页面加载完毕可视区域的图片
     window.addEventListener('scroll', throttle(main, 500, 1000));
 };
-
 

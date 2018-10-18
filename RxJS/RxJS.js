@@ -232,7 +232,11 @@ let stream$ = Rx.Observable.create(observer => {
     let timer = setInterval(() => {
         console.log('setInterval');
         observer.next(i++);
-    }, 1000)
+    }, 1000);
+
+    return function () {
+        clearInterval(timer);
+    }
 });
 
 let subscription = stream$.subscribe(v => {
@@ -241,4 +245,4 @@ let subscription = stream$.subscribe(v => {
 
 setTimeout(() => {
     subscription.unsubscribe();
-}, 3000);
+}, 4000);

@@ -116,3 +116,4 @@ let fn = () => {
 // window.addEventListener('scroll', _debounce(fn, 3000, true));
 
 window.addEventListener('scroll', throttle(fn, 3000, {leading: true, trailing: true}));
+

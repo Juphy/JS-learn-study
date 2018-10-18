@@ -1,6 +1,6 @@
 var btn = document.getElementById('btn');
 
-// 创建流
+// 创建事件流
 Rx.Observable.fromEvent(btn, 'click')
 // .map(e => 1)
 // .scan((a, b) => a + b)
@@ -35,7 +35,7 @@ Rx.Observable.fromEvent(document.querySelector('#btn1'), 'click')
         console.log(v);
     });
 
-
+// 简单拖拽
 let dragDOM = document.getElementById('drag'), body = document.body;
 let mouseDown = Rx.Observable.fromEvent(dragDOM, 'mousedown');
 let mouseUp = Rx.Observable.fromEvent(body, 'mouseup');
@@ -49,6 +49,7 @@ mouseDown
         dragDOM.style.top = pos.y + 'px';
     });
 
+// 创建数据流
 var observable = Rx.Observable.create(observer => {
     observer.next(1);
     observer.next(2);
@@ -68,3 +69,21 @@ observable.subscribe({
 });
 
 console.log('just after subscribe');
+
+// 取消订阅返回函数可以处理清理定时器
+let stream$ = new Rx.Observable.create((observer) => {
+    let i = 0;
+    let id = setInterval(() => {
+        observer.next(i++);
+    }, 1000)
+    // 返回了一个清理函数
+    return function () {
+        clearInterval(id);
+    }
+})
+let subscription = stream$.subscribe((value) => {
+    console.log('Value', value)
+});
+setTimeout(() => {
+    subscription.unsubscribe() // 在这我们调用了清理函数
+}, 3000)

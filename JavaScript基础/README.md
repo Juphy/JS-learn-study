@@ -6,3 +6,4 @@
 - [原生封装event](./example/发布-订阅模式event.js)
 - [浏览器性能优化](./浏览器性能优化.md)
 - [图片懒加载](./lazyload/lazyload.js)
+- [防抖与节流](./lazyload/防抖与节流.md)

@@ -74,7 +74,7 @@
     })
 </script>
 <script>
-    // var input = Rx.Observable.fromEvent(document.querySelector('input'), 'input');
+    var input = Rx.Observable.fromEvent(document.querySelector('input'), 'input');
     // input.filter(event => event.target.value.length > 2)
     //     .map(event => event.target.value)
     //     .subscribe(res => {
@@ -98,11 +98,11 @@
     //     .map(event => event.target.value)
     //     .subscribe(value => console.log(value));
     // // 在三次事件后停止事件流
-    // input.take(3)
-    //     .map(event => event.target.value)
-    //     .subscribe(value => {
-    //         console.log(value);
-    //     })
+    input.take(3)
+        .map(event => event.target.value)
+        .subscribe(value => {
+            console.log('333333', value);
+        })
     // // 停止输入后200ms方能通过最新的那个事件
     // input.debounceTime(200)
     //     .map(event => event.target.value)
@@ -111,7 +111,7 @@
     //     })
 </script>
 <script>
-    let input = Rx.Observable.fromEvent(document.querySelector('input'), 'input');
+    var input = Rx.Observable.fromEvent(document.querySelector('input'), 'input');
     // // 产生值
     // // 输入“hello world”
     //

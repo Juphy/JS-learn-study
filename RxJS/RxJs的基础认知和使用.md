@@ -78,12 +78,48 @@ example: ----(123)----(123)-------
 
 
 ### takeUntil
-mousedown的时候监听mousemove,然后mouseup时候停止监听:
+mousedown的时候监听mouseMove,然后mouseup时候停止监听mouseMove:
 ```
 mouseDown.map(event => mouseMove.takeUntil(mouseUp))
 ```
 
-### Observer产生流
+### unsubscribe
+虽然取消了订阅，但是开启的setInterval定时器并不会自动清理，我们需要自己返回一个清理函数。
+
+```
+let stream$ = Rx.Observable.create(observer => {
+    let i=0;
+    let timer = setInterval(()=>{
+        console.log('interval');
+        observer.next(i++);
+    }, 1000);
+
+    return function(){
+        clearInterval(timer);
+    }
+});
+
+let subscription = stream$.subscribe(v=>{
+    console.log(v);
+})
+
+setTimeout(() =>{
+    subscription.unsubscribe();
+}, 4000)
+
+```
+
+### switchMap
+能取消上一个已无用的请求，只保留最后的请求结果流，这样就确保处理展示的是最后的搜索的结果。
+
+### debounceTime
+表示经过n毫秒后，没有流入新值，那么才将值转入下一个环节
+
+### delay
+表示延迟多少秒之后触发
+
+### take(n)
+记录事件触发的个数小于等于n时，触发的事件。
 
 
 http://anata.me/2018/02/28/RxJS%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/
