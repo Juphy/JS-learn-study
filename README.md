@@ -7,5 +7,6 @@
 - [linux相关问题](./linux/README.md)
 - [JavaScript基础](./JavaScript基础/README.md)
 - [JavaScript进阶](./JavaScript进阶/README.md)
+- [python](./python/README.md)
 
 以上部分内容已经梳理至  [挽留之王小石](http://blog.juphy.cn)
