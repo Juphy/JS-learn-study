@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        label {
+            display: inline-block;
+            width: 48px;
+        }
+
+        div {
+            margin: 12px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <label>key:</label><input class="key" type="text">
+        <label>value:</label><input class="value" type="text">
+    </div>
+    <div>
+        <label>key:</label><input class="key" type="text">
+        <label>value:</label><input class="value" type="text">
+    </div>
+    <div>
+        <label>key:</label><input class="key" type="text">
+        <label>value:</label><input class="value" type="text">
+    </div>
+    <div>
+        <label>key:</label><input class="key" type="text">
+        <label>value:</label><input class="value" type="text">
+    </div>
+    <div>
+        <label>key:</label><input class="key" type="text">
+        <label>value:</label><input class="value" type="text">
+    </div>
+    <div>
+        <label>api:</label><input id="api" type="text">
+    </div>
+    <button onclick="submit_get()">GET</button>
+    <button onclick="submit_post()">POST</button>
+</body>
+
+</html>
+<script src="../../../node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    let key = document.querySelectorAll('.key');
+    let value = document.querySelectorAll('.value');
+    let api = document.querySelector('#api');
+    let URL = 'http://localhost:5757/weapp/';
+    let submit_get = function () {
+        let str = '?', obj = {};
+        [...key].forEach((item, index) => {
+            if (item.value) {
+                obj[item.value] = value[index].value;
+                str += item.value + '=' + value[index].value + '&';
+            }
+        });
+        if (str === '?') str = '';
+        str = str.slice(0, -1);
+        console.log(obj);
+        $.post(URL+api.value, obj);
+    };
+    let submit_post = function () {
+
+    }
+</script>

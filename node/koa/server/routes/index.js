@@ -14,6 +14,8 @@ let routes = tables.reduce((obj, key) => {
     return obj;
 }, []);
 
+console.log(routes);
+
 routes.forEach(item => {
     const service = require(`../controllers/${item.service}`);
     methods.forEach(method => {

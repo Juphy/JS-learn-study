@@ -21,7 +21,7 @@ const user = sequelize.define('users', {
     }
 }, {
     timestamps: false,
-    tableName: 'ads',
+    tableName: 'admins',
     freezeTableName: true
 });
 user.sync().then(() => {
