@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>小标签</title>
+    <style>
+        div {
+            position: relative;
+            width: 80px;
+            height: 28px;
+            border: 1px solid #999;
+            margin-left: 24px;
+            border-left: none;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            padding-left: 6px;
+        }
+
+        div:before {
+            position: absolute;
+            left: -30px;
+            top: -1px;
+            width: 0;
+            height: 0;
+            content: "";
+            border: 15px solid transparent;
+            border-right-color: #999;
+        }
+
+        div:after {
+            position: absolute;
+            left: -28px;
+            top: 0px;
+            width: 0;
+            height: 0;
+            content: "";
+            border: 14px solid transparent;
+            border-right-color: #fff;
+        }
+
+        span {
+            display: inline-block;
+            line-height: 28px;
+        }
+
+        .bot {
+            position: absolute;
+            left: -8px;
+            top: 12px;
+            border: 1px solid #999;
+            border-radius: 2px;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            z-index: 9;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <span class="bot"></span>
+        <span>标签</span>
+    </div>
+</body>
+
+</html>
