@@ -7,7 +7,7 @@
 > 使用npm
 
 ```
-npm instal xlsx
+npm install xlsx
 ```
 > 老版本浏览器
 
