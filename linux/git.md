@@ -12,7 +12,19 @@
 - git remote set-url 原连接名 新的连接  修改连接地址
 - git config --list 查看所有的config配置
 
-- error: GH007:Your push would publish a private email address.
+- error: GH007:Your push would publish a private email address. 
+
   由于设置邮箱为隐私邮箱，解决方法：
   - 1.在github上的settings=>Emails=>Keep my email address private去掉勾选
   - 2.命令行中配置邮箱为 username@users.noreply.github.com   `git config --global user.email 'username@users.noreply.github.com'`
+
+- ssh: connect to host `gitlab.huayingjuhe.com` port 22: Connection timed out
+fatal: Could not read from remote repository.
+
+原因可能是防火墙修改，导致网路无法连接。如果是超时这种情况使用http协议而不是ssh这种方式，只需要将配置文件的url更改为http。
+
+  - ssh -T git@github.com  检查网络连接
+  - git config --local -e 直接修改git的配置文件，将url=git@github.com:username/repo.git修改为url=`https://github.com/username/repo.git`
+  - git config --global url."http://github.com/".insteadOf git@github.com:
+
+  
