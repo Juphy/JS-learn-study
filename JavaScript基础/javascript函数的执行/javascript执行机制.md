@@ -33,4 +33,8 @@ javascript运行时包含一个消息队列，它是要处理的消息列表以�
 
 Browser Web APIs-threads created by browser implemented in C++ to handle async events like DOM events, http request, setTimeout, etc.
 
-这些WebAPI本身不能将执行代码放到堆栈上，如果确实如此，那么它会随机出现在代码的中间。任何WebAPI在完成执行后将回调推送到此队列。现在，Event Loop负责在队列
+这些WebAPI本身不能将执行代码放到堆栈上，如果确实如此，那么它会随机出现在代码的中间。任何WebAPI在完成执行后将回调推送到此队列。现在，Event Loop负责在队列。
+
+
+
+
