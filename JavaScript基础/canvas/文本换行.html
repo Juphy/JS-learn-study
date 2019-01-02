@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>canvas文字换行</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="380" height="200"></canvas>
+    <script type="text/javascript">
+        let canvas = document.getElementById('canvas');
+        let textAutoLine = function (text, canvas, initX, initY, lineHeight) {
+            let ctx = canvas.getContext('2d');
+            // 等同于css的font
+            ctx.font = 'bold 18px Miscrosoft Yahei';
+            // 初始化一行字体的宽度为0
+            let lineWidth = 0;
+            let canvasWidth = canvas.width;
+            // 初始化截取位置为0
+            let lastSubStrIndex = 0;
+            for (let i = 0; i < text.length; i++) {
+                lineWidth += ctx.measureText(text[i]).width;
+                if (lineWidth > canvasWidth - (initX + 18)) {
+                    ctx.strokeText(text.slice(lastSubStrIndex, i), initX, initY);
+                    initY += lineHeight;
+                    lineWidth = 0;
+                    lastSubStrIndex = i;
+                }
+                if (i === text.length - 1) { // 处理最后一行文字
+                    ctx.strokeText(text.slice(lastSubStrIndex, i + 1), initX, initY);
+                }
+            }
+        }
+        textAutoLine('注意: 下面这种设计模式并不推荐用来实现redis分布式锁。应该参考the Redlock algorithm的实现，因为这个方法只是复杂一点，但是却能保证更好的使用效果。', canvas, 0, 24, 24);
+    </script>
+</body>
+
+</html>
