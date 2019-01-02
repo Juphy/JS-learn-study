@@ -68,7 +68,6 @@ Event Loop是实现异步的一种机制，一般而言，操作分为：发出�
 
 ### Event Loop
 事件驱动的的实现过程主要靠事件循环完成。进程启动后就进入主循环。主循环的过程就是不停的从事件队列里读取事件。如果事件有关联的handle(也就是注册的callback)，就执行handle。一个事件并不一定有callback。
-
 ![event loop](https://ws1.sinaimg.cn/large/8b2b1aafly1fymawsf734j20gp0endg6.jpg)
 
 主线程运行的时候，产生堆（heap）和栈（stack），栈中的代码调用各种外部API，它们在"任务队列"中加入各种事件（click，load，done）。只要栈中的代码执行完毕，主线程就会去读取"任务队列"，依次执行那些事件所对应的回调函数。
@@ -84,6 +83,7 @@ setTimeout()只是将事件插入了"任务队列"，必须等到当前代码（
 
 ### nodejs的event loop
 ![event loop](https://ws1.sinaimg.cn/large/8b2b1aafly1fymbetug3wj20m808saad.jpg)
+
 只有磁盘IO操作才用到了线程池（unix）。
 Node中，磁盘I/O的异步操作步骤如下：
 - 将调用封装成中间对象，交给event loop，然后直接返回
@@ -98,7 +98,7 @@ Node中，磁盘I/O的异步操作步骤如下：
 
 > setImmediate 
 
-在当前"任务队列"的尾部添加事件，也就是说，它指定的任务总是在下一次Event Loop时执行，这与setTimeout(fn, 0)很像。虽然两者都是在下一次Event Loop触发，但是那个回调先执行是不确定。[详见](./定时器.js)
+在当前"任务队列"的尾部添加事件，也就是说，它指定的任务总是在下一次Event Loop时执行，这与setTimeout(fn, 0)很像。虽然两者都是在下一次Event Loop触发，但是那个回调先执行是不确定。[详见代码](./定时器.js)
 
 使用事件驱动的系统中，必然有非常非常多的事件。如果事件都产生，都要主循环去处理，必然会导致主线程繁忙。那对于应用层的代码而言，肯定有很多不关心的事件（比如只关心点击事件，不关心定时器事件）。这会导致一定浪费。因此，还有一个watcher，观察者。事实上，不是所有的事件都放置在一个队列里。不同的事件，放置在不同的队列。
 
@@ -110,6 +110,7 @@ Node中，磁盘I/O的异步操作步骤如下：
 > micro-task（微任务）：Promise，process.nextTick
 
 ![event_loop](https://ws1.sinaimg.cn/large/8b2b1aafly1fyma0l75shj20m80ia793.jpg)
+
 JS的执行机制：
 - 执行一个宏任务，过程中如果遇到微任务，就将其放到微任务的事件队列里
 - 当前宏任务执行完成后，会查看微任务的事件队列，并将里面全部的微任务依次执行完
@@ -132,6 +133,6 @@ JS的执行机制：
 ```
 首先执行script下的宏任务，遇到setTimeout，将其放到宏任务的【队列】里，遇到new Promise直接执行，打印；遇到then方法，是微任务，将其放到微任务的【队列】里，打印；本轮宏任务执行完毕，查看本轮的微任务，发现有一个then方法里的函数，打印；至此，本轮的event loop全部完成。下一轮的循环里，先执行一个宏任务，发现宏任务的【队列】里有一个setTimeout里的函数，打印。
 
-
+[详见代码](./await和promise.js)
 
 
