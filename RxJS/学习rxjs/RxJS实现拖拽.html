@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RxJS小球拖动</title>
+    <style>
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 2000px;
+            background-color: tomato;
+        }
+
+        #anchor {
+            height: 360px;
+            width: 100%;
+            background-color: #F0F0F0;
+        }
+
+        .video {
+            width: 640px;
+            height: 360px;
+            margin: 0 auto;
+            background-color: black;
+        }
+
+        .video.video-fixed {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            width: 320px;
+            height: 150px;
+            cursor: all-scroll;
+        }
+
+        /*.video.video-fixed.masker {*/
+        /*display: none;*/
+        /*}*/
+
+        /*.video.video-fixed:hover .masker {*/
+        /*display: block;*/
+        /*position: absolute;*/
+        /*width: 100%;*/
+        /*height: 180px;*/
+        /*background-color: rgba(0, 0, 0, 0.8);*/
+        /*z-index: 2;*/
+        /*}*/
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.12/Rx.js"></script>
+</head>
+<body>
+<div id="anchor">
+    <div class="video" id="video">
+        <!--<div class="masker"></div>-->
+        <video width="100%" controls>
+            <source src="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.ogg"
+                    type="video/ogg">
+        </video>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var anchor = document.getElementById('anchor'),
+        video = document.getElementById('video');
+    var scroll$ = Rx.Observable.fromEvent(document, 'scroll'),
+        mouseDown$ = Rx.Observable.fromEvent(video, 'mousedown'),
+        mouseMove$ = Rx.Observable.fromEvent(document, 'mousemove'),
+        mouseUp$ = Rx.Observable.fromEvent(document, 'mouseup');
+    const validValue = (value, max, min) => {
+        return Math.min(Math.max(value, min), max)
+    };
+    scroll$.map(e => anchor.getBoundingClientRect().bottom < 0)
+        .subscribe(flag => {
+            if (flag) {
+                video.classList.add('video-fixed');
+            } else {
+                video.classList.remove('video-fixed');
+            }
+        });
+    mouseDown$.filter(e => video.classList.contains('video-fixed'))
+        .map(e => mouseMove$.takeUntil(mouseUp$))
+        .concatAll()
+        .withLatestFrom(mouseDown$, (move, down) => {
+            return {
+                x: validValue(move.clientX - down.offsetX, (document.documentElement.scrollWidth || document.body.scrollWidth) - video.getBoundingClientRect().width, 0),
+                y: validValue(move.clientY - down.offsetY, window.innerHeight - video.getBoundingClientRect().height, 0)
+            }
+        })
+        .subscribe(pos => {
+            video.style.left = pos.x + 'px';
+            video.style.top = pos.y + 'px';
+        })
+</script>

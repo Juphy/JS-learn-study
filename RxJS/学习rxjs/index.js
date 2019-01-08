@@ -255,8 +255,8 @@ function IteratorFromArray(arr) {
 
 IteratorFromArray.prototype.next = function () {
     return this._cursor < this._array.length ?
-        { value: this._array[this._cursor++], done: false } :
-        { value: undefined, done: true }
+        {value: this._array[this._cursor++], done: false} :
+        {value: undefined, done: true}
 }
 
 class Iterator {
@@ -267,15 +267,15 @@ class Iterator {
 
     next() {
         return this._cursor < this._array.length ?
-            { value: this._array[this._cursor++], done: false } :
-            { value: undefined, done: true }
+            {value: this._array[this._cursor++], done: false} :
+            {value: undefined, done: true}
     }
 
     map(callback) {
         const iterator = new Iterator(this._array);
         return {
             next: () => {
-                const { done, value } = iterator.next();
+                const {done, value} = iterator.next();
                 return {
                     done: done,
                     value: done ? undefined : callback(value)
@@ -301,6 +301,7 @@ function* getNumbers(words) {
         }
     }
 }
+
 let iterator1 = getNumbers('10填阿萨德23按时1');
 console.log(iterator1.next());
 console.log(iterator1.next());
@@ -364,26 +365,26 @@ source.subscribe({
 })
 egghead.notify('hello! Can you hear me?');
 
-var source = Rx.Observable.interval(1000);
-
-source.subscribe({
-    next: function (value) {
-        console.log(value)
-    },
-    complete: function () {
-        console.log('complete!');
-    },
-    error: function (error) {
-        console.log('Throw Error: ' + error)
-    }
-});
+// var source = Rx.Observable.interval(1000);
+//
+// source.subscribe({
+//     next: function (value) {
+//         console.log(value)
+//     },
+//     complete: function () {
+//         console.log('complete!');
+//     },
+//     error: function (error) {
+//         console.log('Throw Error: ' + error)
+//     }
+// });
 
 Rx.Observable.map = function (callback) {
     return Rx.Observable.create(observer => {
-        return this.subscribe(
+        return this.subscribe( // 先subscribe在进行修改
             value => {
                 try {
-                    observer.next(callback(item))
+                    observer.next(callback(value))
                 } catch (e) {
                     observer.error(e);
                 }
@@ -400,3 +401,68 @@ Rx.Observable.map = function (callback) {
 var people = Rx.Observable.of('Tom', 'Jerry');
 var hello_people = people.map(i => 'hello' + i);
 hello_people.subscribe(console.log);
+
+function map(callback) {
+    return Rx.Observable.create((observer) => {
+        return this.subscribe((value) => { // 先拿到，再发布
+            try {
+                observer.next(callback(value));
+            } catch (e) {
+                observer.error(e)
+            }
+        }, (err) => {
+            observer.error(err);
+        }, () => {
+            observer.complete();
+        })
+    })
+}
+
+Rx.Observable.prototype.map = map;
+var people = Rx.Observable.of("Jerry", "Anna");
+var helloPeople = people.map(item => item + " Hello~");
+helloPeople.subscribe(console.log);
+
+var obs1 = Rx.Observable.interval(1000).take(5);
+var obs2 = Rx.Observable.interval(500).take(2);
+var obs3 = Rx.Observable.interval(800).take(1);
+var source = Rx.Observable.of(obs1, obs2, obs3);
+var example = source.concatAll();
+example.subscribe({
+    next: value => {
+        console.log(value)
+    },
+    error: err => {
+        console.log(err)
+    },
+    complete: () => {
+        console.log('complete')
+    }
+})
+
+Rx.Observable.interval(500).take(3)
+    .merge(Rx.Observable.interval(300).take(6))
+    .subscribe(res => {
+        console.log(res);
+    }, err => {
+        console.log(err);
+    }, () => {
+        console.log("complete");
+    });
+Rx.Observable.interval(500).take(5)
+    .zip(Rx.Observable.interval(300).take(6), (x, y) => x + y)
+    .subscribe(res => {
+        console.log(`【${res}】`);
+    });
+Rx.Observable.from("hello")
+    .zip(Rx.Observable.interval(1000), (x, y) => x)
+    .subscribe(res => {
+        console.log(res);
+    });
+
+Rx.Observable.from('hello')
+    .zip(Rx.Observable.interval(2000), (x, y) => x)
+    .scan((origin, next) => origin + next, '')
+    .subscribe(res => {
+        console.log(res);
+    })
