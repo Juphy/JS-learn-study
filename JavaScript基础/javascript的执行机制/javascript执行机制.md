@@ -96,7 +96,7 @@ Node中，磁盘I/O的异步操作步骤如下：
 
 在当前“执行栈”的尾部及下一次event loop（主线程读取“任务队列”）之前，触发函数。如果有多个process.nextTick（不管他们是否嵌套），将全部在当前“执行栈”执行完后执行。process.nextTick嵌套时，外层先执行，内层后执行。
 
-> setImmediate 
+> setImmediate
 
 在当前"任务队列"的尾部添加事件，也就是说，它指定的任务总是在下一次Event Loop时执行，这与setTimeout(fn, 0)很像。虽然两者都是在下一次Event Loop触发，但是那个回调先执行是不确定。[详见代码](./定时器.js)
 
@@ -107,7 +107,11 @@ Node中，磁盘I/O的异步操作步骤如下：
 ### 执行机制
 > macro-task（宏任务）：包括整体代码script，setTimeout，setInterval，async
 
-> micro-task（微任务）：Promise，process.nextTick
+> micro-task（微任务）：Promise，process.nextTick（当前loop宏任务结束之后最先执行，先于promise的then执行）
+
+> async中的await fn().then()此处相当于promise的then，在这之后的代码是在本次loop的最后执行。
+
+因此代码整体的运行顺序，script(主程序代码，new Promise(……)，async函数的await之前的部分)—> process.nextTick—>promise().then—>async function(){await fn();……}省略号处的代码—>setTimeout/setInterval
 
 ![event_loop](https://ws1.sinaimg.cn/large/8b2b1aafly1fyma0l75shj20m80ia793.jpg)
 
@@ -119,7 +123,7 @@ JS的执行机制：
  setTimeout(function(){
      console.log('定时器开始啦')
  });
- 
+
  new Promise(function(resolve){
      console.log('马上执行for循环啦');
      for(var i = 0; i < 10000; i++){
@@ -128,7 +132,7 @@ JS的执行机制：
  }).then(function(){
      console.log('执行then函数啦')
  });
- 
+
  console.log('代码执行结束');
 ```
 首先执行script下的宏任务，遇到setTimeout，将其放到宏任务的【队列】里，遇到new Promise直接执行，打印；遇到then方法，是微任务，将其放到微任务的【队列】里，打印；本轮宏任务执行完毕，查看本轮的微任务，发现有一个then方法里的函数，打印；至此，本轮的event loop全部完成。下一轮的循环里，先执行一个宏任务，发现宏任务的【队列】里有一个setTimeout里的函数，打印。
