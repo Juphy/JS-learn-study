@@ -73,7 +73,7 @@ constructor(){
         const json = XLSX.utils.sheet_to_json(sheet);
     }
 
-    this.header.onloadend = () =>{
+    this.reader.onloadend = () =>{
 
     }
 }
