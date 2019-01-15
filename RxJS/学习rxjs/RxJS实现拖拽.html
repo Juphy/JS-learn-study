@@ -98,3 +98,24 @@
             video.style.top = pos.y + 'px';
         })
 </script>
+<script>
+    var click = Rx.Observable.fromEvent(document.body, 'click'),
+        source = click.map(e => Rx.Observable.interval(1000));
+    source.switch().subscribe(res => {
+        console.log(res);
+    }, err => {
+        console.log(err);
+    }, () => {
+        console.log('complete');
+    })
+</script>
+<script>
+    let getPostData = () => {
+        return fetch('https://jsonplaceholder.typicode.com/posts/1').then(res => res.json());
+    };
+    Rx.Observable.fromEvent(document.body, 'click')
+        .mergeMap(e => getPostData(), (e, res, eIndex, resIndex) => res, 3)
+        .subscribe(res => {
+            console.log(res);
+        })
+</script>

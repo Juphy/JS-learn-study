@@ -1,0 +1,26 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="autocomplete">
+        <input type="search" class="input" id="search" autocomplete="off">
+        <ul id="suggest-list" class="suggest"></ul>
+    </div>
+</body>
+
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.12/Rx.js"></script>
+<script>
+    const url = 'https://zh.wikipedia.org/w/api.php?action=opensearch&format=json&limit=5&origin=*';
+    const getSuggestList = (keyword) => fetch(url + '&search=' + keyword, { method: 'GET', mode: 'cors' })
+        .then(res => res.json());
+    let searchInput = document.getElementById('search'), suggestList = document.getElementById('suggest-list');
+    let keyword$ = Rx.Observable.fromEvent(searchInput, 'input'), select$ = Rx.Observable.fromEvent(suggestList, 'click');
+    keyword$.switchMap(e => getSuggestList(e.target.value))
+        .subscribe(console.log)
+</script>

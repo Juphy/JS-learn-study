@@ -325,7 +325,7 @@ Rx.Observable.from(['a', 'b', 'c', 'd', 2, 's'])
 ```
 var source = Rx.Observable.from(['a','b','c','d',2])
             .zip(Rx.Observable.interval(500), (x,y) => x)
-            .map(x => x.toUpperCase()); 
+            .map(x => x.toUpperCase());
             // 通常 source 會是建立即時同步的連線，像是 web socket
 
 var example = source.catch(
@@ -335,3 +335,77 @@ var example = source.catch(
                  );
 模仿在即时同步断线时，利用catch返回一个新的observable。
 ```
+- concatAll：使用时最重要的一点就是先处理完上一个observable，才会处理下一个observable
+```
+var click = Rx.Observable.fromEvent(document.body, 'click');
+var source = click.map(e => Rx.Observable.interval(1000));
+var example = source.concatAll();
+由于concatAll()会一个一个处理，一定是等前一个observable完成（complete）才会处理下一个observable，因为前一个observable是无限的，导致不会处理第二个。
+```
+- switch：同样是把二维的observable转为一维。在新的observable送出后直接处理新的observable，不管前一个observable是否完成，每当有新的observable就会直接把旧的observable退订，永远只有最新的observable。
+- mergeAll：把二维的observable转为一维的，并且能够同时处理所有的observable。mergeAll(number)数值代表可以同时处理observable的数量。如果传入的数字是1，就和concatAll()的效果一样。
+```
+Rx.Observable.from(document.body, 'click')
+             .map(e => Rx.Observable.interval(1000))
+             .mergeAll()
+             .subscribe(res =>{
+                console.log(res);
+             })
+  click: ----c-c-----------c---
+        map(e => Rx.Observable.interval(1000))
+ source: ----o-o-----------o---
+              \ \           \ ---0---1---
+               \ ---0---1---2---
+                ---0---1---2---
+                switch()
+example: ------------00---11---22---33---(04)4--
+```
+- concatMap：map+concatAll
+```
+Rx.Observable.fromEvent(document.body, 'click')
+             .map(e => Rx.Observable.interval(1000).take(3))
+             .concatAll();
+===>
+Rx.Observable.fromEvent(document.body, 'click')
+             .concatMap(e => Rx.Observable.interval(100).take(3))
+```
+类似这样的行为，常用在request，如下：
+```
+function getPostData(){
+    return fetch('https://jsonplaceholder.typicode.com/posts/1').then(res => res.json())
+}
+Rx.Observable.fromEvent(document.body, 'click')
+                       .concatMap(e => Rx.Observable.from(getPostData()));
+每点击一下就会送出一个HTTP request，快速点击时可以发现每个request是等前一个
+request完成之后才会送出下一个request。
+```
+> concatMap(e => observable,(e, res, eIndex, resIndex)=>{})
+
+concatMap传入第二个参数callback，callback的参数分别是：外部observable送出的元素，内部observable送出的元素，外部observable送出的元素的index，内部observable送出的元素index。
+```
+Rx.Observable.fromEvent(document.body, 'click')
+                       .concatMap(e => Rx.Observable.from(getPostData()), 
+                       (e, res, eIndex, resIndex) => res.title)
+外部Observable送出的元素是click event，内部observable送出的元素就是response
+```
+- switchMap：map+switch
+```
+Rx.Observable.fromEvent(document.body, 'click')
+                       .switchMap(e => Rx.Observable.fromEvent(getPostData()))
+                       .subscribe(res =>{
+                           console.log(res);
+                       })
+快速点击，每点击一次就会产生一个request，但是只会产生一次log。
+这代表之前的request已经不会造成任何side-effect，这个很适合用在最后一次request的情景，
+比如说自动完成（auto complete）,只需要显示使用者最后一次打在书面上的文字，来做建议选项而不用每一次的。
+```
+> switchMap(e => observable, (e, res, eIndex, resIndex) => {}) 参数与concatMap一致。
+
+- mergeMap：map+mergeAll（flatMap=mergeMap）
+```
+Rx.Observable.fromEvent(document.body, 'click')
+                       .mergeMap(e => Rx.Observable.from(getPostData()),
+                       (e, res, eIndex, resIndex)=> res.title, 3)
+限制同时发出的request的数量                       
+```
+> mergeMap(e => observable, (e, res, eIndex, resIndex)=> {}, 3)
