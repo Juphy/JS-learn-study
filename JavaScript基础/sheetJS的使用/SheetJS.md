@@ -98,7 +98,7 @@ XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 /* save to file */
 XLSX.writeFile(wb, 'SheetJS.xlsx');
 
-或者使用file-saver中的saveAs
+或者使用file-saver中的saveAs(尚不知两者有什么区别？)
 
 import {saveAs} from 'file-save
 

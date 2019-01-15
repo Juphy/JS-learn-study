@@ -27,4 +27,19 @@ fatal: Could not read from remote repository.
   - git config --local -e 直接修改git的配置文件，将url=git@github.com:username/repo.git修改为url=`https://github.com/username/repo.git`
   - git config --global url."http://github.com/".insteadOf git@github.com:
 
-  
+>  WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! (远程连接服务异常)
+```
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ECDSA key sent by the remote host is
+SHA256:DY4p81gRCppTGt4f+3882AUe7wmG7BUIGFRmiF1Bypg.
+Please contact your system administrator.
+Add correct host key in /c/Users/Juphy/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /c/Users/Juphy/.ssh/known_hosts:2
+ECDSA host key for 58.87.114.124 has changed and you have requested strict checking.
+Host key verification failed.
+```
+由于中间有一句"Add correct host key in /c/Users/Juphy/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /c/Users/Juphy/.ssh/known_hosts:2"
+vi ~/.ssh/known_hosts将第二行删掉

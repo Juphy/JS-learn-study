@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        #div1, #div2 {
+            width: 450px;
+            height: 266px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+        }
+    </style>
+
+</head>
+<body>
+
+<p>请把 W3School 的图片拖放到矩形中：</p>
+
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<br/>
+<img id="drag1" src="./assets/images/pubsub-pattern.png" draggable="true" ondragstart="drag(event)"
+     style="width:450px; height:266px"/>
+
+<div>
+    <p>首先为了使元素可拖动，把dragable属性设置为true</p>
+    <p>然后规定拖动元素时发生什么，在此例中，ondragstart 属性调用一个函数=》drag(event)，它规定了被拖动的数据 </p>
+    <br/>
+    <p>
+        dataTransfer.setData() 方法设置被拖动数据的数据类型和值；此例中 数据类型是 ‘Text’， 值是可拖动的元素的id("darag1")
+    </p>
+    <h2>放到何处-ondrop</h2>
+    <p>当放置被拖动数据时，会触发drop事件
+        drop调用一个函数，drop(event)。函数的代码解释如下：</p>
+    <ul>
+        <li>调用preventdefault()来避免浏览器对数据的默认处理</li>
+        <li>通过 dataTransfer.getData("Text")方法获取到被拖动的数据。改方法将返回在setData()方法中设置为相同类型的的任何数据</li>
+        <li>
+            被拖动数据是被拖动元素的id
+        </li>
+        <li>
+            把被拖动元素追加到目标元素中
+        </li>
+    </ul>
+</div>
+<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+</body>
+</html>
+<script type="text/javascript">
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("Text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("Text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+</script>

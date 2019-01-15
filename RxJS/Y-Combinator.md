@@ -1,4 +1,4 @@
-     在现代编程语言中函数都是具名的，而在传统的Lambda Calculus中，函数都是没有名字的，这样就出现了一个问题，如何在Lambda Calculus中实现递归函数，即匿名递归函数。Haskell B.Curry 发现了一种不定点组合子——Y Combinator，用于解决匿名递归函数实现的问题。Y = λf.(λx.f(xx))(λx.f(xx))
+        在现代编程语言中函数都是具名的，而在传统的Lambda Calculus中，函数都是没有名字的，这样就出现了一个问题，如何在Lambda Calculus中实现递归函数，即匿名递归函数。Haskell B.Curry 发现了一种不定点组合子——Y Combinator，用于解决匿名递归函数实现的问题。Y = λf.(λx.f(xx))(λx.f(xx))
 
 ### lambda表达式
 把一个lambda表达式解释为一个js函数：
