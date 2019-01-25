@@ -1,0 +1,40 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>window</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.12/Rx.js"></script>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+    // var click = Rx.Observable.fromEvent(document, 'click'),
+    //     source = Rx.Observable.interval(1000),
+    //     example = click.window(source);
+    // example.map(innerObservable => {
+    //     return innerObservable.count()
+    // })
+    //     .switch()
+    //     .subscribe(console.log)
+
+    // source.window(click).switch()
+    //     .subscribe(console.log)
+</script>
+<script>
+    // var source1 = Rx.Observable.interval(1000),
+    //     mouseDown$ = Rx.Observable.fromEvent(document, 'mousedown'),
+    //     mouseUp$ = Rx.Observable.fromEvent(document, 'mouseup');
+    // var example1 = source1.windowToggle(mouseDown$, () => mouseUp$);
+    // example1.switch().subscribe(console.log);
+</script>
+<script>
+    var source2 = Rx.Observable.interval(300).take(5);
+    var example2 = source2.groupBy(x => x % 2);
+    example2.subscribe(console.log);
+</script>

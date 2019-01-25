@@ -4,6 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        html, body {
+            height: 100%;
+            background-color: white;
+            padding: 0;
+            margin: 0;
+        }
+
+        .autocomplete {
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .input {
+            width: 200px;
+            border: none;
+            border-bottom: 1px solid black;
+            padding: 0;
+            line-height: 24px;
+            font-size: 16px;
+        }
+
+        .input:focus{
+            outline: none;
+            border-bottom-color: blue;
+        }
+
+        .suggest {
+            width: 200px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            -webkit-box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .suggest li{
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .suggest li:hover{
+            background-color: lightblue;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,7 +65,26 @@
     const getSuggestList = (keyword) => fetch(url + '&search=' + keyword, { method: 'GET', mode: 'cors' })
         .then(res => res.json());
     let searchInput = document.getElementById('search'), suggestList = document.getElementById('suggest-list');
+    const render = (suggestArr = []) => {
+        suggestList.innerHTML = suggestArr
+            .map(item => `<li>${item}</li>`)
+            .join('');
+    }
     let keyword$ = Rx.Observable.fromEvent(searchInput, 'input'), select$ = Rx.Observable.fromEvent(suggestList, 'click');
-    keyword$.switchMap(e => getSuggestList(e.target.value))
-        .subscribe(console.log)
+    keyword$.debounceTime(100)
+        .switchMap(
+            e => getSuggestList(e.target.value),
+            (e, res) => res[1]
+        )
+        .subscribe(render)
+    select$.filter(e => e.target.matches('li'))
+        .map(e => e.target.innerText)
+        .subscribe(text => {
+            searchInput.value = text;
+            render();
+        });
+    let keywordMouseDown = Rx.Observable.fromEvent(searchInput, 'mousedown');
+    keywordMouseDown.filter(e => e.keyCode === 37 || e.keyCode === 38);
+    
+
 </script>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>RxJS小球拖动</title>
@@ -54,17 +55,18 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.12/Rx.js"></script>
 </head>
+
 <body>
-<div id="anchor">
-    <div class="video" id="video">
-        <!--<div class="masker"></div>-->
-        <video width="100%" controls>
-            <source src="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.ogg"
-                    type="video/ogg">
-        </video>
+    <div id="anchor">
+        <div class="video" id="video">
+            <!--<div class="masker"></div>-->
+            <video width="100%" controls>
+                <source src="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.ogg" type="video/ogg">
+            </video>
+        </div>
     </div>
-</div>
 </body>
+
 </html>
 <script>
     var anchor = document.getElementById('anchor'),
@@ -118,4 +120,10 @@
         .subscribe(res => {
             console.log(res);
         })
+</script>
+<script>
+    var click = Rx.Observable.fromEvent(document, 'click'),
+        source = Rx.Observable.interval(1000),
+        example = source.window(click);
+    example.switch().subscribe(console.log);
 </script>

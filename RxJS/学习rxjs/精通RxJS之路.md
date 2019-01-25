@@ -386,7 +386,7 @@ concatMap传入第二个参数callback，callback的参数分别是：外部obse
 Rx.Observable.fromEvent(document.body, 'click')
                        .concatMap(e => Rx.Observable.from(getPostData()), 
                        (e, res, eIndex, resIndex) => res.title)
-外部Observable送出的元素是click event，内部observable送出的元素就是response
+外部Observable送出的元素（e）是click event，内部observable送出的元素（e）就是response
 ```
 - switchMap：map+switch
 ```
@@ -409,3 +409,395 @@ Rx.Observable.fromEvent(document.body, 'click')
 限制同时发出的request的数量                       
 ```
 > mergeMap(e => observable, (e, res, eIndex, resIndex)=> {}, 3)
+
+- window(5个window相关的operators：window、windowCount、windowTime、windowToggle、windowWhen)
+- window：类似于buffer可以把一段时间送出来的元素拆出来，只是buffer是把元素拆分到阵列中变成（Observable<T>=>Observable<Array<T>>）。window则是会把元素拆出来放到新的observable变成（Observable<T>=>Observable<Observable<T>>）。observable.window(observable)，
+```
+// 统计一秒钟内触发了几次click事件
+    var click = Rx.Observable.fromEvent(document, 'click'),
+        source = Rx.Observable.interval(1000),
+        example = click.window(source);
+    example.map(innerObservable => innerObservable.count())
+        .switch()
+        .subscribe(console.log)
+```
+- windowToggle：windowToggle(observable, callback),第一个参数是observable1，第二个参数是callback，返回一个observable2。送出来的observable始于observable1，终于observable2。
+```
+// 鼠标按下计数，松开停止记录
+    var source1 = Rx.Observable.interval(1000),
+        mouseDown$ = Rx.Observable.fromEvent(document, 'mousedown'),
+        mouseUp$ = Rx.Observable.fromEvent(document, 'mouseup');
+    var example1 = source1.windowToggle(mouseDown$, () => mouseUp$);
+    example1.switch().subscribe(console.log);
+```
+- groupBy：把相同条件的元素拆分成一个Observable
+```
+var people = [
+    {name: 'Anna', score: 100, subject: 'English'},
+    {name: 'Anna', score: 90, subject: 'Math'},
+    {name: 'Anna', score: 96, subject: 'Chinese'},
+    {name: 'Jerry', score: 80, subject: 'English'},
+    {name: 'Jerry', score: 100, subject: 'Math'},
+    {name: 'Jerry', score: 90, subject: 'Chinese'},
+];
+var source = Rx.Observable.from(people)
+    .zip(Rx.Observable.interval(300), (x, y) => x);
+var example = source
+    .groupBy(person => person.name)
+    .map(group => group.reduce((acc, cur) => ({
+        name: cur.name,
+        score: cur.score + acc.score
+    })))
+    .mergeAll();
+example.subscribe(console.log);
+// { name: "Anna", score: 286 }
+// { name: 'Jerry', score: 270 }
+```
+### Observable
+Observable的operators执行的特点：
+- 延迟运算
+- 渐进式取值
+
+Rx.Observable.from([1,2,3,4,5]).map(x => x+1)的代码不会执行因为没有被订阅。
+
+数组中都是必须完整的运算出每个元素的返回值并组成一个数组，在做下一个运算。
+```
+var source =[1,2,3,4,5];
+var example = source
+                            .filter(x => x%2===0) // 这里会运算并返回一个完整的阵列
+                            .map(x => x+1) // 这里也会运算并返回一个完整的阵列
+```
+![数组中的操作运算](https://ws3.sinaimg.cn/large/8b2b1aafly1fzfd6qxiobg20dc08cto8.gif)
+
+Observable中的operators的运算方式跟数组的是完全不同的，虽然Observable的operator也会回传一个新的observable，但因为元素是渐进式取得的关系，所以每次的运算是一个元素运算到底，而不是运算完全部的元素再返回。
+```
+Rx.Observable.from([1,2,3])
+                       .filter(x =>x%2===0)
+                       .map(x => x+1)
+                       .subscribe(console.log)
+每个元素送出后就是运算到底，在这个过程终不悔等待其他的元素运算，这就是渐进式的特性。
+```
+```
+class IteratorFromArray{
+    constructor(arr){
+        this._array = arr;
+        this._cursor = 0;
+    }
+
+    next(){
+        return this._cursor < this._array.length?{value: this._array[this._cursor++], done: false}:{done: true};
+    }
+    map(callback){
+        const iterator = new IteratorFromArray(this._array);
+        return {
+            next: () =>{
+                const {done, value} = iterator.next();
+                return {
+                    done: done,
+                    value: done?undefined: callback(value)
+                }
+            }
+        }
+    }
+}
+
+var myIterator = new IteratorFromArray([1,2,3]);
+var newIterator = myIterator.map(x => x+1);
+newIterator.next(); // {done: false, value: 2}
+```
+![Observable的操作运算](https://wx3.sinaimg.cn/large/8b2b1aafly1fzfdsdonv0g20dc08ch2j.gif)
+渐进式取值的观念在Observable中其实非常的重要，这个特性也使得Observable相较于Array的Operator在做运算时更加的高效很多，尤其是在处理大量资料的时候会非常的明显。
+
+### Subject
+每个observable都是可以多次订阅的，每次订阅的执行都是完全独立的。
+
+> 在有些情况下，我们希望第二次订阅 不会从头开始接受元素，而是从第一次订阅到当前处理的元素开始发送，这种处理方式成为组播（multicast），如何做到？
+
+```
+let Rx = require('rxjs');
+var source = Rx.Observable.interval(1000).take(3);
+var observerA = {
+    next: value => console.log('A next: ' + value),
+    error: error => console.log('A error: ' + error),
+    complete: () => console.log('A complete!')
+};
+var observerB = {
+    next: value => console.log('B next: ' + value),
+    error: error => console.log('B error: ' + error),
+    complete: () => console.log('B complete!')
+};
+
+var subject = {
+    observers: [],
+    addObserver: function (observer) {
+        this.observers.push(observer)
+    },
+    next: function (value) {
+        this.observers.forEach(o => o.next(value))
+    },
+    error: function (error) {
+        this.observer.forEach(o => o.error(error))
+    },
+    complete: function () {
+        this.observers.forEach(o => o.complete())
+    }
+};
+subject.addObserver(observerA);
+
+source.subscribe(subject);
+
+setTimeout(() => {
+    subject.addObserver(observerB)
+}, 1000);
+
+建立subject，具备observer的所有方法（next，error，complete），并且还能addObserver把observer加到内部的清单中，每当有值送出就会遍历清单中的所有observer并把值再次送出，这样一来不管多久之后加进来的observer，都是会从当前处理到的元素继续往下走。subject订阅source并把observerA加到subject中，一秒之后再把observerB加到subject，这时就可以看到observerB直接是从1开始的，这就是（multicast）的行为。
+```
+Subject：Subject既可以订阅Observable代表它是一个Observer，同时Subject又可以被Observer（observerA，observerB）订阅，代表它是一个Observable。
+
+- Subject 同時是 Observable 又是 Observer
+- Subject 會對內部的 observers 清單進行組播(multicast)
+
+```
+var source = Rx.Observable.interval(1000).take(5);
+var observerA = {
+    next: value => console.log('A next: ' + value),
+    error: error => console.log('A error: ' + error),
+    complete: () => console.log('A complete!')
+}
+
+var observerB = {
+    next: value => console.log('B next: ' + value),
+    error: error => console.log('B error: ' + error),
+    complete: () => console.log('B complete!')
+}
+let subject = new Rx.Subject();
+source.subscribe(subject);
+subject.subscribe(observerA);
+setTimeout(() =>{
+    subject.subscribe(observerB)
+}, 1000)
+```
+- subject的next方法传值
+
+所有订阅的observer就会接收到，又因为Subject本身是Observable，这样的使用方式很适合用在某些无法直接使用Observable的前端框架中，例如React相对DOM的时间做监听。
+```
+class MyButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { count: 0 };
+        this.subject = new Rx.Subject();
+        
+        this.subject
+            .mapTo(1)
+            .scan((origin, next) => origin + next)
+            .subscribe(x => {
+                this.setState({ count: x })
+            })
+    }
+    render() {
+        return <button onClick={event => this.subject.next(event)}>{this.state.count}</button>
+    }
+}
+```
+#### BehaviorSubject
+> 如果有一个新的订阅，我们希望Subject能立即给出最新的值，而不是没有回应？
+
+```
+var subject = new Rx.Subject();
+var observerA = {
+    next: value => console.log('A next: ' + value),
+    error: error => console.log('A error: ' + error),
+    complete: () => console.log('A complete!')
+}
+var observerB = {
+    next: value => console.log('B next: ' + value),
+    error: error => console.log('B error: ' + error),
+    complete: () => console.log('B complete!')
+}
+subject.subscribe(observerA);
+subject.next(1); // 'A next: 1'
+subject.next(2); // 'A next: 2'
+subject.next(3); // 'A next: 3'
+setTimeout(() =>{
+    subject.subscribe(observerB); // 3秒后才订阅，这之后没有执行任何subject.next()，observerB不会收到任何值。
+}, 3000)
+如果想要observerB订阅时就能立即收到3，希望做到这样的效果就可以用BehaviorSubject。
+```
+BehaviorSubject跟Subject最大的不同就是BehaviorSubject是用来呈现当前的值，而不是单纯的发送事件。BehaviorSubject会记住最新一次发送的元素，并把改元素当做目前的值，在使用上BehaviorSubject建构式需要传入一个参数来代表起始的状态。
+```
+var subject = new Rx.BehaviorSubject(0); // 0 为起始值
+var observerA = {
+    next: value => console.log('A next: ' + value),
+    error: error => console.log('A error: ' + error),
+    complete: () => console.log('A complete!')
+};
+var observerB = {
+    next: value => console.log('B next: ' + value),
+    error: error => console.log('B error: ' + error),
+    complete: () => console.log('B complete!')
+};
+
+subject.subscribe(observerA);
+// A next: 0
+subject.next(1)
+// A next: 1
+subject.next(2)
+// A next: 2
+subject.next(3)
+// A next: 3
+
+setTimeout(() =>{
+    subject.subscribe(observerB)
+    // B next: 3
+}, 3000)
+```
+BehaviorSubject在建立时就需要给定一个状态，并在之后任何一次订阅，就会先送出最新的状态，其实这种行为就是一种状态的表达而非单纯的事件。
+
+#### ReplaySubject
+在某些时候我们会希望Subject代表事件，但又能在新订阅时重新发送最后的几个元素，这时我们就可以用ReplaySubject。
+```
+vat subject = new Rx.ReplaySubject(2);//  重复发送最后两个元素
+var observerA ={
+    next: value => console.log('A next: '+ value),
+    error: error => console.log('A error: ' + error),
+    complete: () => console.log('B complete!')
+}
+
+var observerB ={
+    next: value => console.log('A next: '+ value),
+    error: error => console.log('A error: ' + error),
+    complete: () => console.log('B complete!')
+}
+
+subject.subscribe(observerA);
+subject.next(1); // A next: 1
+subject.next(2); // A next: 2
+subject.next(3); // A next: 3
+
+setTimeout(() =>{
+    subject.subscribe(observerB);
+    // B next: 2
+    // B next: 3
+}, 3000)
+```
+ReplaySubject(1)和BehaviorSubject的效果一致，但是本质是不一样的，BehaviorSubject在建立时就会有起始值，比如BehaviorSubject(0)起始值就是0，BehaviorSubject代表状态而ReplaySubject只是事件的重放而已。
+
+#### AsyncSubject
+会在subject结束后送出最后一个值，其余的值不会记录。
+```
+var subject = new Rx.AsyncSubject();
+
+var observerA ={
+    next: value => console.log(`A next: `+ value),
+    error : error => console.log(`A error: `+ value),
+    complete: () => console.log('A complete!')
+}
+
+var observerB ={
+    next: value => console.log(`B next: `+ value),
+    error : error => console.log(`B error: `+ value),
+    complete: () => console.log('B complete!')
+}
+
+subject.subscribe(observerA)
+subject.next(1)
+subject.next(2)
+subject.next(3)
+subject.complete(); //  A next: 3  A complete!
+
+setTimeout(() =>{
+    subject.subscribe(observerB); // B next: 3  B complete!
+}, 3000)
+```
+AsyncSubject会在subject结束后才送出最后一个值，其实这个行为跟Promise很像，都是等到事情结束后送出一个值，但实际上非常少用到AsyncSubject。
+
+- multicast：用来挂载subject并回传一个可连结（connectable）的observable
+
+```
+var source = Rx.Observable.interval(1000).take(3).multicast(new Rx.Subject());
+
+var observerA = {
+    next : value => console.log('A next: ' + value),
+    error: error => console.log('A error: ' +error),
+    complete: () => console.log('A complete!')
+}
+
+var observerB ={
+    next : value => console.log('B next: ' + value),
+    error: error => console.log('B error: ' +error),
+    complete: () => console.log('B complete!')
+}
+
+var subscriptionA = source.subscribe(observerA) // subject.subscribe(observerA)
+var realSubscription = source.connect() // source.subscribe(subject)
+var subscriptionB;
+setTimeout(() =>{
+    subscriptionB = source.subscribe(observerB);
+}, 1000);
+
+setTimeout(() =>{
+    subscriptionA.unsubscribe();
+    subscriptionB.unsubscribe();
+    // 这里虽然A跟B都退订了，但source还会继续送元素
+}, 5000);
+
+setTimeout(() => {
+    realSubscription.unsubscribe();
+    // 这里source才会真正停止送元素
+}, 7000)
+
+通过multicast来挂载一个subject之后，这个observable（source）的订阅其实都是订阅到subject上。
+```
+虽然multicast会让我们处理的对象少一点，但必须搭配connect一起使用还是让代码有点复杂，通常我们希望有observer订阅时，就立即执行并发送元素，而不要再多执行一个方法（connect），这时我们就可以使用refCount。
+
+- refCount：refCount必须搭配multicast一起使用，它可以建立一个只要有订阅就会自动connect的observable。
+```
+var source2 = Rx.Observable.interval(1000).take(5)
+    .do(x => console.log('send: ' + x))
+    .multicast(new Rx.Subject())
+    .refCount();
+var observerA2 = {
+    next: value => console.log('2A next: ' + value),
+    error: error => console.log('2A error: ' + error),
+    complete: () => console.log('2A complete!')
+};
+var observerB2 = {
+    next: value => console.log('2B next: ' + value),
+    error: error => console.log('2B error: ' + error),
+    complete: () => console.log('2B complete!')
+};
+
+var subscriptionA2 = source2.subscribe(observerA2); // 订阅数 0 => 1
+var subscriptionB2;
+setTimeout(() => {
+    subscriptionB2 = source2.subscribe(observerB2) // 订阅数 0 => 2
+}, 1000);
+
+```
+- publish：等同于 multicast(new Rx.Subject())
+```
+Rx.Observable.interval(1000).publish(1000).refCount();
+=> Rx.Observable.interval(1000).multicast(new Rx.Subject()).refCount();
+
+Rx.Observable.interval(1000).publishBehavior(0).refCount();
+=> Rx.Observable.interval(1000).multicast(new Rx.BehaviorSubject(0))
+
+Rx.Observable.interval(1000).publishReplay(1).refCount();
+=> Rx.Observable.interval(1000).multicast(new Rx.ReplaySubject(1))
+
+Rx.Observable.interval(1000).publishLast().refCount();
+=> Rx.Observable.interval(1000).multicast(new Rx.AsyncSubject())
+```
+- share: publish+refCount可以简写成share
+```
+var source = Rx.Observable.interval(1000)
+             .share();
+             
+// var source = Rx.Observable.interval(1000)
+//             .publish() 
+//             .refCount();
+
+// var source = Rx.Observable.interval(1000)
+//             .multicast(new Rx.Subject()) 
+//             .refCount();
+```
