@@ -801,3 +801,86 @@ var source = Rx.Observable.interval(1000)
 //             .multicast(new Rx.Subject()) 
 //             .refCount();
 ```
+
+#### Subject
+Subject其实是Observer Design Pattern，所以当observer订阅到subject时，subject会把订阅者塞到一份订阅者清单，在发送元素就是在遍历元素，并把元素一一送出。
+Subject之所以具有Observable的所有方法，是因为Subject继承了Observable的型别，其实Subject型别中主要的方法有next、error、complete、subscribe、unsubscribe。
+
+#### 一定要用Subject的时机
+当一个Observable的操作过程中发生side-effect，而我们不需要这个side-effect因为多个subscribe会导致触发多次。
+```
+var result = Rx.Observable.interval(1000).take(6)
+                        .map(x => Math.random());
+var subA = result.subscribe(x => console.log('A: ' + x));
+var subB = result.subscribe(x => console.log('B: ' + x));
+```
+上面的代码A和B的结果不一致，代表random（side-effect）被执行两次。
+```
+var result = Rx.Observable.interval(1000).take(6)
+             .map(x => Math.random()) // side-effect
+             .multicast(new Rx.Subject())
+             .refCount();
+var subA = result.subscribe(x => console.log('A: ' + x));
+var subB = result.subscribe(x => console.log('B: ' + x));
+```
+
+### Scheduler
+Scheduler控制一个observable的订阅什么时候开始，以及发送元素什么时候送达，主要有以下三个元素组成：
+- Scheduler是一个资料结构。它知道如何根据优先级或其他标准来存储并排列任务。
+- Scheduler是一个执行环境。它意味着任务何时何地被执行，比如像立即执行、在callback中执行、setTimeout中执行、animation frame中执行
+- Scheduler是一个虚拟时钟。它透过now()这个方法提供了时间的概念，我们可以让任务在特定的时间点被执行。
+```
+var observable = Rx.Observable.create(function(observer){
+    observer.next(1);
+    observer.next(2);
+    observer.next(3);
+    observer.complete();
+})
+
+console.log('before subscribe');
+observable.observeOn(Rx.Scheduler.async)
+                  .subscribe({
+                      next: (value) => {console.log(value)},
+                      error: (err) => {console.log(err)},
+                      complete: () => {console.log('complete')}
+                  });
+console.log('after subscribe');
+// "before subscribe"                  
+// "after subscribe"                  
+// 1
+// 2
+// 3
+// "complete"
+上面的代码原本是同步执行，但是使用observable.observeOn(Rx.Scheduler.async)原本同步执行就变成非同步执行了。
+```
+使用不同的operator时，这些operator就会各自预设不同的scheduler，例如一个无限的observable就会预设为queue scheduler，而timer相关的operator则预设为async scheduler。
+
+最通用的方式时observeOn()，只要是observable就可以使用这个方法。以下这几个creation operators最后一个参数都能接收Scheduler
+- bindCallback
+- bindNodeCallback
+- combineLatest
+- concat
+- empty
+- from
+- fromPromise
+- interval
+- merge
+- of
+- range
+- throw
+- timer
+```
+var observable = Rx.Observable.from([1,2,3,4,5], Rx.Scheduler.async);
+```
+
+#### queue
+queue的运作方式跟预设的立即执行很像，但是当我们使用到返回方法时，会排列这些行为而非直接执行，一个递回的operator就是他会执行另一个operator。repeat()，如果我们不给他参数的话，他就会执行无限多次。queue很适合用在会有递回的operator且具有大量资料时使用，在这个情况下queue能避免不必要的效能损耗。
+
+#### asap
+asap是非同步执行，在浏览器中其实就是setTimeout设为0秒。因为都是在setTimeout中执行，所以不会有block event loop的问题，很适合用在永远不会退订的observable。
+
+#### async
+跟asap很像，但是使用setInterval来运作，通常是跟时间相关的operator才会用到。
+
+#### animationFrame
+跟window.requestAnimationFrame一摸一样。在做复杂运算，且高频率出发的UI动画时，就很适合使用animationFrame，可以搭配throttle operator使用。

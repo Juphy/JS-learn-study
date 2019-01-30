@@ -1,0 +1,76 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拖拽</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.12/Rx.js"></script>
+    <style>
+        #box {
+            -webkit-transform: translate(10px, 10px);
+            transform: translate(10px, 10px);
+            transition: 0.05s -webkit-transform ease-out;
+            transition: 0.05s transform ease-out;
+            transition: 0.05s transform ease-out, 0.05s -webkit-transform ease-out;
+            width: 40px;
+            height: 40px;
+            background: #ffa500;
+            border: 5px solid #f00;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box"></div>
+</body>
+
+</html>
+<script>
+    const box = document.getElementById('box');
+    let mouseDown$ = Rx.Observable.fromEvent(box, 'mousedown'),
+        mouseMove$ = Rx.Observable.fromEvent(document, 'mousemove'),
+        mouseUp$ = Rx.Observable.fromEvent(document, 'mouseup');
+
+    let getTranslate = (element) => {
+        const style = getComputedStyle(element);
+        console.log(style.transform);
+        const regExp = /matrix\((\d+, \s){4}(\d+),\s(\d+)/i;
+        // const result = style.transform.match(regExp);
+        const result = style.transform.slice(7, -1).split(',');
+        console.log(result);
+        if (result) {
+            return {
+                x: parseInt(result[2], 10),
+                y: parseInt(result[3], 10)
+            }
+        } else {
+            return {
+                x: 0,
+                y: 0
+            }
+        }
+    }
+
+    let setTranslate = (ele, pos) => {
+        ele.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+    }
+
+    mouseDown$.map(event => ({
+        pos: getTranslate(box),
+        event
+    }))
+        .switchMap(initialState => {
+            const initialPos = initialState.pos;
+            const { clientX, clientY } = initialState.event;
+            return mouseMove$.map(moveEvent => ({
+                x: moveEvent.clientX - clientX + initialPos.x,
+                y: moveEvent.clientY - clientY + initialPos.y
+            })).takeUntil(mouseUp$)
+        })
+        .subscribe(pos => {
+            setTranslate(box, pos)
+        })
+
+</script>
