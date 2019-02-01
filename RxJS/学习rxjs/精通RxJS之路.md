@@ -623,7 +623,7 @@ setTimeout(() =>{
 }, 3000)
 如果想要observerB订阅时就能立即收到3，希望做到这样的效果就可以用BehaviorSubject。
 ```
-BehaviorSubject跟Subject最大的不同就是BehaviorSubject是用来呈现当前的值，而不是单纯的发送事件。BehaviorSubject会记住最新一次发送的元素，并把改元素当做目前的值，在使用上BehaviorSubject建构式需要传入一个参数来代表起始的状态。
+BehaviorSubject跟Subject最大的不同就是BehaviorSubject是用来呈现当前的值，而不是单纯的发送事件。BehaviorSubject会记住最新一次发送的元素，并把该素当做目前的值，在使用上BehaviorSubject建构式需要传入一个参数来代表起始的状态。
 ```
 var subject = new Rx.BehaviorSubject(0); // 0 为起始值
 var observerA = {

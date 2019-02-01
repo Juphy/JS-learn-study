@@ -19,18 +19,16 @@
                 width: 100%;
                 max-width: 950px;
                 margin: 0 auto;
+                position: relative;
         }
         h2{
             width: 100%;
             text-align: center;
-            margin: .24rem 0;
+            padding: .24rem 0;
         }
         ul,li{
             list-style: none;
             width: 100%;
-        }
-        ul{
-            padding: 0 .24rem;
         }
         li{
             margin-bottom: 0.16rem;
@@ -40,12 +38,12 @@
             display: inline-block;
             height: 0.32rem;
             line-height: 0.32rem;
-            width: 1.2rem;
+            width: 1.6rem;
             text-align: right;
         }
         input {
             flex:1;
-            max-width: 3rem;
+            max-width: 3.4rem;
             min-width: 2.5rem;
             font-variant: tabular-nums;
             box-sizing: border-box;
@@ -95,6 +93,13 @@
                 position: relative
         }
 
+         button:focus{
+            border-color: #40a9ff;
+            outline: none;
+            box-shadow: 0 0 0 0.02rem rgba(24,144,255,.2);
+            border-right-width: 0.01rem!important;
+        }
+
         .btns{
             margin-left: 1.6rem;
         }
@@ -114,7 +119,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.65);
-            padding-top: 0.48rem;
         }
 
         #box div{
@@ -125,6 +129,14 @@
             display: flex;
             text-align: center;
             justify-content: center;
+        }
+
+        #box div:first-child{
+            margin-top: .48rem;
+        }
+
+        #box label{
+            width: 1.2rem;
         }
     </style>
     <script>

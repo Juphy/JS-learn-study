@@ -1,0 +1,30 @@
+{
+  "name": "reactive-snake",
+  "version": "0.0.1",
+  "description": "Snake built with RxJS",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --port 9000 --inline --progress --profile --colors --watch --content-base src/",
+    "build": "webpack --config webpack.config.js",
+    "build:prod": "webpack --config webpack.config.js -p"
+  },
+  "keywords": [
+    "snake",
+    "games",
+    "rxjs"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "7.0.0",
+    "awesome-typescript-loader": "3.4.0",
+    "source-map-loader": "0.2.3",
+    "tslint": "5.8.0",
+    "tslint-loader": "3.5.3",
+    "typescript": "2.6.1",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.4"
+  },
+  "dependencies": {
+    "rxjs": "5.5.2"
+  }
+}

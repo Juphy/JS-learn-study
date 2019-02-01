@@ -9,8 +9,15 @@ var observable = Rx.Observable.create(function (observer) {
 console.log('before subscribe');
 observable.observeOn(Rx.Scheduler.async)
     .subscribe({
-        next: (value) => { console.log(value) },
-        error: (err) => { console.log(err) },
-        complete: () => { console.log('complete') }
+        next: (value) => {
+            console.log(value)
+        },
+        error: (err) => {
+            console.log(err)
+        },
+        complete: () => {
+            console.log('complete')
+        }
     });
 console.log('after subscribe');
+
