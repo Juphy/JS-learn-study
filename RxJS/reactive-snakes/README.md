@@ -116,5 +116,19 @@ export function eat(apples: Array<Point2D>, snake){
     return apples;
 }
 ```
-在if中调用length$.next(POINT_PER_APPLE)，但是这样会导致具体方法无法提取到自己的模块（ES2015模块）中，ES2015模块一般都是一个模块一个文件，这样组织代码的目的主要是让代码变得更容易维护和推导。解决方式是引入另一个流，appleEaten$，这个流是基于apples$的，每次流发出新值时，就执行一个动作，即调用length$.next()，为此，我们可以调用do()操作符，每次发出值都会执行一段代码。但是，我们需要通过某种方式来跳过apple$发出的第一个值（初始值），否则，最终将变成开场立刻增加比分，但这在刚刚开始时
+在if中调用length$.next(POINT_PER_APPLE)，但是这样会导致具体方法无法提取到自己的模块（ES2015模块）中，ES2015模块一般都是一个模块一个文件，这样组织代码的目的主要是让代码变得更容易维护和推导。解决方式是引入另一个流，appleEaten$，这个流是基于apples$的，每次流发出新值时，就执行一个动作，即调用length$.next()，为此，我们可以调用do()操作符，每次发出值都会执行一段代码。但是，我们需要通过某种方式来跳过apple$发出的第一个值（初始值），否则，最终将变成开场立刻增加比分，但这在刚刚开始时是没有意义的。好在RxJS为我们提供了这样的操作符skip()。
+事实上，applesEaten$只负责扮演通知者的角色，它只负责通知其他的流，而不会有观察者来订阅它，因此需要手动订阅。
+```
+let appleEaten$ = apples$
+                .skip(1)
+                .do(()=>length$.next(POINTS_PER_APPLE))
+                .subscribe();
+```
+### 整合代码
+将这些组合成最终的结果流scene$，使用combineLatest操作符。
+```
+let scene$ = Observable.combineLatest(snake$,apple$,score$,(snake, apples, score)=>({snake, apples, score}));
+```
+与widthLatestFrom不同的是，我们不会对辅助流限制，只关心每个Observable产生的新值，最后一个参数还是选择器函数，我们将所有数据组合成一个表示游戏状态的对象，并将对象返回。游戏状态包含了canvas渲染所需的所有数据。
 
+![image](https://wx2.sinaimg.cn/large/8b2b1aafly1g06x3trek6j223c0ldtag.jpg)
