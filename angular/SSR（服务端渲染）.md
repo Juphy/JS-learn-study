@@ -1,6 +1,8 @@
 ### Angular Universal: 服务端渲染
 标准的Angular应用会运行在浏览器中，它会在DOM中渲染页面，以响应用户的操作，而Angular Universal会在服务端通过一个名叫服务端渲染（server-side rendering - SSR）的过程生成静态的应用页面。它可以生成这些页面，并在浏览器请求时直接用它们给出响应，也可以把页面预先生成为HTML文件，然后把它们作为静态文件供服务器使用。
 
+![universal-starter](https://github.com/Juphy/universal-starter)
+（*目前还有问题无法解决，可能是npm安装包的环境版本问题*）
 ### 为何需要服务端渲染？
 - 帮助网络爬虫
 
@@ -45,6 +47,8 @@ $ npm install --save @angular/platform-server @nguniversal/module-map-ngfactory-
     - 为应用添加Universal支持
       ```
       // app.module.ts
+      import { BrowserModule } from '@angular/platform-browser';
+      import { TransferHttpCacheModule } from '@nguniversal/common';
       @NgModule({
       bootstrap: [AppComponent],
       imports: [
@@ -52,6 +56,7 @@ $ npm install --save @angular/platform-server @nguniversal/module-map-ngfactory-
         // The application ID can be any identifier which is unique on
         // the page.
         BrowserModule.withServerTransition({appId: 'my-app'}),
+        TransferHttpCacheModule
         ...
       ],
         })
