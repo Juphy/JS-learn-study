@@ -1,7 +1,7 @@
 ### Angular Universal: 服务端渲染
 标准的Angular应用会运行在浏览器中，它会在DOM中渲染页面，以响应用户的操作，而Angular Universal会在服务端通过一个名叫服务端渲染（server-side rendering - SSR）的过程生成静态的应用页面。它可以生成这些页面，并在浏览器请求时直接用它们给出响应，也可以把页面预先生成为HTML文件，然后把它们作为静态文件供服务器使用。
 
-![universal-starter](https://github.com/Juphy/universal-starter)
+[universal-starter](https://github.com/Juphy/universal-starter)
 （*目前还有问题无法解决，可能是npm安装包的环境版本问题*）
 ### 为何需要服务端渲染？
 - 帮助网络爬虫
@@ -256,7 +256,7 @@ webpack.server.config.js     * Webpack 的服务端配置* webpack server config
 
 ```
 #### 在HTTP中使用绝对地址
-Angular的HttpClient模块来获取应用数据时，服务都把请求发送到相对URL。在Universal应用中，HTTP的URL必须是绝对地址（比如https://my-server.com/api/heroes），只有这样，Universal的Web服务器才能处理那些请求，这意味着当运行在服务端中时，必须修改你的服务，来使用绝对URL发起请求，而在浏览器中，则使用相对URL。
+Angular的HttpClient模块来获取应用数据时，服务都把请求发送到相对URL。在Universal应用中，HTTP的URL必须是绝对地址（比如`https://my-server.com/api/heroes`），只有这样，Universal的Web服务器才能处理那些请求，这意味着当运行在服务端中时，必须修改你的服务，来使用绝对URL发起请求，而在浏览器中，则使用相对URL。
 
 解决方案：通过Angular的App_BASE_HREF令牌来提供服务器的源地址（origin），把它注入到服务中，并把这个源地址添加到所请求的URL之前。
 ```
