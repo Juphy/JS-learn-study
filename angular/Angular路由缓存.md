@@ -1,4 +1,4 @@
-## angular路由缓存
+## Angular路由缓存
 
 路由缓存，input输入状态， 下拉框选中状态
 
