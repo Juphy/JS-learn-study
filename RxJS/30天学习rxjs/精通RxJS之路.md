@@ -206,7 +206,7 @@ source2: --0--1--2--3--4--5|
         merge()
 example: --0-01--21-3--(24)--5|
 ```
-- comblineLatest:分别取得各个observable最后送出的值，在输出成一个值。
+- combineLatest:分别取得各个observable最后送出的值，在输出成一个值。
 ```
 var source = Rx.Observable.interval(500).take(3);
 var newest = Rx.Observable.interval(300).take(6);

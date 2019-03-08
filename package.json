@@ -54,6 +54,8 @@
     "serve-index": "^1.9.1",
     "superagent": "^3.8.3",
     "underscore": "^1.9.1",
+    "websocket": "^1.0.28",
+    "ws": "^6.1.4",
     "xlsx": "^0.13.5"
   }
 }
