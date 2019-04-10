@@ -140,3 +140,33 @@ location /images/ {
 ### 多域名配置
 
 
+## Nginx服务安装SSL证书
+### Nginx/Tengine服务器安装SSL证书
+在证书控制台下载nginx版本证书，解压后包含：
+- .crt文件：是证书文件，crt是pem文件的扩展名。.pem扩展名
+- .key文件：证书的私钥文件（申请证书时如果没有选择自动创建CSR，则没有该文件）
+
+### 安装步骤
+证书文件名a.pem、私钥文件是a.key
+- 1.在nginx的安装目录下创建cert目录，并且将全部文件拷贝到cert目录中，如果申请证书时是自己创建的CSR文件，请将对应的私钥文件放到cert目录下并且命名a.key
+- 2.打开Nginx安装目录下conf目录中的nginx.conf文件，添加配置：
+```
+ ssl_certificate   cert/a.pem;
+ ssl_certificate_key  cert/a.key;
+ ssl_session_timeout 5m;
+ ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+ ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ ssl_prefer_server_ciphers on;
+```
+
+###  nginx 403 forbidden
+- 1.缺少index.html或者index.php文件
+- 2.权限问题：修改文件或者目录的权限
+- 3.nginx配置的用户
+```
+ps aux | grep nginx 查看nginx运行的user，可以修改为root
+root     11551  0.0  0.1  47156  1140 ?        Ss   06:25   0:00 nginx: master process nginx -c /etc/nginx/nginx.conf
+root     11552  0.0  1.1  47536  6636 ?        S    06:25   0:00 nginx: worker process
+root     11897  0.0  0.3 112716  2320 pts/0    S+   06:49   0:00 grep --color=auto nginx
+```
+
