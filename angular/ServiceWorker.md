@@ -1,7 +1,9 @@
 ## Service Worker
 增强传统的 Web 发布模式，并使应用程序能够提供可与本机代码媲美的高可靠、高性能的用户体验。为 Angular 应用添加 Service Worker 是把应用转换成渐进式应用（PWA）的步骤之一。简单来说，Service Worker 就是一段运行在 Web 浏览器中，并为应用管理缓存的脚本。
 
-Service Worker 的功能就像一个网络代理。它们会拦截所有由应用发出的 HTTP 请求，并选择如何给出响应。 比如，它们可以查询局部缓存，如果有缓存的响应数据，就用它做出响应。 这种代理行为不会局限于通过程序调用 API（比如fetch）发起的请求，还包括 HTML 中对资源的引用，甚至对 index.html 的首次请求。 基于 Service Worker 的缓存是完全可编程的，并且不依赖于服务端指定的那些控制缓存策略的头。
+Service Worker 的功能就像一个网络代理。它们会拦截所有由应用发出的 HTTP 请求，并选择如何给出响应。 比如，它们可以查询局部缓存，如果有缓存的响应数据，就用它做出响应。 这种代理行为不会局限于通过程序调用 API（比如fetch）发起的请求，还包括 HTML 中对资源的引用，甚至对 index.html 的首次请求。 基于Service Worker的缓存是完全可编程的，并且不依赖于服务端指定的那些控制缓存策略的头。Service Worker在用户关闭浏览器页标签时仍然会被保留，下次浏览器加载本应用时，Service Worker会首先加载，然后拦截加载本应用时的对每一项资源的请求。
+
+Angular 的 Service Worker 的设计目标是优化那些使用慢速、不可靠网络的最终用户的体验，同时还要尽可能减小提供过期内容的风险。
 
 Angular 的 Service Worker 的行为遵循下列设计目标：
 - 像安装原生应用一样缓存应用。该应用作为整体被缓存，它的所有文件作为整体进行更新。
@@ -10,7 +12,7 @@ Angular 的 Service Worker 的行为遵循下列设计目标：
 - 在更改发布之后，相对较快的在后台进行更新。在一次完整的更新完成之前，仍然使用应用的上一个版本。
 - 只要有可能，Service Worker 就会尽量节省带宽。它只会下载那些发生了变化的资源。
 
-要支持这些行为，Angular 的 Service Worker 会从服务器上下载一个 manifest 文件。 这个 manifest 文件描述要缓存的资源，并包含每个文件内容的哈希值。 当发布了应用的一个新版本时，manifest 的内容就会改变，通知 Service Worker 应该下载并缓存应用的一个新版本了。 这个 manifest 是从 CLI 生成的一个名叫 ngsw-config.json 的文件中生成的。
+要支持这些行为，Angular的Service Worker会从服务器上下载一个manifest文件。 这个manifest文件描述要缓存的资源，并包含每个文件内容的哈希值。 当发布了应用的一个新版本时，manifest的内容就会改变，通知Service Worker应该下载并缓存应用的一个新版本了。 这个 manifest是从CLI生成的一个名叫 ngsw-config.json 的文件中生成的。
 
 ## Angular中添加Service Worker
 ```

@@ -1,0 +1,1 @@
+sudo npm install -g puppeteer --unsafe-perm=true --allow-root

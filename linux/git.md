@@ -339,4 +339,5 @@ git verify-pack -v .git/objects/pack/pack-*.idx | sort -k 3 -g | tail -5
 - du -ah 查看各个文件的大小
 - find .git/objects -type f   列出.git中存储的所有的
 - git count-objects -v 查看空间使用，size-pack 是以千字节为单位表示的packfiles的大小
-
+- git checkout .  本地所有修改，没有提交的，都返回到原来的状态
+- git stash 把所有

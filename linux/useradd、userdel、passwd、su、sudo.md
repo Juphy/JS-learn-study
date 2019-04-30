@@ -121,3 +121,25 @@ su - root   // 切换到root用户
 ```
 sudo ls
 ```
+
+- /etc/passwd 查看所有的用户
+- cat /etc/passwd | grep xxx 模糊查找xxx相关的用户
+
+### 如何在Linux中配置sudo访问权限
+- /etc/sudoers sudo用户访问权限的控制文件
+- /var/log/secure 和 /var/log/auth.log sudo用户的操作日志
+- 在Linux中使用wheel组为普通用户授予超级用户访问权限
+    - grep -i wheel /etc/sudoers 激活wheel组来获得该访问权限
+    ```
+    ## Allows people in group wheel to run all commands
+    %wheel ALL=(ALL) ALL
+    # %wheel ALL=(ALL) NOPASSWD: ALL
+    ```
+    创建daygeek用户账号
+    - usermod -aG wheel daygeek 将用户daygeek添加到wheel组
+    - getent group wheel 确定daygeek添加到wheel组
+    ```
+    wheel:x:10:daygeek
+    ```
+    - tail -5 /var/log/secure 检测daygeek是否可以访问属于root用户的文件
+    - sudo tail -5 /var/log/secure sudo访问同一文件
