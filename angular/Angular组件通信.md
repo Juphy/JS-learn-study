@@ -1,7 +1,9 @@
 ## 输入属性（父组件->子组件）
+
 > @Input，自定义属性
 
 app.component.ts
+
 ```
 import { Component } from '@angular/core';
 
@@ -15,7 +17,9 @@ export class AppComponent {
   initialCount: number = 5;
 }
 ```
+
 counter.component.ts
+
 ```
 import { Component, Input } from '@angular/core';
 
@@ -39,10 +43,13 @@ export class CounterComponent {
     }
 }
 ```
+
 ## 输出属性（子组件->父组件）
+
 > @Output()，自定义事件
 
 app.component.ts
+
 ```
 import { Component } from '@angular/core';
 
@@ -65,7 +72,9 @@ export class AppComponent {
 }
 // 自定义事件change，接收发送过来的数据。
 ```
+
 counter.component.ts
+
 ```
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
@@ -94,15 +103,19 @@ export class CounterComponent {
 }
 // 当值改变时，通过事件发射数据接收。
 ```
-## 双向绑定
-> [()]，Angular的双向绑定
 
-*通过修改绑定属性的方式，使用双向绑定即可，此时在子组件中只需要接收数据。*
+## 双向绑定
+
+> [()]，Angular 的双向绑定
+
+_通过修改绑定属性的方式，使用双向绑定即可，此时在子组件中只需要接收数据。_
 
 ## 模板变量
-> 通过子组件标签的#child,则child就相当于子组件component。
+
+> 通过子组件标签的#child,则 child 就相当于子组件 component。
 
 parent.component.ts
+
 ```
 import {Component, OnInit} from '@angular/core';
 import {ChildComponent} from './child-component.ts';
@@ -126,7 +139,9 @@ export class ParentComponent implements OnInit {
   }
 }
 ```
+
 child.component.ts
+
 ```
 import {Component} from '@angular/core';
 
@@ -139,22 +154,33 @@ export class ChildComponent {
   public name: string;
 }
 ```
+
 ## 路由传参
+
+ActivatedRoute 专门用于由 Angular 路由器加载的每个路由组件，它包含关于该路由、路由参数以及该路由关联的其他数据的信息。
+
 ### 在查询参数中传递参数
+
 传递参数页面
+
 ```
 <a [routerLink]="['/cinema-chain/cinema']" [queryParams]="{chain: 1}">查看影院</a>
 ```
-点击跳转时，/cinema-chain/cinema?chain=1（?chain=1就是从路由里面传递过来的参数）。
+
+点击跳转时，/cinema-chain/cinema?chain=1（?chain=1 就是从路由里面传递过来的参数）。
 
 接收参数的页面
+
 ```
  constructor(private activatedRoute: ActivatedRoute) {
     const chain = this.activatedRoute.snapshot.queryParams['chain'];
   }
 ```
-### 在url路由路径中传递参数
-在path中传递参数就需要先修改原有的路径使其可以携带参数。
+
+### 在 url 路由路径中传递参数
+
+在 path 中传递参数就需要先修改原有的路径使其可以携带参数。
+
 ```
 const routes: Routes = [
   {path: 'main/:type', loadChildren: './index/index.module#IndexModule'},
@@ -165,7 +191,9 @@ const routes: Routes = [
 ];
 整个路径被划分成两段变量
 ```
+
 传递参数页面
+
 ```
 <a [routerLink]="['/home',2]">主页</a>
 这里的routerLink是一个数组，第一个值为路由的跳转路径，第二值为路由携带参数的值，这里传递的值为2
@@ -180,19 +208,24 @@ const routes: Routes = [
 <a routerLink="/home/{{变量名}}"></a>
 
 ```
+
 页面跳转的结果：/home/2
 
 接收参数页面
+
 ```
  constructor(private activatedRoute: ActivatedRoute) {
     const chain = this.activatedRoute.snapshot.params['id'];
     或者 chain = this.activatedRoute.snapshot.paramMap.get('id');
   }
 ```
-*不能同时使用参数查询方式和路由路径Url 方式传递同一个页面的参数，否则报错。*
+
+_不能同时使用参数查询方式和路由路径 Url 方式传递同一个页面的参数，否则报错。_
 
 ### 参数快照和参数订阅
-参数快照：获取路由中传递的参数的值得一个方法就用到了参数快照snapshot。
+
+参数快照：获取路由中传递的参数的值得一个方法就用到了参数快照 snapshot。
+
 ```
 <a [routerLink]="['/home',2]">主页</a>
 
@@ -201,9 +234,11 @@ change_id(){
 }
 路由路径中想home同时传递了两个参数，1和2
 ```
-当在页面第一次加载的时候会创建一次home，将2这个值传入页面，当点击按钮出发change_id事件的时候也会导航到home，但是在此之前主页已经被创建，并已经被赋值，此时导航到主页，主页并不会再次被创建，所以自然不会再次获取第二次导航过来的路由所携带的参数和值，但是路径变为了/home/1。
 
-然而页面上的值仍然是2，获取当前路由所传递的参数值失败。这就是参数快照的弱点，为了解决这个问题引入了参数订阅：subscribe()。
+当在页面第一次加载的时候会创建一次 home，将 2 这个值传入页面，当点击按钮出发 change_id 事件的时候也会导航到 home，但是在此之前主页已经被创建，并已经被赋值，此时导航到主页，主页并不会再次被创建，所以自然不会再次获取第二次导航过来的路由所携带的参数和值，但是路径变为了/home/1。
+
+然而页面上的值仍然是 2，获取当前路由所传递的参数值失败。这就是参数快照的弱点，为了解决这个问题引入了参数订阅：subscribe()。
+
 ```
  constructor(private activatedRoute: ActivatedRoute) {
     this.activatedRoute.params.subscribe(params => {
@@ -211,12 +246,15 @@ change_id(){
     });
   }
 ```
-采用参数订阅的方式subscribe()获取到一个类型为Params的属性params，并返回params里面的Id复制给本地变量homeID，这样就不会出现路径在变，但是页面里面的参数值不变的情况；
+
+采用参数订阅的方式 subscribe()获取到一个类型为 Params 的属性 params，并返回 params 里面的 Id 复制给本地变量 homeID，这样就不会出现路径在变，但是页面里面的参数值不变的情况；
 
 ## @ViewChild 装饰器
+
 > 父组件获取子组件数据需要借助@ViewChild(),子组件直接引用。
 
 app.component.ts
+
 ```
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { ChildComponent } from './child.component';
@@ -237,7 +275,9 @@ export class AppComponent {
   }
 }
 ```
+
 child.component.ts
+
 ```
 import { Component, OnInit } from '@angular/core';
 
@@ -254,9 +294,12 @@ export class ChildComponent {
     }
 }
 ```
-## 基于RxJS Subject
+
+## 基于 RxJS Subject
+
 `rxjs版本基于6需要结合rxjs-compat使用`
 message.service.ts
+
 ```
 import {Injectable} from '@angular/core';
 import {of} from 'rxjs/observable/of';
@@ -285,7 +328,9 @@ export class MessageService {
   }
 }
 ```
+
 home.component.ts
+
 ```
 import { Component } from '@angular/core';
 import { MessageService } from './message.service';
@@ -312,7 +357,9 @@ export class HomeComponent {
     }
 }
 ```
+
 app.component.ts
+
 ```
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
@@ -344,4 +391,4 @@ export class AppComponent implements OnDestroy {
 }
 ```
 
-*更多[RxJS知识以及用法](https://github.com/RxJS-CN)*
+_更多[RxJS 知识以及用法](https://github.com/RxJS-CN)_

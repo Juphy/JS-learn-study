@@ -1,4 +1,4 @@
-- [Angular](./angular/README.md)
+- [Angular](./Angular/README.md)
 - [Angular常见问题汇总](https://github.com/semlinker/angular-faq)
 - [node](./node/README.md)
 - [JavaScript的数据结构](./JavaScript的数据结构/README.md)
