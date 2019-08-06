@@ -17,8 +17,8 @@
 - vi post-receive 写入以下代码
     ```
     git checkout -f 更新代码
-    echo 'Restarting server:' （记录在面板的log文字）
-    pm2 restart main
+    echo 'Restarting server:' （记录在客户端面板的log文字）
+    pm2 restart main （想要进行的操作）
     echo 'Deployment Done'
     exit 0
     ```
