@@ -1,0 +1,31 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <form>
+        <div>
+            <label for="number1">Multiply number 1:</label>
+            <input type="text" id="number1" value="0">
+        </div>
+        <div>
+            <label for="number2">Multiply number 2:</label>
+            <input type="text" id="number2" value="0">
+        </div>
+    </form>
+    <p class="result">Result: 0</p>
+    <p>
+        Count numbers: <output id="result"></output>
+    </p>
+    <button onclick="startWorker()">Start webWorker</button>
+    <button onclick="stopWorker()">Stop webWorker</button>
+    <input type="text" value="" />
+</body>
+
+</html>
+<script src="main.js"></script>
