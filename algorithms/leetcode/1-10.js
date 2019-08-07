@@ -109,7 +109,7 @@ let lengthOfLongestSubstring2 = function(s) {
         if (!set.has(s[j])) {
             set.add(s[j++]);
             res = Math.max(res, j - i);
-        } else {
+        } else { // 如果有某一值，会一直删除，直至没有重复
             set.delete(s[i++]);
         }
     }
@@ -150,4 +150,57 @@ let findMedianSortedArrays = function(nums1, nums2) {
         }
     }
     return (findKth(nums1, 0, nums2, 0, left) + findKth(nums1, 0, nums2, 0, right)) / 2;
+}
+
+// 5、最长回文子串
+// 以字符为中心，向两边扩散来寻找回文串，这个算法的时间复杂度是O(n*n)。由于回文串的长度可奇可偶，因此两种形式都需要搜索。对于奇数，从遍历到的位置为中心向两边进行扩散，对于偶数，就以当前位置以及下一个位置当做偶数行回文进行遍历。
+let longestPalindrome = function(s) {
+    let len = s.length;
+    if (len < 2) return s;
+    let start = 0,
+        maxLen = 0;
+    let fn = (s, i, j) => {
+        while (i >= 0 && j < len && s[i] === s[j]) {
+            --i;
+            ++j;
+        }
+        if (maxLen < j - i - 1) {
+            start = i + 1;
+            maxLen = j - i - 1;
+        }
+    }
+    for (let i = 0; i < len - 1; i++) {
+        fn(s, i, i); // 奇数
+        fn(s, i, i + 1); // 偶数
+    }
+    return s.substr(start, maxLen);
+}
+
+// 定义起点start跟长度maxLen，遍历字符串，如果剩余字符串长度小于maxLen，就break;否则就向右遍历寻找重复项，然后向两边扩散更新start和maxLen
+let longestPalindrome1 = function(s) {
+    let len = s.length;
+    if (len < 2) return s;
+    let start = 0,
+        maxLen = 0;
+    for (let i = 0; i < len;) {
+        if (len - i <= maxLen / 2) break;
+        let left = i,
+            right = i;
+        while (right < len - 1 && s[left] === s[right + 1]) ++right;
+        i = right + 1;
+        while (left > 0 && right < len - 1 && s[left - 1] === s[right + 1]) {
+            --left;
+            ++right;
+        }
+        if (maxLen < right - left + 1) {
+            start = left;
+            maxLen = right - left + 1;
+        }
+    }
+    return s.substr(start, maxLen);
+}
+
+// 借助二维数组
+let longestPalindrome2 = function(s) {
+
 }
