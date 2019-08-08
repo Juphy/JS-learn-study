@@ -141,8 +141,8 @@ let findMedianSortedArrays = function(nums1, nums2) {
         if (i >= m) return nums2[j + k - 1];
         if (j >= n) return nums1[i + k - 1];
         if (k === 1) return Math.min(nums1[i], nums2[j]);
-        let midVal1 = (i + k / 2 - 1 < m) ? nums1[parseInt(i + k / 2 - 1)] : -1;
-        let midVal2 = (j + k / 2 - 1 < n) ? nums2[parseInt(j + k / 2 - 1)] : -1;
+        let midVal1 = (i + k / 2 - 1 < m) ? nums1[parseInt(i + k / 2 - 1)] : Infinity;
+        let midVal2 = (j + k / 2 - 1 < n) ? nums2[parseInt(j + k / 2 - 1)] : Infinity;
         if (midVal1 < midVal2) {
             return findKth(nums1, parseInt(i + k / 2), nums2, j, parseInt(k - k / 2));
         } else {
@@ -151,6 +151,63 @@ let findMedianSortedArrays = function(nums1, nums2) {
     }
     return (findKth(nums1, 0, nums2, 0, left) + findKth(nums1, 0, nums2, 0, right)) / 2;
 }
+
+let findMedianSortedArrays1 = function(nums1, nums2) {
+    let nums = nums1.concat(nums2);
+    nums.sort((a, b) => a - b);
+    let len = nums.length;
+    return len % 2 === 0 ? (nums[len / 2] + nums[len / 2 - 1]) / 2 : nums[len / 2 - 0.5];
+}
+
+let findMedianSortedArrays2 = function(nums1, nums2) {
+    if (nums1.length > nums2.length) return findMedianSortedArrays2(nums2, nums1);
+    let x = nums1.length,
+        y = nums2.length;
+    let low = 0,
+        high = x
+    while (low <= high) {
+        const partitionX = (high + low) >> 1
+        const partitionY = ((x + y + 1) >> 1) - partitionX
+
+        const maxX = partitionX == 0 ? Number.NEGATIVE_INFINITY : nums1[partitionX - 1]
+        const maxY = partitionY == 0 ? Number.NEGATIVE_INFINITY : nums2[partitionY - 1]
+
+        const minX = partitionX == nums1.length ? Number.POSITIVE_INFINITY : nums1[partitionX]
+        const minY = partitionY == nums2.length ? Number.POSITIVE_INFINITY : nums2[partitionY]
+
+        if (maxX <= minY && maxY <= minX) {
+            const lowMax = Math.max(maxX, maxY)
+            if ((x + y) % 2 == 1)
+                return lowMax
+            return (lowMax + Math.min(minX, minY)) / 2
+        } else if (maxX < minY) {
+            low = partitionX + 1
+        } else
+            high = partitionX - 1
+    }
+}
+
+let findMedianSortedArrays3 = function(nums1, nums2) {
+    let m = nums1.length,
+        n = nums2.length;
+    let i = 0,
+        j = 0;
+    while (i + j < (m + n) / 2) {
+        if (nums1[i] < nums2[j]) {
+            i++;
+        }
+        if (nums1[i] > nums2[j]) {
+            j++;
+        }
+        if (nums1[i] === nums2[j]) {
+            i++;
+            j++;
+        }
+    }
+    console.log(i, j);
+}
+
+findMedianSortedArrays3([1, 2, 3, 4, 5], [1, 2, 3, 4]);
 
 // 5、最长回文子串
 // 以字符为中心，向两边扩散来寻找回文串，这个算法的时间复杂度是O(n*n)。由于回文串的长度可奇可偶，因此两种形式都需要搜索。对于奇数，从遍历到的位置为中心向两边进行扩散，对于偶数，就以当前位置以及下一个位置当做偶数行回文进行遍历。
@@ -202,5 +259,51 @@ let longestPalindrome1 = function(s) {
 
 // 借助二维数组
 let longestPalindrome2 = function(s) {
+    let len = s.length;
+    if (len < 1) return s;
+    let dp = new Array(len),
+        left = 0,
+        maxLen = 1;
+    for (let i = 0; i < len; i++) {
+        dp[i] = new Array(len);
+    }
+    for (let i = 0; i < len; i++) {
+        dp[i][i] = 1;
+        for (let j = 0; j < i; j++) {
+            dp[j][i] = (s[i] === s[j] && (i - j < 2 || dp[j + 1][i - 1]));
+            if (dp[j][i] && maxLen < i - j + 1) {
+                maxLen = i - j + 1;
+                left = j;
+            }
+        }
+    }
+    return s.substr(left, maxLen);
+}
 
+// 马拉车算法 Manacher's Algorithm
+
+let longestPalindrome3 = function(s) {
+    let t = "$#";
+    for (let i = 0; i < s.length; i++) {
+        t += s[i];
+        t += '#';
+    }
+    let p = new Array(t.length);
+    let mx = 0,
+        id = 0,
+        resLen = 0,
+        resCenter = 0;
+    for (let i = 1; i < t.length; i++) {
+        p[i] = mx > i ? Math.min(p[2 * id - i], mx - i) : 1;
+        while (t[i + p[i]] === t[i - p[i]]) ++p[i];
+        if (mx < i + p[i]) {
+            mx = i + p[i];
+            id = i;
+        }
+        if (resLen < p[i]) {
+            resLen = p[i];
+            resCenter = i;
+        }
+    }
+    return s.substr((resCenter - resLen) / 2, resLen - 1);
 }
