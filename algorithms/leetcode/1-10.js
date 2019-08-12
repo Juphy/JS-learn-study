@@ -204,7 +204,6 @@ let findMedianSortedArrays3 = function(nums1, nums2) {
             j++;
         }
     }
-    console.log(i, j);
 }
 
 findMedianSortedArrays3([1, 2, 3, 4, 5], [1, 2, 3, 4]);
@@ -280,8 +279,7 @@ let longestPalindrome2 = function(s) {
     return s.substr(left, maxLen);
 }
 
-// 马拉车算法 Manacher's Algorithm
-
+// 马拉车算法 Manacher's Algorithm 
 let longestPalindrome3 = function(s) {
     let t = "$#";
     for (let i = 0; i < s.length; i++) {
@@ -306,4 +304,109 @@ let longestPalindrome3 = function(s) {
         }
     }
     return s.substr((resCenter - resLen) / 2, resLen - 1);
+}
+
+// 6、ZigZag Conversion 之字型转换字符串
+// 0    6        12
+// 1  57    1113
+// 24  810    1416
+// 3    9        15
+
+let convert = function(s, numRows) {
+    if (!s || s.length < 2 || numRows < 2) return s;
+    let size = 2 * numRows - 2,
+        res = '';
+    for (let i = 0; i < numRows; i++) { // 行
+        for (let j = i; j < s.length; j += size) { // 列
+            res += s[j]; // 取2*numRows列
+            if (i !== 0 && i !== numRows - 1) { // 除去第一行和最后一行
+                let k = j + size - 2 * i;
+                if (k < s.length) {
+                    res += s[k];
+                }
+                ``
+            }
+        }
+    }
+    return res;
+}
+
+// 7、Reverse Integer 翻转整数（给定32位符号整数）
+// [-2^31, 2^31-1]
+let reverse = function(x) {
+    x = Math.sign(x) * parseInt(Math.abs(x).toString().split('').reverse().join(''));
+    return x >= Math.pow(-2, 31) && x <= (Math.pow(2, 31) - 1) ? x : 0;
+}
+
+let reverse1 = function(x) {
+    let res = 0;
+    while (x !== 0) {
+        if (Math.abs(res) > Infinity / 10) return 0;
+        res = res * 10 + x % 10;
+        x = parseInt(x / 10);
+    }
+    return res;
+}
+
+// 8、String into Integer 字符串转为整数
+// - 只有空格字符' ' 被视为空白字符
+// - 整数范围[-2^31, 2^31-1]，如果超出表示的数值范围，返回2^31-1或者2^31
+// "4193 with words"==> 4193    "word and 987" ===> 0
+let myAtoi = function(str) {
+    return Math.max(Math.min(parseInt(str) || 0, Math.pow(2, 31) - 1), Math.pow(-2, 31))
+}
+
+let myAtoi1 = function(str) {
+    let sign = 1,
+        flag = true,
+        res = 0,
+        i = 0;
+    while (i < str.length && flag) {
+        if (str[i] === '-' && sign === 1) sign = -1;
+        if (!isNaN(str[i])) {
+            if (str[i] !== ' ') res = res * 10 + (str[i] - '0')
+        } else {
+            if (!(sign === -1 && str[i] === '-')) flag = false;
+        }
+        i++;
+    }
+    return res * sign;
+}
+
+// 9、Palindrome Number 验证回文数字
+// 首尾验证，在去除首尾循环验证
+let isPalindrome = function(x) {
+    if (x < 0) return false;
+    let size = 1;
+    while (x / size >= 10) size *= 10;
+    while (x > 0) {
+        let left = parseInt(x / size),
+            right = x % 10;
+        if (left !== right) return false;
+        x = parseInt(x % size / 10);
+        size /= 100;
+    }
+    return true;
+}
+
+// 反向取数比较
+let isPalindrome1 = function(x) {
+    if (x < 0) return false;
+    let num = 0,
+        y = x;
+    while (y > 0) {
+        num = num * 10 + y % 10;
+        y = Math.floor(y / 10);
+    }
+    return x === num;
+}
+
+let isPalindrome2 = function(x) {
+    if (x < 0) return false;
+    let num = 0;
+    while (x > num) {
+        num = num * 10 + x % 10;
+        x = parseInt(x / 10);
+    }
+
 }
