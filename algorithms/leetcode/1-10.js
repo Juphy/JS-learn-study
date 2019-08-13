@@ -401,12 +401,73 @@ let isPalindrome1 = function(x) {
     return x === num;
 }
 
+// 后半段翻转比较，奇数与偶数相异
 let isPalindrome2 = function(x) {
-    if (x < 0) return false;
-    let num = 0;
-    while (x > num) {
-        num = num * 10 + x % 10;
+    if (x < 0 || (x % 10 === 0 && x !== 0)) return false;
+    let y = 0;
+    while (x > y) {
+        y = y * 10 + x % 10;
         x = parseInt(x / 10);
     }
+    return x === y || x === parseInt(y / 10);
+}
 
+// 其他
+let isPalindrome3 = function(x) {
+    if (x < 0) return false;
+    return x === Number(x.toString().split('').reverse().join(''));
+}
+
+// 10、Regular Expression Matching正则表达式匹配  
+// '.' 匹配任意字符
+// '*'匹配0或者多个相同的字符串
+// s==> 空或者a-z
+// p==> 空,a-z,.,*
+let isMatch = function(s, p) {
+    if (!p.length) return !s.length; // 如果p为空则s也为空，反之返回false.
+    if (p.length === 1) return s.length === 1 && (s === p || p === '.'); // 若p的长度为1，s的长度也为1且相同或者p为“.”
+    if (p[1] !== '*') { // 若p的第二个字符不为"*"，若此时s为空返回false，否则判断首字符是否匹配，且从第二个字符开始调用递归函数匹配。
+        if (!s.length) return false;
+        return (s[0] === p[0] || p[0] === '.') && isMatch(s.slice(1), p.slice(1));
+    }
+    while (s.length && (s[0] === p[0] || p[0] === '.')) {
+        if (isMatch(s, p.slice(2))) return true;
+        s = s.slice(1);
+    }
+    return isMatch(s, p.slice(2));
+}
+
+let isMatch1 = function(s, p) {
+    if (!p.length) return !s.length;
+    if (p.length > 1 && p[1] === "*") {
+        return isMatch(s, p.slice(2)) || (s.length && (s[0] === p[0] || p[0] === '.') && isMatch(s.slice(1), p));
+    } else {
+        return s.length && (s[0] === p[0] || p[0] === '.') && isMatch(s.slice(1), p.slice(1));
+    }
+}
+
+//  二维数组DP，dp[i][j]表示s[0,i)和p[0,j)是否match
+// dp[i][j] = dp[i-1][j-1]，if dp[j-1]!=="*"&&(s[i-1]===p[j-1]||p[j-1]===".")
+// dp[i][j] = dp[i][j-2]，if dp[j-1]==="*" and the pattern repeats for 0 times
+// dp[i][j] = dp[i-1][j]&&(s[i-1]===p[j-2]||p[j-2]==='.')， if p[j-1]==="*" and the pattern repeats for at least 1 times.
+let isMatch2 = function(s, p) {
+    let m = s.length,
+        n = p.length;
+    let dp = new Array(m + 1).fill(0).map(() => new Array(n + 1).fill(false));
+    dp[0][0] = true;
+    for (let i = 0; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (p[j - 1] == '*') {
+                dp[i][j] = dp[i][j - 2] || (i && (s[i - 1] === p[j - 2] || p[j - 2] === '.') && dp[i - 1][j]);
+            } else {
+                dp[i][j] = (i && dp[i - 1][j - 1] && (s[i - 1] === p[j - 1] || p[j - 1] === '.'));
+            }
+        }
+    }
+    return dp[m][n];
+}
+
+let isMatch3 = function(s, p) {
+    let reg = new RegExp(`^${p}$`);
+    return reg.test(s);
 }
