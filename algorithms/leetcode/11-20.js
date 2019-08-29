@@ -200,4 +200,52 @@ let longestCommonPrefix3 = function(strs) {
 // 15、3Sum
 let threeSum = function(nums) {
     if (nums.length < 3) return [];
+    nums = nums.sort((a, b) => a - b); // 对原数组进行排序，从小到大
+    if (nums[0] > 0 || nums[nums.length - 1] < 0) return [];
+    let res = [];
+    for (let i = 0; i < nums.length - 2; i++) {
+        if (nums[i] > 0) break; // 只比较<=0的数据
+        if (nums[i] === nums[i - 1]) continue; // 如果和前一个值相同，就跳过
+        let v = 0 - nums[i],
+            l = i + 1,
+            r = nums.length - 1;
+        while (l < r) {
+            let _v = nums[l] + nums[r];
+            if (v === _v) {
+                res.push([nums[i], nums[l], nums[r]]);
+                while (l < r && nums[l] === nums[l + 1]) l++; // 值相同光标就进行移动
+                while (l < r && nums[r] === nums[r - 1]) r--;
+                l++;
+                r--;
+            };
+            // 不同的结果，移动不同的光标
+            if (v > _v) l++;
+            if (v < _v) r--;
+        }
+    }
+    return res;
 }
+
+// 16、3sum cloest
+let threeSumClosest = (nums, target) => {
+    let diff = Number.MAX_SAFE_INTEGER,
+        cloest;
+    nums = nums.sort((a, b) => a - b);
+    for (let i = 0; i < nums.length - 2; i++) {
+        if (nums[i] === nums[i - 1]) continue;
+        let l = i + 1,
+            r = nums.length - 1;
+        while (l < r) {
+            let sum = nums[i] + nums[l] + nums[r];
+            let newDiff = Math.abs(sum - target);
+            if (newDiff === 0) return sum;
+            if (diff > newDiff) diff = newDiff, closet = sum;
+            if (sum > target) r--;
+            else l++;
+        }
+    }
+    return cloest;
+}
+
+
+// 17、Letter Combination of a Phone Number

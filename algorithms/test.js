@@ -1,102 +1,69 @@
-let fn = (nums, target) => {
-    let map = new Map(),
-        len = nums.length;
-    for (let i = 0; i < len; i++) {
-        let j = map.get(target - nums[i]);
-        console.log(j);
-        if (j > -1) {
-            return [j, i];
-        }
-        map.set(nums[i], i);
-    }
-    return [];
-}
-console.log(fn([2, 7, 11, 15], 9));
-
-function ListNode(val) {
-    this.val = val;
-    this.next = null;
-}
-
-let fo = (l1, l2) => {
-    let l = new ListNode(null),
-        cur = l,
-        carry = 0;
-    while (l1, l2) {
-        let val1 = l1 ? l1.val : 0,
-            val2 = l2 ? l2.val : 0;
-        let sum = val1 + val2 + carry;
-        carry = parseInt(sum / 10);
-        cur.next = new ListNode(sum % 10);
-        cur = cur.next;
-        l1 && (l1 = l1.next);
-        l2 && (l2 = l2.next);
-    }
-    if (carry) cur.next = new ListNode(carry);
-    return l.next;
-}
-
-let foo = (s) => {
-    let map = new Map(),
-        left = -1,
-        res = 0;
-    for (let i = 0; i < s.length; i++) {
-        let j = map.get(s[i]);
-        if (j > left) {
-            left = j;
-        }
-        map.set(s[i], i);
-        res = Math.max(res, i - left);
-    }
-}
-
-let f = (s) => {
-    let set = new Set(),
-        i = 0,
-        j = 0,
-        res = 0,
-        len = s.length;
-    while (i < len && j < len) {
-        if (set.has(s[j])) {
-            set.delete(s[i++]);
-        } else {
-            set.add(s[j++]);
-            res = Math.max(res, j - i);
-        }
-        console.log(set);
+let threeSum = function(nums) {
+    if (nums.length < 3) return [];
+    nums = nums.sort((a, b) => a - b);
+    if (nums[0] > 0 || nums[nums.length - 1] < 0) return [];
+    let res = [];
+    for (let i = 0; i < nums.length - 2; i++) {
+        if (nums[i] > 0) break;
+        if (nums[i] === nums[i - 1]) continue;
+        let v = 0 - nums[i],
+            l = i + 1,
+            r = nums.length - 1;
+        while (l < r) {
+            let _v = nums[l] + nums[r];
+            if (v === _v) {
+                res.push([nums[i], nums[l], nums[r]]);
+                while (l < r && nums[l] === nums[l + 1]) l++;
+                while (l < r && nums[r] === nums[r - 1]) r--;
+                l++;
+                r--;
+            }
+            if (v > _v) l++;
+            if (v < _v) r--;
+        };
     }
     return res;
 }
 
-let longestPalindrome = function(s) {
-    let len = s.length;
-    if (len < 0) return s;
-    let start = 0,
-        maxLen = 0;
-    for (let i = 0; i < len;) {
-        let left = i,
-            right = i;
-        while (right < len - 1 && s[right] === s[right + 1]) {
-            ++right;
-        }
-        i = right + 1;
-        while (left > 0 && right < len - 1 && s[left - 1] === s[right + 1]) {
-            --left;
-            ++right;
-        }
-        if (maxLen < right - left + 1) {
-            start = left;
-            maxLen = right - left + 1;
+let longestCommonPrefix = (strs) => {
+    let res = strs[0] || '';
+    for (let i = 0; i < res.length; i++) {
+        let pre = res[i];
+        for (let j = 1; j < strs.length; j++) {
+            if (strs[j][i] !== pre) return res.slice(0, i);
         }
     }
-    return s.substr(start, maxLen);
+    return res;
 }
 
-// console.log(longestPalindrome("cbbd"));
+let threeSumClosest = (nums, target) => {
+    let diff = Number.MAX_SAFE_INTEGER;
+    nums = nums.sort((a, b) => a - b);
+    for (let i = 0; i < nums.length - 2; i++) {
+        if (nums[i] === nums[i - 1]) continue;
+        let l = i + 1,
+            r = nums.length - 1;
+        while (l < r) {
+            let sum = nums[i] + nums[l] + nums[r];
+            let newDiff = Math.abs(sum - target);
+            if (newDiff === 0) return sum;
+            if (diff > newDiff) diff = newDiff, closest = sum;
+            if (sum > target) r--;
+            else l++;
+        }
+    }
+    return closest;
+}
 
-let findMedianSortedArrays = function(nums1, nums2) {}
-findMedianSortedArrays([1, 2, 3, 4, 5], [1, 2, 3, 4]);
-findMedianSortedArrays([-2, -1], [3]);
-findMedianSortedArrays([1, 2], [3, 4]);
-findMedianSortedArrays([1, 2, 5, 6], [3, 4]);
-findMedianSortedArrays([1, 2], [3, 4, 5, 6, 7]);
+let letterCombinations = (digits) => {
+    let dict = {
+        2: ['a', 'b', 'c'],
+        3: ['a', 'b', 'c'],
+        4: ['a', 'b', 'c'],
+        5: ['a', 'b', 'c'],
+        6: ['a', 'b', 'c'],
+        7: ['a', 'b', 'c'],
+        8: ['a', 'b', 'c'],
+        9: ['a', 'b', 'c']
+    }
+}
