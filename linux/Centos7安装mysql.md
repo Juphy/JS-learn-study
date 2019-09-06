@@ -109,7 +109,7 @@ grant命令说明：
 - with grant option 表示该用户可以将自己拥有的权限授权给别人。可以使用grant重复给用户添加权限，权限叠加。
 
 ### 配置MySQL远程连接
-为了安全考虑，Oneinstack仅允许云主机本机（localhost）连接数据库，如果需要远程连接数据库，需要进行以下操作：
+为了安全考虑，Oneinstack仅允许云主机本机（localhost）连接数据库，如果需要远程连接数据库，需要进行以下操作：（服务器重启之后也需要重新操作一下iptables）
 - 打开iptables3306端口
 ```
  iptables -I INPUT 4 -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT（其中INPUT后的数字可修改）
