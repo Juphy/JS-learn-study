@@ -249,3 +249,172 @@ let threeSumClosest = (nums, target) => {
 
 
 // 17、Letter Combination of a Phone Number
+let letterCombinations = (digits) => {
+    if (!digits) return [];
+    let dict = {
+        2: ['a', 'b', 'c'],
+        3: ['d', 'e', 'f'],
+        4: ['g', 'h', 'i'],
+        5: ['j', 'k', 'l'],
+        6: ['m', 'n', 'o'],
+        7: ['p', 'q', 'r', 's'],
+        8: ['t', 'u', 'v'],
+        9: ['w', 'x', 'y', 'z']
+    };
+    return digits.split('').reduce((a, k) => {
+        if (!a.length) return [...dict[k]];
+        else {
+            let ary = [];
+            a.forEach(i => {
+                dict[k].forEach(j => {
+                    ary.push(i + j);
+                })
+            })
+            return ary;
+        }
+    }, [])
+}
+
+// 递归 (有问题)
+let letterCombinations1 = (digits) => {
+    let dict = {
+        2: ['a', 'b', 'c'],
+        3: ['d', 'e', 'f'],
+        4: ['g', 'h', 'i'],
+        5: ['j', 'k', 'l'],
+        6: ['m', 'n', 'o'],
+        7: ['p', 'q', 'r', 's'],
+        8: ['t', 'u', 'v'],
+        9: ['w', 'x', 'y', 'z']
+    };
+    if (digits.length === 1) return dict[digits[0]];
+    let start = dict[digits[0]];
+    let subs = letterCombinations1(digits.slice(1));
+    let res = [];
+    start.forEach(i => {
+        subs.forEach(j => {
+            res.push(i + j);
+        })
+    })
+    return res;
+}
+
+// 18、fourSum 
+let fourSum = (nums, target) => {
+    let res = [];
+    nums = nums.sort((a, b) => a - b);
+    for (let i = 0; i < nums.length - 3; i++) {
+        if (i > 0 && nums[i] === nums[i - 1]) continue;
+        for (let j = i + 1; j < nums.length - 2; j++) {
+            if (j > i + 1 && nums[j] === nums[j - 1]) continue;
+            let l = j + 1,
+                r = nums.length - 1;
+            while (l < r) {
+                let sum = nums[i] + nums[j] + nums[l] + nums[r];
+                if (sum === target) {
+                    res.push(nums[i], nums[j], nums[l], nums[r]);
+                    while (l < r && nums[l] === nums[l + 1]) l++;
+                    while (l < r && nums[r] === nums[r - 1]) r--;
+                    l++;
+                    r--;
+                } else if (sum < targer) l++;
+                else r--;
+            }
+        }
+    }
+}
+
+let fourSum1 = (nums, target) => {
+    let res = [],
+        n = nums.length;
+    nums = nums.sort((a, b) => a - b);
+    for (let i = 0; i < nums.length - 3; i++) {
+        if (i > 0 && nums[i] === nums[i - 1]) continue;
+        if (nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3] > target) break;
+        if (nums[i] + nums[n - 3] + nums[n - 2] + nums[n - 1] < target) continue;
+        for (let j = i + 1; j < nums.length - 2; j++) {
+            if (j > i + 1 && nums[j] === nums[j - 1]) continue;
+            if (nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > target) break;
+            if (nums[i] + nums[j] + nums[n - 2] + nums[n - 1] < target) continue;
+            let l = j + 1;
+            r = n - 1;
+            while (l < r) {
+                let sum = nums[i] + nums[j] + nums[l] + nums[r];
+                if (sum === target) {
+                    res.push([nums[i], nums[j], nums[l], nums[r]]);
+                    while (l < r && nums[l] === nums[l + 1]) l++;
+                    while (l < r && nums[r] === nums[r - 1]) r--;
+                    l++;
+                    r--;
+                } else if (sum < target) l++;
+                else r--;
+            }
+        }
+    }
+    return res;
+}
+
+// 19、remove Nth Node From End of List 移除链表倒数第N个节点
+// 相当于移除第 len - n +1 节点的
+let removeNthFromEnd = (head, n) => {
+    let dummy = new ListNode(null);
+    dummy.next = head;
+    let len = 0;
+    let first = head;
+    while (first !== null) {
+        len++;
+        first = first.next;
+    }
+    len -= n;
+    first = dummy;
+    while (len > 0) {
+        len--;
+        first = first.next;
+    }
+    first.next = first.next.next;
+    return dummy.next;
+}
+
+// 两个指针，前后相差n
+let removeNthFromEnd1 = (head, n) => {
+    let dummy = new ListNode(null);
+    dummy.next = head;
+    let first = dummy,
+        second = dummy;
+    // first先行n步    
+    for (let i = 1; i <= n; i++) {
+        first = first.next;
+    }
+    // first move to end
+    while (first.next) {
+        first = first.next;
+        second = second.next;
+    }
+    second.next = second.next.next;
+    return dummy.next;
+}
+
+// 20 Valid Parenthese 验证括号
+//  用栈解决，先进后出，array模拟之
+let isValid = (s) => {
+    if (s.length % 2 !== 0) return false;
+    let dict = {
+        "}": "{",
+        ")": "(",
+        "]": "["
+    };
+    let stach = [];
+    for (let i = 0; i < s.length; i++) {
+        if (dict[s[i]]) {
+            if (statch.pop() !== dict[s[i]]) {
+                return false;
+            }
+        } else {
+            stach.push(s[i]);
+        }
+    }
+    if (statch.length) {
+        return false;
+    }
+    return true;
+}
