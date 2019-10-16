@@ -86,3 +86,50 @@ let swapPairs1 = (head) => {
     t.next = head;
     return t;
 }
+
+let swapPairs2 = (head) => {
+    let thead = new ListNode(null),
+        t = thead;
+    thead.next = head;
+    while (t.next && t.next.next) {
+        let a = t.next,
+            b = t.next.next;
+        t.next = b;
+        a.next = b.next;
+        b.next = a;
+        t.next = t.next.next;
+    }
+    return t.next;
+}
+
+// 25、k个一组翻转链表
+//   list: 1->2->3->4->5
+// k=2: 2->1->4->3->5
+// k=3: 3->2->1->4->5
+let reverseKGroup = (head, k) => {
+    if (!head || k === 1) return head;
+    let thead = new ListNode(null),
+        pre = thead,
+        cur = head;
+    thead.next = head;
+    let reverseGroup = (pre, next) => {
+        let last = pre.next,
+            cur = last.next;
+        while (cur !== next) {
+            last.next = cur.next;
+            cur.next = pre.next;
+            pre.next = cur;
+            cur = last.next;
+        }
+        return last;
+    }
+    for (let i = 1; cur; i++) {
+        if (i % k === 0) {
+            pre = reverseGroup(pre, cur.next);
+            cur = pre.next;
+        } else {
+            cur = cur.next;
+        }
+    }
+    return thead.next;
+}
