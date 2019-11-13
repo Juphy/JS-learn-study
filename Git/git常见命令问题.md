@@ -64,3 +64,24 @@ echo  git仓库的文件夹  >>  .git/info/sparse-checkout  （这里的工作�
 git pull origin master
 ```
 
+### 本地代码与线上代码不一致
+- Repository is not clean.  Please commit or stash any changes before updating. 
+- Please commit your changes or stash them before you merge.error: Your local changes to the following files would be overwritten by merge.
+解决方法：
+```
+git reset --hard  // 将当前的工作目录重置
+git pull origin master // 拉取远程更新到本地
+```
+```
+git stash   // save uncommited changes 将本地未提交的修改暂存
+git pull origin master
+git stash pop
+```
+
+### .gitignore
+- ?：代表任意字符
+- *：代表任意数目的字符
+- {!ab}：必须不是此类型
+- {ab,bb,cx}：代表ab、bb、cx中任一类型即可
+- `[`abc`]`：代表a、b、c中任一字符即可
+- `[`^abc`]`：代表必须不是a,b,c中任一字符
