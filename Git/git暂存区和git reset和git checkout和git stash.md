@@ -2,7 +2,7 @@
 
 ![head](../assets/images/head1.png)
 
-左侧是工作区，也就是本地电脑上的文件，index 就是暂存区，右侧是 HEAD（git 版本库）。HEAD 是一个头指针。git 的绝大部分操作都是在工作区、暂存区和版本库中移来移去。
+左侧是工作区，也就是本地电脑上的文件，index 就是暂存区，右侧是 HEAD（git 版本库=>工作区中隐藏的目录`.git`，Git的版本库里存了很多东西，其中最重要的就是stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针HEAD）。HEAD 是一个头指针。git 的绝大部分操作都是在工作区、暂存区和版本库中移来移去。
 
 > git add
 
@@ -12,19 +12,19 @@
 
 把文件从暂存区复制到或提交到版本库
 
-> git checkout --(有空格) `<`file>
+> git checkout --(有空格) `<`file`>`
 
-用暂存区的某个文件来覆盖工作区，经常用于撤销一些文件内容的修改。因为会修改工作区且无法撤销。假设正在编辑 a.txt 文件需要写两段，写完第一段时，通过 git add a.txt 将 a.txt 复制到暂存区，这样的话，如果在写第二段时写错了，可以直接通过 git checkout -- a.txt 恢复到第一段完成时的样子。git checkout --（有空格）`<`file>是用来使工作区回到上次操作 git add 的样子。
+用暂存区的某个文件来覆盖工作区，经常用于撤销一些文件内容的修改。因为会修改工作区且无法撤销。假设正在编辑 a.txt 文件需要写两段，写完第一段时，通过 git add a.txt 将 a.txt 复制到暂存区，这样的话，如果在写第二段时写错了，可以直接通过 git checkout -- a.txt 恢复到第一段完成时的样子。git checkout --（有空格）`<`file`>`是用来使工作区回到上次操作 git add 的样子。
 
-> git checkout HEAD `<`file>
+> git checkout HEAD `<`file`>`
 
 用版本库来同时覆盖暂存区和工作区，用来彻底撤销一个修改，会同时修改工作区和暂存区，且无法撤销。假设正在编辑 a.txt 文件需要写两段，写完第一段时，使用 git add a.txt 命令先备份到暂存区，然后接着写第二段，结果发现思路不对，就可以通过 git checkout HEAD a.txt 将工作区和暂存区中 a.txt 的修改都撤销，回到上次提交之前的样子。
 
-> git reset HEAD
+> git reset HEAD `<`file`>`
 
-git reset HEAD `<`file>通常用来撤销 git add 操作，并不会把文件删除，可以重新 git add。假设新增一个 c.txt 文件，并通过 git add c.txt 将此文件复制到了暂存区，但这个文件没有必要提交，可以使用 git reset HEAD c.txt 命令，它的本质是使用版本可来覆盖暂存区，由于版本库没有 c.txt，所以覆盖后，暂存区也就没有 c.txt，从而实现对 git add 命令的撤销。
+git reset HEAD `<`file`>`通常用来撤销 git add 操作，并不会把文件删除，可以重新 git add。假设新增一个 c.txt 文件，并通过 git add c.txt 将此文件复制到了暂存区，但这个文件没有必要提交，可以使用 git reset HEAD c.txt 命令，它的本质是使用版本可来覆盖暂存区，由于版本库没有 c.txt，所以覆盖后，暂存区也就没有 c.txt，从而实现对 git add 命令的撤销。
 
-> git rm -cached `<`file>
+> git rm -cached `<`file`>`
 
 将一个文件从暂存区删除。假设有一个已经提交（git commit）到版本库的文件，然后发现这个文件其实不应该提交上去（例如配置文件，每个人的都不一样），但又不能直接删掉，假设这个文件的名字叫做 user.config，你可以这么操作： 1.通过 git rm --cached user.config 命令将此文件从暂存区删除 2.通过修改.gitignore 文件，把 user.config 加到文件中，使 git 忽略这个文件 3.通过 git commit -m"xxx"命令，用暂存区覆盖版本库。由于暂存区没了这个文件，覆盖后，版本库也就没了这个文件，这个文件就被这么从版本库删掉了，但是他还保留在工作区。
 

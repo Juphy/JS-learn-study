@@ -30,3 +30,10 @@
 ### 卸载node
 - yum remove nodejs npm -y
 - 删除/usr/local/lib、/usr/local/include、/usr/local/bin下所有的node和node_modules文件夹或者可执行node和npm
+
+### yum安装
+- curl -sL https://rpm.nodesource.com/setup_13.x | bash -
+- curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+- sudo yum install gcc-c++ make
+- sudo yum -y install nodejs
+- npm i n -g(用n来管理node的版本)

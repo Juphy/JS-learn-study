@@ -4,11 +4,12 @@
 
 > 安装git
 
-- wget url(github中git发布的版本下载地址)
-- tar zxf git-2.9.2.tar.gz  解压文件
-- cd git-2.9.2
-- make prefix=/usr/local/git all
-- make prefix=/usr/local/git install
+- wget url(github中git发布的版本下载地址https://github.com/git/git/archive/v2.24.0.tar.gz)
+- tar xzvf v-2.24.0.tar.gz  解压文件
+- cd git-2.24.0
+- ./configure
+- make
+- make install
 
 > 添加到环境变量
 
