@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'exe-app',
   template: `
-   <exe-counter [count]="initialCount"></exe-counter>
+   <exe-counter [initialCount]="initialCount"></exe-counter>
   `
 })
 export class AppComponent {
@@ -32,7 +32,7 @@ import { Component, Input } from '@angular/core';
     `
 })
 export class CounterComponent {
-    @Input() count: number = 0;
+    @Input('initialCount') count: number = 0; // 为子属性count指定别名initialCount
 
     increment() {
         this.count++;
@@ -44,9 +44,121 @@ export class CounterComponent {
 }
 ```
 
+> 通过 setter 监听输入属性值的变化
+
+child.component.ts
+
+```
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-name-child',
+  template: '<h3>"{{name}}"</h3>'
+})
+export class NameChildComponent {
+  private _name = '';
+
+  @Input()
+  set name(name: string) {
+    this._name = (name && name.trim()) || '<no name set>'; // trim掉名字里的空格，并把控制替换成默认字符串。
+  }
+
+  get name(): string { return this._name; }
+}
+```
+
+parent.component.ts
+
+```
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-name-parent',
+  template: `
+  <h2>Master controls {{names.length}} names</h2>
+  <app-name-child *ngFor="let name of names" [name]="name"></app-name-child>
+  `
+})
+export class NameParentComponent {
+  // Displays 'Dr IQ', '<no name set>', 'Bombasto'
+  names = ['Dr IQ', '   ', '  Bombasto  '];
+}
+```
+
+> 通过 ngOnChanges()来监听属性值的变化
+
+child.components.ts
+
+```
+import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
+
+@Component({
+  selector: 'app-version-child',
+  template: `
+    <h3>Version {{major}}.{{minor}}</h3>
+    <h4>Change log:</h4>
+    <ul>
+      <li *ngFor="let change of changeLog">{{change}}</li>
+    </ul>
+  `
+})
+export class VersionChildComponent implements OnChanges {
+  @Input() major: number;
+  @Input() minor: number;
+  changeLog: string[] = [];
+
+  // 监听major和minor
+  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+    let log: string[] = [];
+    for (let propName in changes) {
+      let changedProp = changes[propName];
+      let to = JSON.stringify(changedProp.currentValue);
+      if (changedProp.isFirstChange()) {
+        log.push(`Initial value of ${propName} set to ${to}`);
+      } else {
+        let from = JSON.stringify(changedProp.previousValue);
+        log.push(`${propName} changed from ${from} to ${to}`);
+      }
+    }
+    this.changeLog.push(log.join(', '));
+  }
+}
+```
+
+parent.component.ts
+
+```
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-version-parent',
+  template: `
+    <h2>Source code version</h2>
+    <button (click)="newMinor()">New minor version</button>
+    <button (click)="newMajor()">New major version</button>
+    <app-version-child [major]="major" [minor]="minor"></app-version-child>
+  `
+})
+export class VersionParentComponent {
+  major = 1;
+  minor = 23;
+
+  newMinor() {
+    this.minor++;
+  }
+
+  newMajor() {
+    this.major++;
+    this.minor = 0;
+  }
+}
+```
+
 ## 输出属性（子组件->父组件）
 
 > @Output()，自定义事件
+
+_子组件暴露一个 EventEmitter 属性，当事件发生时，子组件利用该属性 emits（向上弹射）事件。父组件绑定到这个事件属性，并在事件发生时做出回应_
 
 app.component.ts
 
@@ -104,6 +216,59 @@ export class CounterComponent {
 // 当值改变时，通过事件发射数据接收。
 ```
 
+child.component.ts
+
+```
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-voter',
+  template: `
+    <h4>{{name}}</h4>
+    <button (click)="vote(true)"  [disabled]="didVote">Agree</button>
+    <button (click)="vote(false)" [disabled]="didVote">Disagree</button>
+  `
+})
+export class VoterComponent {
+  @Input()  name: string;
+  @Output() voted = new EventEmitter<boolean>();
+  didVote = false;
+
+  // 点击按钮触发true或false（布尔型有效载荷）的事件
+  vote(agreed: boolean) {
+    this.voted.emit(agreed);
+    this.didVote = true;
+  }
+}
+```
+
+parent.component.ts
+
+```
+import { Component }      from '@angular/core';
+
+@Component({
+  selector: 'app-vote-taker',
+  template: `
+    <h2>Should mankind colonize the Universe?</h2>
+    <h3>Agree: {{agreed}}, Disagree: {{disagreed}}</h3>
+    <app-voter *ngFor="let voter of voters"
+      [name]="voter"
+      (voted)="onVoted($event)">
+    </app-voter>
+  `
+})
+export class VoteTakerComponent {
+  agreed = 0;
+  disagreed = 0;
+  voters = ['Narco', 'Celeritas', 'Bombasto'];
+
+  onVoted(agreed: boolean) {
+    agreed ? this.agreed++ : this.disagreed++;
+  }
+}
+```
+
 ## 双向绑定
 
 > [()]，Angular 的双向绑定
@@ -153,6 +318,72 @@ import {Component} from '@angular/core';
 export class ChildComponent {
   public name: string;
 }
+```
+
+> 父组件与子组件通过本地变量互动
+
+_通过把本地变量（#timer）放到子组件的标签上，来代表子组件。这样父组件的模板就得到了子组件的引用，于是可以在父组件的模板中访问子组件的所有属性和方法。_
+child.component.ts
+
+```
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-countdown-timer',
+  template: '<p>{{message}}</p>'
+})
+export class CountdownTimerComponent implements OnInit, OnDestroy {
+
+  intervalId = 0;
+  message = '';
+  seconds = 11;
+
+  clearTimer() { clearInterval(this.intervalId); }
+
+  ngOnInit()    { this.start(); }
+  ngOnDestroy() { this.clearTimer(); }
+
+  start() { this.countDown(); }
+  stop()  {
+    this.clearTimer();
+    this.message = `Holding at T-${this.seconds} seconds`;
+  }
+
+  private countDown() {
+    this.clearTimer();
+    this.intervalId = window.setInterval(() => {
+      this.seconds -= 1;
+      if (this.seconds === 0) {
+        this.message = 'Blast off!';
+      } else {
+        if (this.seconds < 0) { this.seconds = 10; } // reset
+        this.message = `T-${this.seconds} seconds and counting`;
+      }
+    }, 1000);
+  }
+}
+```
+
+parent.components.ts
+
+```
+import { Component } from '@angular/core';
+import { CountdownTimerComponent }  from './countdown-timer.component';
+
+@Component({
+  selector: 'app-countdown-parent-lv',
+  template: `
+  <h3>Countdown to Liftoff (via local variable)</h3>
+  <button (click)="timer.start()">Start</button>
+  <button (click)="timer.stop()">Stop</button>
+  // 把本地变量#timer放到<countdown-timer>标签中，用来代表子组件。
+
+  <div class="seconds">{{timer.seconds}}</div>
+  <app-countdown-timer #timer></app-countdown-timer>
+  `,
+  styleUrls: ['../assets/demo.css']
+})
+export class CountdownLocalVarParentComponent { }
 ```
 
 ## 路由传参
@@ -251,6 +482,8 @@ change_id(){
 
 ## @ViewChild 装饰器
 
+`本地变量`（#timer）方法有局限性，因为父组件-子组件的连接必须全部在父组件的模板中进行，父组件本身的代码堆子组件没有访问权。如果父组件的类需要读取子组件的属性值或调用子组件的方法，就不能使用`本地变量`方法。当父组件类需要这种访问时，可以把子组件作为 ViewChild，注入到父组件里面。
+
 > 父组件获取子组件数据需要借助@ViewChild(),子组件直接引用。
 
 app.component.ts
@@ -267,7 +500,7 @@ import { ChildComponent } from './child.component';
   `,
 })
 export class AppComponent {
-  @ViewChild(ChildComponent)
+  @ViewChild(ChildComponent, {static: false}) // V8需要添加{ static: false }参数
   childCmp: ChildComponent;
 
   ngAfterViewInit() {
@@ -291,6 +524,83 @@ export class ChildComponent {
     name: string = '';
     constructor(private appcomponent:AppComponent) {
       this.name='child-component'
+    }
+}
+```
+
+```
+// child
+@Component({
+    selector: 'app-countdown-child',
+    template: '<p>{{message}}</p>'
+})
+export class CountdownChildComponent implements OnInit, OnDestroy {
+
+    intervalId = 0;
+    message = '';
+    seconds = 11;
+
+    clearTimer() { clearInterval(this.intervalId); }
+
+    ngOnInit() { this.start(); }
+    ngOnDestroy() { this.clearTimer(); }
+
+    start() { this.countDown(); }
+    stop() {
+        this.clearTimer();
+        this.message = `Holding at T-${this.seconds} seconds`;
+    }
+
+    private countDown() {
+        this.clearTimer();
+        this.intervalId = window.setInterval(() => {
+            this.seconds -= 1;
+            if (this.seconds === 0) {
+                this.message = 'Blast off!';
+            } else {
+                
+                if (this.seconds < 0) { this.seconds = 10; } // reset
+                this.message = `T-${this.seconds} seconds and counting`;
+            }
+        }, 1000);
+    }
+}
+
+// parent
+@Component({
+    selector: 'app-countdown-parent-vc',
+    template: `
+    <h3>Countdown to Liftoff (via ViewChild)</h3>
+    <button (click)="start()">Start</button>
+    <button (click)="stop()">Stop</button>
+    <div class="seconds">{{ seconds() }}</div>
+    <app-countdown-child></app-countdown-child>
+  `,
+    styles: [`
+        .seconds {
+            background-color: black;
+            color: red;
+            font-size: 3em;
+            margin: 0.3em 0;
+            text-align: center;
+            width: 1.5em;
+        }
+    `]
+})
+export class CountdownParentViewChildComponent implements AfterViewInit {
+    @ViewChild(CountdownChildComponent, { static: false })
+    private countdownChild: CountdownChildComponent;
+
+    seconds() { return 0; }
+
+    ngAfterViewInit() {
+        setTimeout(() => this.seconds = () => this.countdownChild.seconds, 0);
+    }
+    start() {
+        this.countdownChild.start();
+    }
+    stop() {
+        this.countdownChild.stop();
     }
 }
 ```
