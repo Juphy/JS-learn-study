@@ -558,7 +558,7 @@ export class CountdownChildComponent implements OnInit, OnDestroy {
             if (this.seconds === 0) {
                 this.message = 'Blast off!';
             } else {
-                
+
                 if (this.seconds < 0) { this.seconds = 10; } // reset
                 this.message = `T-${this.seconds} seconds and counting`;
             }
@@ -607,7 +607,7 @@ export class CountdownParentViewChildComponent implements AfterViewInit {
 
 ## 基于 RxJS Subject
 
-`rxjs版本基于6需要结合rxjs-compat使用`
+`rxjs版本基于6+`
 message.service.ts
 
 ```
@@ -698,6 +698,134 @@ export class AppComponent implements OnDestroy {
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
+}
+```
+
+## Rxjs 改进版的信息传递
+
+mission.service.ts
+
+```
+import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs';
+
+@Injectable()
+export class MissionService {
+
+  // Observable string sources
+  private missionAnnouncedSource = new Subject<string>();
+  private missionConfirmedSource = new Subject<string>();
+
+  // Observable string streams
+  missionAnnounced$ = this.missionAnnouncedSource.asObservable();
+  missionConfirmed$ = this.missionConfirmedSource.asObservable();
+
+  // Service message commands
+  announceMission(mission: string) {
+    this.missionAnnouncedSource.next(mission);
+  }
+
+  confirmMission(astronaut: string) {
+    this.missionConfirmedSource.next(astronaut);
+  }
+}
+```
+
+父组件 MissionControlComponent
+
+```
+import { Component }          from '@angular/core';
+
+import { MissionService }     from './mission.service';
+
+@Component({
+  selector: 'app-mission-control',
+  template: `
+    <h2>Mission Control</h2>
+    <button (click)="announce()">Announce mission</button>
+    <app-astronaut *ngFor="let astronaut of astronauts"
+      [astronaut]="astronaut">
+    </app-astronaut>
+    <h3>History</h3>
+    <ul>
+      <li *ngFor="let event of history">{{event}}</li>
+    </ul>
+  `,
+  providers: [MissionService]
+})
+export class MissionControlComponent {
+  astronauts = ['Lovell', 'Swigert', 'Haise'];
+  history: string[] = [];
+  missions = ['Fly to the moon!',
+              'Fly to mars!',
+              'Fly to Vegas!'];
+  nextMission = 0;
+
+  constructor(private missionService: MissionService) {
+    missionService.missionConfirmed$.subscribe(
+      astronaut => {
+        this.history.push(`${astronaut} confirmed the mission`);
+      });
+  }
+
+  announce() {
+    let mission = this.missions[this.nextMission++];
+    this.missionService.announceMission(mission);
+    this.history.push(`Mission "${mission}" announced`);
+    if (this.nextMission >= this.missions.length) { this.nextMission = 0; }
+  }
+}
+```
+
+子组件：AstronautComponent
+
+```
+import { Component, Input, OnDestroy } from '@angular/core';
+
+import { MissionService } from './mission.service';
+import { Subscription }   from 'rxjs';
+
+@Component({
+  selector: 'app-astronaut',
+  template: `
+    <p>
+      {{astronaut}}: <strong>{{mission}}</strong>
+      <button
+        (click)="confirm()"
+        [disabled]="!announced || confirmed">
+        Confirm
+      </button>
+    </p>
+  `
+})
+export class AstronautComponent implements OnDestroy {
+  @Input() astronaut: string;
+  mission = '<no mission announced>';
+  confirmed = false;
+  announced = false;
+  subscription: Subscription;
+
+  constructor(private missionService: MissionService) {
+    this.subscription = missionService.missionAnnounced$.subscribe(
+      mission => {
+        this.mission = mission;
+        this.announced = true;
+        this.confirmed = false;
+    });
+  }
+
+  confirm() {
+    this.confirmed = true;
+    this.missionService.confirmMission(this.astronaut);
+  }
+
+  ngOnDestroy() {
+    // prevent memory leak when component destroyed
+    // 这是一个用于防止内存泄漏的保护措施。实际上，在这个应用程序中并没有这个风险，
+    // 因为 AstronautComponent 的生命期和应用程序的生命期一样长。但在更复杂的应用程序环境中就不一定了。
+    // 不需要在 MissionControlComponent 中添加这个保护措施，因为它作为父组件，控制着 MissionService 的生命期。
+    this.subscription.unsubscribe();
+  }
 }
 ```
 
