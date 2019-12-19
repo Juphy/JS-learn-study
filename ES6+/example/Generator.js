@@ -43,3 +43,7 @@ var flat = function* (arr) {
 for (var f of flat(arr)) {
     console.log(f);
 }
+
+function* PrimeGenerator(){
+    
+}

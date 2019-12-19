@@ -45,7 +45,7 @@
     "moment": "^2.22.2",
     "mysql": "^2.16.0",
     "mysql2": "^1.6.1",
-    "node-fetch": "^2.2.0",
+    "node-fetch": "^2.6.0",
     "printj": "^1.2.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",

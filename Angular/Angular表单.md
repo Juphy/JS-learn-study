@@ -234,7 +234,7 @@ HTML5有一组内置的属性，用来进行原生验证，包括required、minl
 ```
 
 - 显示表单状态
-  当你往表单控件上添加一个必填字段时，它的初始值是无效的（INVALID）,  这种无效状态会传播到其父 FormGroup 元素上，也让这个 FormGroup 的状态变为无效的。
+  当你往表单控件上添加一个必填字段时，它的初始值是无效的（INVALID）, 这种无效状态会传播到其父 FormGroup 元素上，也让这个 FormGroup 的状态变为无效的。
   _FormGroup 实例的 status 属性来访问其当前状态。_
 
 ### 使用表单数组管理动态控件
@@ -303,22 +303,25 @@ addAlias(){
 
 ### 响应式表单 API
 
-- 类
-  |类|说明|
-  |:--:|:--|
-  |AbstractControl|所有三种表单控件类（FormControl、FormGroup 和 FormArray）的抽象基类。它提供了一些公共的行为和属性。|
-  |FormControl|管理单体表单控件的值和有效性状态。它对应于 HTML 的表单控件，比如 `<input>` 或 `<select>`。|
-  |FormGroup|管理一组 AbstractControl 实例的值和有效性状态。该组的属性中包括了它的子控件。组件中的顶级表单就是 FormGroup。|
-  |FormArray|管理一些 AbstractControl 实例数组的值和有效性状态。|
-  |FormBuilder|一个可注入的服务，提供一些用于提供创建控件实例的工厂方法。|
-- 指令
-  | 指令 | 说明 |
-  | :--: | :-- |
-  | FormControlDirective | 把一个独立的 FormControl 实例绑定到表单控件元素。 |
-  | FormControlName | 把一个现有 FormGroup 中的 FormControl 实例根据名字绑定到表单控件元素。 |
-  | FormGroupDirective | 把一个现有的 FormGroup 实例绑定到 DOM 元素。 |
-  | FormGroupName | 把一个内嵌的 FormGroup 实例绑定到一个 DOM 元素。 |
-  | FormArrayName | 把一个内嵌的 FormArray 实例绑定到一个 DOM 元素。 |
+> 类
+
+|       类        | 说明    |
+| :-------------: | :------------------- |
+| AbstractControl | 所有三种表单控件类（FormControl、FormGroup 和 FormArray）的抽象基类。它提供了一些公共的行为和属性。           |
+|   FormControl   | 管理单体表单控件的值和有效性状态。它对应于 HTML 的表单控件，比如 `<input>` 或 `<select>`。                    |
+|    FormGroup    | 管理一组 AbstractControl 实例的值和有效性状态。该组的属性中包括了它的子控件。组件中的顶级表单就是 FormGroup。 |
+|    FormArray    | 管理一些 AbstractControl 实例数组的值和有效性状态。        |
+|   FormBuilder   | 一个可注入的服务，提供一些用于提供创建控件实例的工厂方法。     |
+
+> 指令
+
+|         指令         | 说明                                                                   |
+| :------------------: | :--------------------------------------------------------------------- |
+| FormControlDirective | 把一个独立的 FormControl 实例绑定到表单控件元素。                      |
+|   FormControlName    | 把一个现有 FormGroup 中的 FormControl 实例根据名字绑定到表单控件元素。 |
+|  FormGroupDirective  | 把一个现有的 FormGroup 实例绑定到 DOM 元素。                           |
+|    FormGroupName     | 把一个内嵌的 FormGroup 实例绑定到一个 DOM 元素。                       |
+|    FormArrayName     | 把一个内嵌的 FormArray 实例绑定到一个 DOM 元素。                       |
 
 ## 模板驱动表单
 
@@ -327,5 +330,3 @@ addAlias(){
 ngForm 指令为 form 增补了一些额外特性，它会控制那些带有 ngModel 指令和 name 属性的元素，监听它们的属性（包括其有效性），它还有自己的 valid 属性，这个属性只有在它包含的每个控件都有效时才是真的。
 
 在内部，Angular 创建了一些 FormControl，并把它们注册到 Angular 附加到`<form>`标签上的 NgForm 指令，注册每个 FormControl 时，使用 name 属性值作为键值。
-
-
