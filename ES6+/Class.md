@@ -1,4 +1,5 @@
 ## Class
+
 ES6 的 class 可以看作是一个语法糖，它的绝大部分功能，ES5 都可以做到的，新的 Class 写法只是让对象原型的写法更加清晰、更像面向对象编程的语法。
 
 ```
@@ -266,4 +267,75 @@ const logger1 = selfish(new Logger());
 const { printName1} = logger1;
 ```
 
-## 静态方法
+### 静态方法
+
+### super 关键字
+
+既可以当作函数使用，也可以当作对象使用，在两种情况下，用法是完全不同的。
+
+- `super 作为函数调用时，代表父类的构造函数，ES6 要求，子类的构造函数必须执行一次 super 函数。`
+
+```JavaScript
+class A {}
+class B extends A {
+    constructor(){
+        super();
+    }
+}
+```
+
+子类 B 的构造函数之中的 super()，代表调用父类的构造函数，这是必须的，否则 JavaScript 引擎会报错。
+super 虽然代表了父类的构造函数，但是返回的是子类 B 的实例，即 super 内部的 this 指的是 B 的实例，因此 super()在这里相当于 A.prototype.constructor.call(this)。
+
+```JavaScript
+class A {
+    constructor(){
+        console.log(new.target.name);
+    }
+}
+class B extends A {
+    constuctor(){
+        super()
+    }
+}
+new A();
+new B();
+```
+
+new.target 指向当前正在执行的函数，在 super()执行时，它指向的是子类 B 的构造函数，而不是父类 A 的构造函数。也就是说，super()内部的 this 指向的是 B。
+
+作为函数时，super()只能用在子类的构造函数之中，用在其他地方就会报错。
+
+- `super 作为对象时，在普通方法中，指向父类的原型对象；在静态方法中，指向父类。`
+
+```JavaScript
+  class A {
+    p(){
+        return 2;
+    }
+  }
+  class B extends A {
+      constructor(){
+          super();
+          console.log(super.p()); // 2
+      }
+  }
+  let b = new B();
+```
+
+子类 B 当中的 super.p()，就是将 super 当作一个对象使用，这时，super 在普通方法之中，指向 A.prototype，所以 super.p()就相当于 A.prototype.p()。
+
+由于 super 指向父类的原型对象，所以定义在父类实例（this）上的方法或属性，是无法通过 super 调用的。如果属性定义在父类的原型对象上，super 就可以取到。
+
+```
+class A{}
+A.prototype.x = 2;
+
+class B extends A {
+    constructor(){
+        super();
+        console.log(super.x);
+    }
+}
+let b = new B();
+```
