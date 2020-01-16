@@ -1,0 +1,174 @@
+### 段落
+#### 正常
+
+Paragraphs don't require any special markup in AsciiDoc.
+A paragraph is just one or more lines of consecutive text.
+
+To begin a new paragraph, separate it by at least one blank line.
+
+#### 换行
+
+Rubies are red, +
+Topazes are blue.
+
+[%hardbreaks]
+Ruby is red.
+Java is black.
+
+#### 文字段落
+A normal paragraph.
+
+ A sequence of lines that begin with at least one space is a literal paragraph.
+ Literal paragraphs are treated as preformatted text.
+ The text is shown in a fixed-width font
+ and endlines are preserved.
+
+Another normal paragraph.
+
+#### 警告
+NOTE: An admonition paragraph draws the reader's attention to
+auxiliary information.
+Its purpose is determined by the label
+at the beginning of the paragraph.
+
+Here are the other built-in admonition types:
+
+TIP: Pro tip...
+
+IMPORTANT: Don't forget...
+
+WARNING: Watch out for...
+
+CAUTION: Ensure that...
+
+#### 概要摘要（默认的Asciidoctor样式会自动将序文的第一段作为摘要段落）
+
+[.lead]
+This text will be styled as a lead paragraph (i.e., larger font).
+
+### 格式化文本
+#### 加粗、斜体和等宽字体
+_italic phrase_。整体倾斜用单下划线
+
+__i__talic le__tt__ers。单字倾斜用双下划线
+
+*bold phrase*。整体加粗用单星号
+
+**b**old le**tt**ers。单字加粗用双星号
+
+**__b__**old italic le**__tt__**ers
+
+`monospace italic phrase` and le``tt``ers
+
+`_monospace italic phrase_` and le``__tt__``ers
+
+`*monospace italic phrase*` and le``**tt**``ers
+
+`*_monospace italic phrase_*` and le``**__tt__**``ers
+
+#### 自定义样式
+Werewolves are #allergic to cinnamon#.
+
+Do werewolves believe in [small]#small print#?
+
+[big]##o##nce upon an infinite loop.
+
+#### 上角标和脚注
+^super^script phrase
+
+~sub~script phrase
+
+'`single curved quotes`'   倾斜的单引号
+
+"`double curved qutoes`"   倾斜的双引号
+
+Olaf's desk was a mess.
+
+All of the werewolves`' desks were a mess.
+
+Olaf had been with the company since the `'60s.
+
+### 文档标题
+- 标题是可选的
+- 标题不能包含空号，并且下面必须紧跟至少一个空行
+
+#### 标题
+- 标题是可选的
+- 标题不能包含空号，并且下面必须紧跟至少一个空行
+- Asciidoctor允许在作者行中出现多位作者，使用分号来分隔开来
+
+= My Document's Title
+Doc Writer <doc.writer@asciidoctor.org>
+v1.0, 2014-01-01
+:toc:
+:imagesdir: assets/images
+:homepage: http://asciidoctor.org
+
+My document provides...
+
+### 章节标题
+#### 文章标题类型
+- 当使用文章标题类型时，默认只能有一个级别为0的文章标题（也就是文档标题），并且必须在文档头部。
+- 等号的数量与输出的HTML标题级别相匹配。例如，Section Level 1将会转化为<h2>标题
+
+= Document Title (Level 0)
+== Level 1 Section Title
+=== Level 2 Section Title
+==== level 3 Section Title
+===== level 4 Section Title
+====== level 5 Section Title
+== Another Level 1 Section Title
+
+#### 指定ID
+[[primitives-nulls]]
+== Primitive types and null values
+
+#### 章节锚点以及链接（仅Asciidoctor支持）
+- 章节标题锚点依赖默认Asciidoctor样式的正确渲染
+
+sectanchors。当设置该文档属性后，章节的锚点图标就会出现在章节标题前面
+
+seclinks。当设置该文档属性后，章节标题就变成自链接。这使得读者可以书签标记这个章节
+
+### 包含文件
+#### 文档分块
+= Reference Documentation
+Lead Developer
+
+This is documentation for project X.
+
+include::basics.adoc[]
+
+include::installation.adoc[]
+
+include::example.adoc[]
+
+#### 从一个URI中含内容
+:asciidoctor-source: https://raw.githubusercontent.com/asciidoctor/asciidoctor/master
+
+include::{asciidoctor-source}/README.adoc[]
+
+### 水平线和分页符
+> 水平线
+
+'''
+
+> 分页
+
+<<<
+
+> 列表
+
+- 列表前后的空行是必须的
+* Edgar Allen Poe
+* Sheri S. Tepper
+* Bill Bryson
+
+* level 1
+** level 2
+*** level 3
+**** level 4
+***** level 5
+* level 1
+
+> 清单
