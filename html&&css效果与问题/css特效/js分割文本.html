@@ -1,0 +1,166 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分割文本</title>
+    <style>
+        @import url("http://fonts.googleapis.com/css?family=Lora:400,400i,700");
+        @import url("https://fonts.googleapis.com/css?family=Raleway:400,400I,700");
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(rgba(16, 16, 16, 0.8),
+                    rgba(16, 16, 16, 0.8)), url(https://i.loli.net/2019/10/18/buDT4YS6zUMfHst.jpg);
+            background-size: cover;
+        }
+
+        p {
+            margin: 0 9em;
+            font-size: 2em;
+            font-weight: 600;
+        }
+
+        .landIn {
+            display: flex;
+            flex-wrap: wrap;
+            line-height: 1.8;
+            color: white;
+            font-family: Lora, serif;
+            white-space: pre;
+        }
+
+        .landIn span {
+            animation: landIn 0.8s ease-out both;
+        }
+
+        @keyframes landIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            position: relative;
+            display: flex;
+            color: #6ee1f5;
+            font-size: 2em;
+            font-family: Raleway, sans-serif;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            white-space: pre;
+        }
+
+        .reveal span {
+            opacity: 0;
+            transform: scale(0);
+            animation: fadeIn 2.4s forwards;
+        }
+
+        .reveal::before,
+        .reveal::after {
+            position: absolute;
+            content: "";
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .reveal::before {
+            left: 50%;
+            animation: slideLeft 1.5s cubic-bezier(0.7, -0.6, 0.3, 1.5) forwards;
+        }
+
+        .reveal::after {
+            right: 50%;
+            animation: slideRight 1.5s cubic-bezier(0.7, -0.6, 0.3, 1.5) forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideLeft {
+            to {
+                left: -6%;
+                opacity: 1;
+                transform: scale(0.9);
+            }
+        }
+
+        @keyframes slideRight {
+            to {
+                right: -6%;
+                opacity: 1;
+                transform: scale(0.9);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <p class="landIn" id="p1">Ano hi watashitachi mada shiranai no Fushigi no monogatari desu.</p>
+
+    <p class="landIn" id="p2">Ano hi watashitachi mada shiranai no Fushigi no monogatari desu.</p>
+
+    <div class="reveal" id="box">sword art online</div>
+</body>
+
+</html>
+<script>
+    let landInTexts = [document.querySelector("#p1")];
+    landInTexts.forEach(landInTexts => {
+        let letters = landInTexts.textContent.split("");
+        let middle = letters.length / 2;
+        landInTexts.textContent = "";
+        letters.forEach((letter, i) => {
+            let span = document.createElement("span");
+            span.textContent = letter;
+            span.style.animationDelay = `${0 + Math.abs(i - middle) * 0.1}s`;
+            landInTexts.append(span);
+        })
+    });
+
+    let landLeft = [document.querySelector('#p2')];
+    landLeft.forEach(landText => {
+        let letters = landText.textContent.split("");
+        landText.textContent = "";
+        letters.forEach((letter, i) => {
+            let span = document.createElement('span');
+            span.textContent = letter;
+            span.style.animationDelay = `${i * 0.05}s`;
+            landText.append(span);
+        })
+    })
+
+    let duration = 0.8, delay = 0.3;
+    let revealText = document.querySelector('#box'),
+        letters = revealText.textContent.split("");
+    revealText.textContent = "";
+    let middle = letters.filter(e => e !== "").length / 2;
+    letters.forEach((letter, i) => {
+        let span = document.createElement("span");
+        span.textContent = letter;
+        span.style.animationDelay = `${delay + Math.abs(i - middle) * 0.1}s`;
+        revealText.append(span);
+    })
+
+</script>

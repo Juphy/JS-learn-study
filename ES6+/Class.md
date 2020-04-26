@@ -150,9 +150,10 @@ class Square {
 
 ### class 表达式
 
-类也可以使用表达式的形式定义。
+类也可以使用表达式的形式定义。类的名字只是在 Class 的内部使用，指代当前类，在 Class 外部，这个类只能用表达式名字。
 
 ```
+1、
 const MyClass = class Me {
     getClassName(){
         return Me.name
@@ -162,8 +163,10 @@ let inst = new MyClass();
 inst.getClassName() // Me
 Me.name  // ReferenceError: Me is not defined
 
+2、
 const MyClass = class { ... }
 
+3、
 // 立即执行的Class
 let person = new class {
     constructor(name){
@@ -178,10 +181,19 @@ person.sayName(); // '张三'
 
 ### 其它
 
-- 默认严格模式
+- 默认严格模式。
+  类和模式的内部，默认就是严格模式，所以不需要`use strict`指定运行模式。
+
 - 不存在变量提升
-- name 属性：ES6 的类只是 ES5 的构造函数的一层包装，所以函数的许多特性都被 Class 继承，包括 name 属性。
-- Generator：如果某个方法之前加上（\*），就表示该方法是一个 Generator 函数
+
+- name 属性。ES6 的类只是 ES5 的构造函数的一层包装，所以函数的许多特性都被 Class 继承，包括 name 属性。
+
+```
+class Point {}
+Point.name // 'Point'
+```
+
+- Generator 方法。如果某个方法之前加上（\*），就表示该方法是一个 Generator 函数
 
 ```
 class Foo{
@@ -203,7 +215,9 @@ for(let x of new Foo('hello', 'world')){
 // world
 ```
 
-- this 的指向：累的方法内部如果含有 this，它默认指向类的实例。
+`Foo`类的`Symbol.iterator`方法前有一个星号，表示该方法是一个 Generator 函数，`Symbol.iterator`方法返回一个`Foo`类的默认遍历器，`for...of`循环会自动调用这个遍历器。
+
+- this 的指向：类的方法内部如果含有 this，它默认指向类的实例。
 
 ```
 class Logger{
@@ -218,7 +232,7 @@ const logger = new Logger();
 const { printName } = logger;
 printName(); // TypeError: Cannot read property 'print' of undefined
 
-// 如果将方法提取出来单独使用，this会指向盖房运行时所在的环境（由于class内部是严格模式，所以this实际指向的是undefined），从而导致找不到print方法而报错。
+printName方法中的this，默认指向Logger类的实例。如果将方法提取出来单独使用，this会指向该方法运行时所在的环境（由于class内部是严格模式，所以this实际指向的是undefined），从而导致找不到print方法而报错。
 ```
 
 解决办法：1、构造方法中绑定 this；2、使用箭头函数；3、使用 proxy
@@ -243,6 +257,8 @@ const { printName, _printName } = logger;
 printName();
 _printName();
 ```
+
+箭头函数内部的`this`总是指向定义时所在的对象，箭头函数位于构造函数内部，它的定义生效的时候，是在构造函数执行的时候。这时，箭头函数所在的运行环境，肯定是实例对象，所以`this`会总是指向实例对象。
 
 ```
 function selfish(target){
@@ -269,6 +285,113 @@ const { printName1} = logger1;
 
 ### 静态方法
 
+- static。类相当于实例的原型，所有在类中定义的方法，都会被实例继承。如果在一个方法前，加上`static`关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为`静态方法`。
+
+```
+class Foo{
+    static classMethod(){
+        return 'hello';
+    }
+
+    static bar(){
+        this.baz();
+    }
+
+    static baz(){
+        console.log('hello');
+    }
+
+    baz(){
+        console.log('world');
+    }
+}
+Foo.classMethod() // 'hello'
+var foo = new Foo();
+foo.classMethod();
+// TypeError: foo.classMethod is not a function
+
+class Baz extends Foo{
+    static classMethod(){
+        return 'hello';
+    }
+}
+class Baz extends Foo{}
+Baz.classMethod(); // 'hello'
+
+class Bar extends Foo{
+    static classMethod(){
+        return super.classMethod()+', too';
+    }
+}
+Bar.classMethod() // 'hello, too'
+```
+
+`Foo`类的`classMethod`方法前有`static`关键字，表明该方法是一个静态方法，可以直接在`Foo`类上调用（`Foo.classMethod()`），而不是在`Foo`类的实例上调用。如果在实例上调用静态方法，会抛出一个错误，表示不存在该方法。
+
+`如果静态方法包含this关键字，这个this指的是类，而不是实例。`
+
+静态方法`bar`调用了`this.baz`，这里的`this`指的是`Foo`类，而不是`Foo`的实例，等同于调用`Foo.baz`。`静态方法可以与非静态方法重名。`
+
+`父类的静态方法可以被子类继承，也是可以从super对象上调用。`
+
+### 静态属性
+
+静态属性指的是 Class 本身的属性，即`Class.propName`，而不是定义在实例对象（`this`）上的属性。
+
+```
+class Foo{}
+Foo.prop = 1;
+Foo.prop // 1
+
+class MyClass {
+    static myStaticProp = 42;
+
+    constructor(){
+        console.log(MyClass.myStaticProp);
+    }
+}
+
+// 老写法
+class Foo{}
+Foo.prop = 1;
+// 新写法
+class Foo {
+    static prop = 1;
+}
+```
+
+### new.target 属性
+
+`new`是从构造函数生成实例对象的命令。ES6 为 new 命令引入了一个`new.target`属性，该属性一般用在构造函数之中，返回 new 命令作用于的那个构造函数。如果构造函数不是通过`new`命令或`Reflect.constructor()`调用，`nwe.target`会返回`undefined`
+
+```
+function Person(name) {
+  if (new.target !== undefined) {
+    this.name = name;
+  } else {
+    throw new Error('必须使用 new 命令生成实例');
+  }
+}
+
+// 另一种写法
+function Person(name) {
+  if (new.target === Person) {
+    this.name = name;
+  } else {
+    throw new Error('必须使用 new 命令生成实例');
+  }
+}
+
+var person = new Person('张三'); // 正确
+var notAPerson = Person.call(person, '张三');  // 报错
+```
+
+`Class内部调用new.target`，返回当前 Class。据此，可以写出不能独立使用、必须继承后才能是用的类。在函数外部，使用 new.target 会报错。
+
+```
+
+```
+
 ### super 关键字
 
 既可以当作函数使用，也可以当作对象使用，在两种情况下，用法是完全不同的。
@@ -284,8 +407,15 @@ class B extends A {
 }
 ```
 
-子类 B 的构造函数之中的 super()，代表调用父类的构造函数，这是必须的，否则 JavaScript 引擎会报错。
+子类 B 的构造函数之中的 super()，代表调用父类的构造函数，这是必须的，否则 JavaScript 引擎会报错。因为子类自己的this对象，必须先通过父类的构造函数完成塑造，得到与父类同样的实例属性和方法，然后在对其进行加工，加上子类自己的实例属性和方法。如果不调用super方法，子类就得不到this对象。
+
 super 虽然代表了父类的构造函数，但是返回的是子类 B 的实例，即 super 内部的 this 指的是 B 的实例，因此 super()在这里相当于 A.prototype.constructor.call(this)。
+
+ES5的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6的继承机制完全不同，实质是先将实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后在用子类的构造函数修改this。
+
+如果子类没有定义constructor方法，这个方法会默认添加，也就是说，不管有没有显式定义，任何一个子类都有constructor方法。
+
+
 
 ```JavaScript
 class A {

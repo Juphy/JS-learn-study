@@ -1,3 +1,61 @@
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    toString() {
+        return `(${this.x},${this.y})`;
+    }
+}
+let p = new Point();
+console.log(typeof Point); // 'function'
+console.log(Point === Point.prototype.constructor); // true
+console.log(p.constructor === Point.prototype.constructor); // true
+
+class Bar {
+    doStuff() {
+        console.log('stuff');
+    }
+}
+
+var b = new Bar();
+b.doStuff();
+
+Object.assign(Point.prototype, {
+    toValue() {}
+})
+
+class Foo {
+    constructor() {
+        return Object.create(null);
+    }
+}
+
+console.log(new Foo() instanceof Foo)
+// Foo();
+
+var point = new Point(2, 3);
+console.log(point.toString());
+
+console.log(point.hasOwnProperty('x'));
+console.log(point.hasOwnProperty('y'));
+console.log(point.hasOwnProperty('toString'));
+console.log(point.__proto__.hasOwnProperty('toString'));
+
+var p1 = new Point(2, 3);
+var p2 = new Point(3, 2);
+
+console.log(p1.__proto__ === p2.__proto__);
+p1.__proto__.printName = function () {
+    return 'Oops'
+}
+console.log(p1.printName());
+console.log(p2.printName());
+
+var p3 = new Point(4, 2);
+console.log(p3.printName());
+
 class MyClass {
     constructor() {
 
@@ -11,12 +69,39 @@ class MyClass {
         console.log('setter: ' + value);
     }
 }
-let inst = new MyClass();
 
+let inst = new MyClass();
 inst.prop = 123;
 console.log(inst.prop);
 
-class Foo {
+class CustomHTMLElement {
+    constructor(element) {
+        this.element = element;
+    }
+
+    get html() {
+        return this.element.innerHTML;
+    }
+
+    set html(value) {
+        this.element.innerHTML = value;
+    }
+}
+
+var descriptor = Object.getOwnPropertyDescriptor(
+    CustomHTMLElement.prototype, 'html'
+);
+
+console.log('get' in descriptor);
+console.log('set' in descriptor);
+
+const MyClass1 = class Me {
+    getClassName() {
+        return Me.name;
+    }
+}
+
+class Foo1 {
     constructor(...args) {
         this.args = args;
     }
@@ -26,85 +111,144 @@ class Foo {
             yield arg;
         }
     }
-}
 
-for (let x of new Foo('hello', 'world')) {
+    static classMethod() {
+        return 'hello world!';
+    }
+
+    static bar() {
+        this.baz();
+    }
+
+    static baz() {
+        console.log('hello');
+    }
+
+    baz() {
+        console.log('world');
+    }
+}
+for (let x of new Foo1('hello', 'world')) {
     console.log(x);
 }
 
-class Logger {
+console.log(Foo1.classMethod());
+
+var foo1 = new Foo1();
+// foo1.classMethod();
+Foo1.bar();
+
+class IncreasingCounter {
     constructor() {
-        this.printName = this.printName.bind(this);
-        this._printName = (name = "there") => {
-            this.print(`hello ${name}`)
-        }
+        this._count = 0;
     }
-    printName(name = 'there') {
-        this.print(`hello ${name}`);
+    get value() {
+        console.log('Getting the current value!');
+        return this._count;
     }
-    print(text) {
-        console.log(text);
-    }
-    printName1(name = "there") {
-        this.print(`hello ${name}`);
+    increment() {
+        this._count++;
     }
 }
-const logger = new Logger();
-const {
-    printName,
-    _printName
-} = logger;
-printName(); // TypeError: Cannot read property 'print' of undefined
-_printName();
 
-function selfish(target) {
-    const cache = new WeakMap();
-    const handler = {
-        get(target, key) {
-            const value = Reflect.get(target, key);
-            if (typeof value !== 'function') {
-                return value;
-            }
-            if (!cache.has(value)) {
-                cache.set(value, value.bind(target));
-            }
-            return cache.get(value);
-        }
+class IncreasingCounter1 {
+    _count = 0;
+    get value() {
+        console.log('Getting the current value!');
+        return this._count;
     }
-    const proxy = new Proxy(target, handler);
-    return proxy;
+    increment() {
+        this._count++;
+    }
 }
 
-const logger1 = selfish(new Logger());
-const {
-    printName1
-} = logger1;
-printName1();
+class MyClass2 {
+    static myStaticProp = 42;
 
-class A {
     constructor() {
-        console.log(new.target.name)
+        console.log(MyClass2.myStaticProp);
     }
 }
 
-class B extends A {
-    constructor() {
-        super();
-    }
-}
-new A();
-new B();
+var myclass2 = new MyClass2();
 
-class C {
-    p() {
-        return 2;
+class Widget {
+    // 公有方法
+    foo(baz) {
+        this._bar(baz);
+    }
+    // 私有方法
+    _bar(baz) {
+        return this.snaf = baz;
     }
 }
 
-class D extends C {
-    constructor() {
-        super();
-        console.log(super.p());
+class Widget1 {
+    foo(baz) {
+        bar.call(this, baz);
+    }
+    //...
+}
+
+function bar(baz) {
+    return this.snaf = baz;
+}
+
+const a1 = Symbol('bar');
+const a2 = Symbol('snaf');
+
+class A1 {
+    // 公有方法
+    foo(baz) {
+        this[bar](baz);
+    }
+
+    // 私有方法
+    [bar](baz) {
+        return this[snaf] = baz;
     }
 }
-let d = new D();
+
+const inst1 = new MyClass();
+console.log(Reflect.ownKeys(Foo1.prototype));
+
+function Person(name) {
+    if (new.target !== undefined) {
+        this.name = name
+    } else {
+        throw new Error('必须使用 new 命令生成实例');
+    }
+}
+
+function Person1(name) {
+    if (new.target === Person) {
+        this.name = name;
+    } else {
+        throw new Error('必须使用 new 命令生成实例');
+    }
+}
+var person = new Person('张三');
+// var noteAPerson = Person.call(person, '张三');
+
+class Rectangle {
+    constructor(length, width) {
+        console.log(new.target === Rectangle);
+        this.length = length;
+        this.width = width;
+    }
+}
+
+var obj = new Rectangle(3, 4);
+
+class Point {}
+
+class ColorPoint extends Point {
+    constructor(x, y, color) {
+        super(x, y); // 调用父类的constructor(x,y)
+        this.color = color;
+    }
+
+    toString() {
+        return this.color + ' ' + super.toString(); // 调用父类的toString()
+    }
+}

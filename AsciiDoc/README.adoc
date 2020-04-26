@@ -172,3 +172,170 @@ include::{asciidoctor-source}/README.adoc[]
 * level 1
 
 > 清单
+
+- [*] checked
+- [x] also checked
+- [ ] not checked
+-     normal list item
+
+> 基本有序列表
+
+. Step 1
+. Step 2
+. Step 3
+
+> 有序嵌套列表
+
+. Step 1
+. Step 2
+.. Step 2a
+.. Step 2b
+. Step 3
+
+> 有序最大嵌套列表
+
+. level 1
+.. level 2
+... level 3
+.... level 4
+..... level 5
+. level 1
+
+> 单行标签列表
+
+first term:: definition of first term
+section term:: definition of second term
+
+> 多行标签列表
+
+first term::
+definition of first term
+section term::
+definition of second term
+
+> 常见问题以及解答
+
+[qanda]
+What is Asciidoctor?:: An implementation of the AsciiDoc processor in Ruby.
+What is the answer to the Ultimate Question?:: 42
+
+> 混合样式列表
+
+- 列表可以缩进。开头空白不需要显示指定
+
+Operating Systems::
+    Linux:::
+        . Fedora
+            * Desktop
+        . Ubuntu
+            * Desktop
+            * Server
+    BSD:::
+        . FreeBSD
+        . NetBSD
+Cloud Provides::
+    PaaS:::
+        . OpenShift
+        . CloudBees
+    IaaS:::
+        . Amazon EC2
+        . Rackspace
+
+> 复杂内容列表
+
+* Every list item has at least one paragraph of content, which may be wrapped, even using a hanging indent.
++
+Additional paragraphs or blocks are adjoined by putting a list continuation on a line adjacent to both blocks.
++
+list continuation:: a plus sign (`{plus}`) on a line by itself
+* A literal paragraph does not require a list continuation.
+
+    $ gem install asciidoctor
+
+* AsciiDoc lists may contain any complex content.
++
+[cols="2", options="header"]
+|===
+|Application
+|Language
+
+|AsciiDoc
+|Python
+
+|Asciidoctor
+|Ruby
+|===
+
+### 链接
+> 外部链接
+
+https://www.baidu.com - automatic!
+
+https://www.baidu.com[Asciidoctor]
+
+https://www.baidu.com[Asciidoctor@*GitHub*]
+
+> 带空格以及特殊字符
+
+link:++http://example.org/?q=[a b]++[URL with special characters]
+
+link:http://example.org/?q=%5Ba%20b%5D[URL with special characters]
+
+> Windows 路径
+
+link:\\server\share\whitepaper.pdf[Whitepaper]
+
+> 相对路径
+
+link:index.html[Docs]
+
+> 电子邮件和IRC
+
+devel@discuss.arquillian.org
+
+mailto:devel@discuss.arquillian.org[Discuss Arquillian]
+
+mailto:devel-join@discuss.arquillian.org[Subscribe, Subscribe me, I want to join!]
+
+irc://irc.freenode.org/#asciidoctor
+
+> 带属性的链接(仅Asciidoctor支持)
+
+http://discuss.asciidoctor.org[Discuss Asciidoctor, role="external", window="_blank"]
+
+http://discuss.asciidoctor.org[Discuss Asciidoctor^]
+
+http://example.org["Google, Yahoo, Bing^", role="teal"]
+
+> 行内锚点
+
+[[bookmark-a]]Inline anchors make arbitrary content referenceable.
+
+anchor:bookmark-b[]Use a cross reference to link to this location.
+
+[[bookmark-c,last paragraph]]The xreflabel attribute will be used as link text in the cross-reference link.
+
+> 内部交叉引用
+
+See <<paragraphs>> to learn how to write paragraphs.
+
+Learn how to organize the document into <<section-titles,sections>>.
+
+> 文档间的交叉引用（仅Asciidoctor支持）
+
+Refer to <<document-b.adoc#section-b,Section B>> for more information.
+
+See you when you get back from <<document-b#section-b,Section B>>!
+
+### 图片
+> 块
+
+image::sunset.jpg[]
+
+image::sunset.jpg[Sunset]
+
+[[img-sunset]]
+image::sunset.jpg[caption="Figure 1:",title="A mountain sunset", alt="Sunset", width="300", height="200", link="http://www.flickr.com/photos/javh/5448336655"]
+
+image::http://asciidoctor.org/images/octocat.jpg[GitHub mascot]
+
