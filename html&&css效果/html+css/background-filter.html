@@ -1,0 +1,61 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片渐变色</title>
+    <style>
+        .img {
+            margin: 0.5rem 2% 0.5rem 0;
+            width: 50%;
+        }
+
+        .img1 img {
+            width: 100%;
+            filter: sepia(0) grayscale(1) contrast(1.2) brightness(100%);
+            transition-duration: 1.5s;
+            cursor: zoom-in;
+        }
+
+        .img1 img:hover {
+            filter: sepia(0) grayscale(0) contrast(1) brightness(100%);
+        }
+
+        .img2 {
+            opacity: 0.75;
+            position: relative;
+            z-index: 1;
+            padding: 0;
+            height: 0;
+            padding-bottom: 19%;
+            overflow: hidden;
+            background-image: url('../../assets/images/background-attachment5.jpg');
+            background-repeat: no-repeat;
+            /* background-position: center 38%; */
+            background-position: center 62%;
+            background-size: cover;
+            background-color: rgba(0, 0, 0, 0.04);
+            filter: sepia(0) grayscale(1) contrast(1.2) brightness(100%);
+            transition-duration: 1.5s;
+            cursor: zoom-in;
+        }
+
+        .img2:hover {
+            opacity: 1;
+            box-shadow: none;
+            background-position: center top;
+            filter: sepia(0) grayscale(0) contrast(1) brightness(100%) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='img img1'>
+        <img src="../../assets/images/background-attachment4.jpg">
+    </div>
+    <div class="img img2">
+        <!-- <img src="../../assets/images/background-attachment5.jpg"> -->
+    </div>
+</body>
+
+</html>
