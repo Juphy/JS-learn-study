@@ -1,0 +1,109 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <style>
+        #infinite-scroller {
+            height: 500px;
+            width: 700px;
+            border: 1px solid #f5ad7c;
+            overflow: scroll;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px 5px;
+            line-height: 1.5;
+        }
+
+        li:nth-child(odd) {
+            background: #ffe8d8;
+        }
+
+        li:nth-child(even) {
+            background: #f5ad7c;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="infinite-scroller">
+    </ul>
+</body>
+
+</html>
+<script>
+    // 基于Rxjs6
+    const { Observable, fromEvent } = rxjs;
+    const { fromFetch } = rxjs.fetch;
+    const { map, filter, pairwise, startWith, exhaustMap } = rxjs.operators;
+    // 设置Observable流
+    const scrollElem = document.getElementById('infinite-scroller');
+    const scrollEvent$ = fromEvent(scrollElem, 'scroll');
+
+    let currentPage = 1;
+    const getQuotesAPI = () => {
+        return 'https://node-hnapi.herokuapp.com/news?page=' + currentPage;
+    }
+    /* 
+    处理API返回数据
+     */
+    const processData = res => {
+        res.json()
+            .then(news => {
+                currentPage++;
+                news.forEach(renderNews);
+            })
+    }
+
+    /* 
+    渲染每条信息
+     */
+    const renderNews = (news) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${news.id} - ${news.title}`;
+        scrollElem.appendChild(li)
+    }
+
+    /* 
+    检查用户是否向下滚动，通过前一个滚动位置和当前滚动位置进行判断
+     */
+    const isUserScrollingDown = (positions) => {
+        return positions[0].sT < positions[1].sT;
+    }
+
+    /* 
+    检查滚动位置是否达到了要求的容器百分比高度，从而加载更多数据
+     */
+    const isScrollExpectedPercent = (position, percent) => {
+        console.log(position);
+        return ((position.sT + position.cH) / position.sH) > (percent / 100);
+    }
+
+    /* 
+    流逻辑
+    */
+    const userScrollDown$ = scrollEvent$.pipe(
+        map(e => ({
+            sH: e.target.scrollHeight,
+            sT: e.target.scrollTop,
+            cH: e.target.clientHeight
+        })),
+        pairwise(), // 将数据流a-b-c-d=>[a,b]-[b,c]-[c,d]
+        filter(positions => {
+            return isUserScrollingDown(positions) && isScrollExpectedPercent(positions[1], 90)
+        }))
+    const requestOnScroll$ = userScrollDown$.pipe(
+        startWith([]),
+        exhaustMap(() => fromFetch(getQuotesAPI()))
+    );
+    requestOnScroll$.subscribe(processData);
+
+    // 1、接收由 scrollEvent$ 发出的滚动事件并将其映射成无限滚动加载逻辑所需要的值，只读取三个属性：scrollHeight、scrollTop 和 clientHeight
+    // 2、将映射过的数据传给 pairwise 操作符来根据条件进行过滤
+    // 3、将这组位置数据传给 filter 操作符来根据条件进行过滤：用户是否向下滚动，用户是否已经滚动到容器的70%高度
+
+</script>
