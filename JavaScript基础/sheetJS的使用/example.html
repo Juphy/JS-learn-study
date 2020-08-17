@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>excel导出</title>
+</head>
+
+<body>
+    <button id="btn1">多个sheet导出excel</button>
+    <button id="btn2">Array of Array导出csv</button>
+    <button id="btn3">JSON导出csv</button>
+</body>
+
+</html>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script>
+    let btn1 = document.getElementById('btn1'),
+        btn2 = document.getElementById('btn2'),
+        btn3 = document.getElementById('btn3');
+    btn1.addEventListener('click', function () {
+        let data = [
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 }
+        ];
+        /* generate worksheet */
+        let ws = XLSX.utils.json_to_sheet(data);
+
+        /* generate workbook and add the worksheet */
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet2');
+
+        /* save to file */
+        XLSX.writeFile(wb, 'SheetJS.xlsx');
+    })
+
+    btn2.addEventListener('click', function () {
+        let data = [
+            ['a', 'b', 'c'],
+            [1, 2, 3],
+            [1, 2, 3],
+            [1, 2, 3],
+            [1, 2, 3],
+            [1, 2, 3]
+        ];
+        let replacer = (key, value) => (value === null ? '' : value);
+        data = data.map(row => row.map(t => JSON.stringify(t, replacer)).join(','))
+        data = data.join('\r\n');
+        data = "data:text/csv;charset=utf-8,\uFEFF" + data;
+        const link = document.createElement("a");
+        link.href = encodeURI(data);
+        link.download = `example.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    })
+
+    btn3.addEventListener('click', function () {
+        let data = [
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 },
+            { a: 1, b: 2, c: 3 }
+        ];
+        let thead = [
+            { name: 'a', value: 'a' },
+            { name: 'b', value: 'b' },
+            { name: 'c', value: 'c' }
+        ];
+        const replacer = (key, value) => (value === null ? '' : value);
+        let csv = data.map(row => thead.map(t => JSON.stringify(row[t.value], replacer)).join(','));
+        csv.unshift(thead.map(t => t.name).join(','));
+        csv = csv.join("\r\n");
+        csv = "data:text/csv;charset=utf-8,\uFEFF" + csv;
+        const link = document.createElement("a");
+        link.href = encodeURI(csv);
+        link.download = `index.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    })
+</script>
