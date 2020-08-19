@@ -37,9 +37,10 @@
 </html>
 <script>
     // 基于Rxjs6
-    const { Observable, fromEvent } = rxjs;
+    const { Observable, fromEvent, zip, pipe, interval, of, range } = rxjs;
     const { fromFetch } = rxjs.fetch;
-    const { map, filter, pairwise, startWith, exhaustMap } = rxjs.operators;
+    const { map, filter, pairwise, startWith, exhaustMap, timer } = rxjs.operators;
+    
     // 设置Observable流
     const scrollElem = document.getElementById('infinite-scroller');
     const scrollEvent$ = fromEvent(scrollElem, 'scroll');
