@@ -21,7 +21,7 @@ fetch(url).then(res => console.log(res))
 - 二进制文件流：response.buffer()
 
 ```
-fetch(url, options);
+  fetch(url, options);
 
 let content = {some: 'content'};
 fetch('some-url', {

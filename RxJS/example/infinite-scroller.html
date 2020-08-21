@@ -36,11 +36,30 @@
 
 </html>
 <script>
+    // fetch
+    const url = 'http:10.110.30.116:3000'
+    fetch(url + '/cats', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: 'John',
+            age: 12,
+            breed: 'good'
+        })
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        })    
+</script>
+<script>
     // 基于Rxjs6
     const { Observable, fromEvent, zip, pipe, interval, of, range } = rxjs;
     const { fromFetch } = rxjs.fetch;
     const { map, filter, pairwise, startWith, exhaustMap, timer } = rxjs.operators;
-    
+
     // 设置Observable流
     const scrollElem = document.getElementById('infinite-scroller');
     const scrollEvent$ = fromEvent(scrollElem, 'scroll');
