@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <!-- <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script> -->
     <style>
         #infinite-scroller {
             height: 500px;
@@ -38,21 +38,19 @@
 <script>
     // fetch
     const url = 'http:10.110.30.116:3000'
-    fetch(url + '/cats', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: 'John',
-            age: 12,
-            breed: 'good'
-        })
-    })
-        .then(res => res.json())
+    fetch(url + '/cats')
+        .then(res => res.text())
         .then(data => {
             console.log(data);
-        })    
+        })
+    fetch(url + '/cats', {
+        methods: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => res.json()).then(data => {
+        console.log(data);
+    })    
 </script>
 <script>
     // 基于Rxjs6
