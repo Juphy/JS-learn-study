@@ -223,6 +223,10 @@ var myObservable = Rx.Observable.create(observer => {
         observer.next('bar');
     }, 1000)
 });
+
+myObservable.last().subscribe(res =>{
+    console.log('-----------', res)
+})
 myObservable.subscribe(res => {
     console.log(res);
 });

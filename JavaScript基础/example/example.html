@@ -1,0 +1,42 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            --primary: #7F583F;
+            --secondary: #F7EFD2;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration-color: var(--secondary);
+        }
+
+        @media screen and (min-width: 768px) {
+            body {
+                --primary: #F7EFD2;
+                --secondary: #7F583F;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+    const isSupported = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+    if (isSupported) {
+        // 设置变量
+        document.body.style.setProperty('--primary', '#7F583F');
+        // 读取变量
+        document.body.style.getPropertyValue('--primary').trim();
+        // 删除变量
+        document.body.style.removeProperty('--primary');
+    }
+</script>

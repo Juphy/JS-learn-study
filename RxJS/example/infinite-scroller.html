@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <!-- <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script> -->
+    <script src="../assets/rxjs.umd.min.js"></script>
     <style>
         #infinite-scroller {
             height: 500px;
@@ -36,6 +37,11 @@
 
 </html>
 <script>
+    (function (x, y) {
+        console.log(x + y);
+    })(1, 2)
+</script>
+<script>
     // fetch
     const url = 'http:10.110.30.116:3000'
     fetch(url + '/cats')
@@ -53,6 +59,7 @@
     })    
 </script>
 <script>
+
     // 基于Rxjs6
     const { Observable, fromEvent, zip, pipe, interval, of, range } = rxjs;
     const { fromFetch } = rxjs.fetch;
