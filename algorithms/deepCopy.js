@@ -19,6 +19,7 @@
 // Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。 
 function deepCopy1(obj) {
     var newObj;
+    // 在v8环境下obj.constructor返回[Function: Object]，与浏览器不一致。。。
     newObj = obj.constructor == Object ? Object.create(obj) : {};
     return newObj;
 }
@@ -30,10 +31,10 @@ var obj1 = {
     b: { m: 2 },
     c: [9, 0]
 };
-
+console.log(obj1.constructor);
 let _obj1 = deepCopy1(obj1);
-obj1.a = 2;
-console.log(_obj1.a);
+// obj1.a = 2;
+console.log(_obj1, _obj1.a);
 
 
 function deepCopy2(obj) {
@@ -63,19 +64,15 @@ var obj2 = {
 }
 let _obj2 = deepCopy2(obj2);
 obj2.a = 2;
-console.log(_obj2.a);
+console.log(_obj2, _obj2.a);
 
-// deepCopy对deepCopy2进行改进，将Array和Object的循环都使用
+// deepCopy对deepCopy2进行改进，将Array和Object的循环都使用in
 function deepCopy3(obj) {
-    let newObj = {};
-    if (!obj instanceof Object) {
-        return obj;
-    }
-    for (let i in obj) {
-        if (obj[i] instanceof Object) {
-            newObj[i] = deepCopy3(obj[i])
-        } else {
-            newObj[i] = obj[i];
+    if (typeof obj !== 'object') return;
+    var newObj = obj instanceof Array ? [] : {};
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            newObj[key] = typeof obj[key] === 'object' ? deepCopy3(obj[key]) : obj[key];
         }
     }
     return newObj;
@@ -88,4 +85,15 @@ var obj3 = {
 }
 let _obj3 = deepCopy3(obj3);
 obj3.a = 2;
-console.log(_obj3.a);
+console.log(_obj3, _obj3.a);
+
+// 深拷贝还要考虑循环引用的问题，JSON.stringify和parse在循环引用的场景下也会报错。。
+var obj4 = {
+    a: 1,
+    b: { m: 2 },
+    c: [9, 0]
+};
+
+var _obj4 = JSON.parse(JSON.stringify(obj4));
+obj4.a = 2;
+console.log(_obj4, _obj4.a);
