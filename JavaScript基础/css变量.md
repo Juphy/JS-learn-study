@@ -216,4 +216,25 @@ body{
     background-color: var(--color, #cd0000);
 }
 ```
-对于CSS变量，只要语法是正确的，就算变量里面的值是乱七八糟的东西，也是会正常的声明解析，如果发现变量值是不合法的，
+对于CSS变量，只要语法是正确的，就算变量里面的值是乱七八糟的东西，也是会正常的声明解析，如果发现变量已定义且变量值是不合法的，则使用背景色的缺省值，也就是默认值代替。如果变量值未定义not defined，就会使用备用值。
+
+```
+.one{
+    color: var(--my-color, red); // red if --my-color is not defined
+}
+
+.two{
+    background-color: var(--my-color, var(--my-background, pink)); // pink if --my-color and --my-background are not defined
+}
+
+.three{
+    background-color: var(--my-color, --my-background, pink)
+}
+```
+
+### 在HTML标签style中设置css变量
+```
+<div style="--color: #cd0000">
+    <img src="mm.jpg" style="border: 10px solid var(--color)"/>
+</div>
+```
