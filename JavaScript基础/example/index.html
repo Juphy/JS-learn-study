@@ -1,0 +1,47 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="box"></div>
+</body>
+
+</html>
+<script>
+    let box = document.getElementById('box');
+    let data = { "status": 200, "result": [{ "type": "int", "display": 0, "is_diff": false, "is_fill": true, "is_index": true, "sql_name": "cinema_code", "excel_name": "影院编码" }] };
+    box.innerText = JSON.stringify(data, null, 2);
+</script>
+<script>
+    function formatJsonStrAsObj(sample) {
+        const isPlainObject = (v) => Object.prototype.toString.call(v) === "[object Object]"
+        const isString = (v) => Object.prototype.toString.call(v) === "[object String]"
+        let temp = sample;
+        if (isString(temp)) {
+            // 因为有解析失败的可能，使用 try catch 做相应处理
+            try {
+                temp = JSON.parse(temp);
+            } catch (ex) {
+                // parse error，return this sample
+                return sample;
+            }
+        }
+        if (isPlainObject(temp)) {
+            temp = { ...temp };
+            Object.keys(temp).forEach(key => {
+                const item = temp[key];
+                // 字符串或者对象进行递归确认
+                if (isString(item) || isPlainObject(item)) {
+                    temp[key] = formatJsonStrAsObj(item);
+                }
+            });
+        }
+    }
+    let _data = JSON.stringify({
+
+    })
+</script>

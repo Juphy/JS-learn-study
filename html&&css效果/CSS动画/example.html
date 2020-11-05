@@ -1,0 +1,85 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS不同动画实现</title>
+    <style>
+        .box {
+            display: inline-block;
+            width: 360px;
+            height: 360px;
+            position: relative;
+        }
+
+        .ball {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.75);
+        }
+
+        .ball1 {
+            background-color: yellowgreen;
+            animation: run-around 4s infinite;
+        }
+
+        .ball2 {
+            background-color: skyblue;
+            animation: run-round 4s infinite;
+        }
+
+        @keyframes run-around {
+            0% {
+                top: 0;
+                left: 0
+            }
+
+            25% {
+                top: 0;
+                left: 200px;
+            }
+
+            50% {
+                top: 200px;
+                left: 200px;
+            }
+
+            75% {
+                top: 200px;
+                left: 0
+            }
+        }
+
+        @keyframes run-round {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(200px, 0);
+            }
+
+            50% {
+                transform: translate(200px, 200px);
+            }
+
+            75% {
+                transform: translate(0, 200px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="ball ball1"></div>
+    </div>
+    <div class="box">
+        <div class="ball ball2"></div>
+    </div>
+</body>
+</html>
