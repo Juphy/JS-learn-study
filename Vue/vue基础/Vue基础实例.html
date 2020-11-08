@@ -1,0 +1,145 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- 开发版本 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- 生产版本 -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+</head>
+
+<body>
+  <div id="app" title="123">
+    {{message}}
+  </div>
+  <div id="app-2">
+    <span v-bind:title="message">
+      鼠标悬停几秒钟查看此处动态绑定的提示信息！
+    </span>
+  </div>
+  <div id="app-3">
+    <p v-if="seen">现在你看到我了！</p>
+  </div>
+  <div id="app-4">
+    <ol>
+      <li v-for="todo in todos">
+        {{todo.text}}
+      </li>
+    </ol>
+  </div>
+  <div id="app-5">
+    <p>{{message}}</p>
+    <button v-on:click="reverseMessage">反转消息</button>
+  </div>
+  <div id="app-6">
+    <p>{{message}}</p>
+    <input type="text" v-model="message">
+  </div>
+  <div id="app-7">
+    <ol>
+      <todo-item v-for="item in groceryList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+    </ol>
+  </div>
+  <div id="app-8">
+    <p>{{foo}}</p>
+    <!-- 这里的‘foo’不会更新 -->
+    <button v-on:click="foo = 'baz'">Change it</button>
+  </div>
+</body>
+
+</html>
+
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue!'
+    }
+  });
+
+  var app2 = new Vue({
+    el: '#app-2',
+    data: {
+      message: '页面加载于' + new Date().toLocaleString()
+    }
+  })
+
+  var app3 = new Vue({
+    el: '#app-3',
+    data: {
+      seen: true
+    }
+  })
+
+  var app4 = new Vue({
+    el: '#app-4',
+    data: {
+      todos: [
+        { text: '学习 JavaScript' },
+        { text: '学习 Vue' },
+        { text: '整个牛项目' }
+      ]
+    }
+  })
+
+  var app5 = new Vue({
+    el: '#app-5',
+    data: {
+      message: 'Hello Vue.js!'
+    },
+    methods: {
+      reverseMessage: function () {
+        this.message = this.message.split('').reverse().join('')
+      }
+    }
+  })
+
+  var app6 = new Vue({
+    el: '#app-6',
+    data: {
+      message: 'Hello World!'
+    }
+  })
+
+  Vue.component('todo-item', {
+    props: ['todo'],
+    template: '<li>{{todo.text}}</li>'
+  })
+
+  var app7 = new Vue({
+    el: '#app-7',
+    data: {
+      groceryList: [
+        { id: 0, text: '蔬菜' },
+        { id: 1, text: '奶酪' },
+        { id: 2, text: '随便其它什么人吃的东西' }
+      ]
+    }
+  })
+
+  var obj = {
+    foo: 'bar'
+  }
+
+  Object.freeze(obj);
+  var app8 = new Vue({
+    el: '#app-8',
+    data: obj
+  })
+
+  var data = { a: 1 }
+  var vm = new Vue({
+    el: '#example',
+    data: data
+  })
+
+  vm.$data === data; // true
+  vm.$el = document.getElementById('example') // true
+
+  // $watch是一个实例方法
+  vm.$watch('a', function(newValue, oldValue){
+    // 这个回调将在`vm.a`改变后调用
+  })
+</script>
