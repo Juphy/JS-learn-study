@@ -565,3 +565,5 @@ return () => {
   cleanup();
 };
 ```
+
+**只能在app.module.ts中引入HttpClientModule，不能再其他模块引入，否则，http请求的拦截器将失效。**
