@@ -23,6 +23,12 @@ var child = Object.create(parent, {
     }
 });
 ```
+### enumerable
+可枚举性：用来控制所描述的属性，是否将被包括在for...in循环之中，如果一个属性的enumerable为false，则下面三个操作不会取到该属性：
+- for..in
+- Object.keys()
+- JSON.stringify()
+
 ### for in
 
 for in 是 es3 中就存在，最早用来遍历对象方法。
@@ -32,7 +38,7 @@ for(let key in child){
   console.log(key);
 }
 // b
-// c
+// a
 ```
 `for in`会输出自身以及原型链上可枚举的属性。
 如果仅想输出自身的属性可以借助hasOwnProperty，可以过滤掉原型链上的属性。

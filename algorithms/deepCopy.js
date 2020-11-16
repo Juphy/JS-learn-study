@@ -85,7 +85,7 @@ var obj3 = {
 }
 let _obj3 = deepCopy3(obj3);
 obj3.a = 2;
-console.log(_obj3, _obj3.a);
+console.log(obj3, _obj3.a);
 
 // 深拷贝还要考虑循环引用的问题，JSON.stringify和parse在循环引用的场景下也会报错。。
 var obj4 = {
@@ -97,3 +97,97 @@ var obj4 = {
 var _obj4 = JSON.parse(JSON.stringify(obj4));
 obj4.a = 2;
 console.log(_obj4, _obj4.a);
+
+///////////////////////////
+let fn1 = () => { console.log(1) };
+let fn2 = () => { console.log(2) }
+let dict = {
+    a: 1,
+    b: {
+        c: 2
+    },
+    d: fn1,
+    e: new Date(),
+    f: /^a/,
+    g: [1, 2, 3]
+}
+
+let copyDict = JSON.parse(JSON.stringify(dict));
+dict.a = 3
+dict.b.c = 4;
+dict.d();
+console.log(copyDict.d);
+console.log(copyDict);
+
+dict = {
+    a: 1,
+    b: {
+        c: 2
+    },
+    d: fn1,
+    e: new Date(),
+    f: /^a/,
+    g: [1, 2, 3]
+}
+let copyDict1 = Object.assign({}, dict);
+dict.a = 5;
+dict.b.c = 6;
+dict.d = fn2;
+dict.f = /^b/;
+dict.g = [4, 5, 6];
+console.log(dict);
+console.log(copyDict1);
+
+dict = {
+    a: 1,
+    b: {
+        c: 2
+    },
+    d: fn1,
+    e: new Date(),
+    f: /^a/,
+    g: [1, 2, 3]
+}
+let copyDictDeep = function (obj) {
+    if (obj == null) return obj;
+    if (obj instanceof Date || obj instanceof RegExp || obj instanceof Function) return obj;
+    let newObj = obj instanceof Array ? [] : {};
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            newObj[key] = typeof obj[key] === 'object' ? copyDictDeep(obj[key]) : obj[key]
+        }
+    }
+    return newObj;
+}
+
+let copyDict2 = copyDictDeep(dict);
+dict.a = 7;
+dict.b.c = 8;
+dict.d = fn2;
+dict.e = new Date();
+dict.f = /^b/;
+dict.g = [4, 5, 6];
+console.log(dict);
+console.log(copyDict2);
+console.log(dict.d());
+console.log(copyDict2.d());
+
+dict = {
+    a: 1,
+    b: {
+        c: 2
+    },
+    d: fn1,
+    e: new Date(),
+    f: /^a/,
+    g: [1, 2, 3]
+}
+let deepDict3 = { ...dict };
+dict.a = 9;
+dict.b.c = 10;
+dict.d = fn2;
+dict.e = new Date();
+dict.f = /^b/;
+dict.g = [4, 5, 6];
+console.log(dict);
+console.log(deepDict3);
