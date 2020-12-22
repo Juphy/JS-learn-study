@@ -57,5 +57,8 @@
     "websocket": "^1.0.28",
     "ws": "^6.1.4",
     "xlsx": "^0.13.5"
+  },
+  "devDependencies": {
+    "tape": "^5.0.1"
   }
 }

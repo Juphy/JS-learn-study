@@ -1,0 +1,24 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>hello world!<strong>Firefox</strong>，Edge，<strong>Chrome</strong></div>
+</body>
+
+</html>
+<script>
+    let eles = document.getElementsByTagName('strong');
+    let s = window.getSelection();
+    if (s.rangeCount > 0) s.removeAllRanges(); // 从选区中移除所有区域
+    for (let i = 0; i < eles.length; i++) {
+        let range = document.createRange(); // 创建range区域
+        range.selectNode(eles[i]); // 让range选区包含指定节点及其内容
+        s.addRange(range); // 将创建的区域添加到选区中
+    }
+    console.log(s);
+</script>
