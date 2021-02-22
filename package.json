@@ -23,6 +23,7 @@
     "cheerio": "^1.0.0-rc.2",
     "clipboard": "^2.0.1",
     "decimal.js": "^10.0.1",
+    "delegate": "^3.2.0",
     "echarts": "^4.1.0",
     "express": "^4.16.3",
     "express-formidable": "^1.0.0",

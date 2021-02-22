@@ -1,0 +1,1 @@
+var is = require('./is');

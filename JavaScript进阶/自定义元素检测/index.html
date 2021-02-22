@@ -1,0 +1,19 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义元素</title>
+    <script src="./example.js"></script>
+    <style>
+        x-ell{
+            display: block;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <x-ell rows="2">对于现代浏览器，例如webkit内核的浏...组合如下。</x-ell>
+    <p><button onClick="document.querySelector('x-ell').rows = '3';">点击设置rows为3</button></p>
+</body>
+</html>

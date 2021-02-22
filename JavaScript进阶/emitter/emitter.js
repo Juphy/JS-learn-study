@@ -58,7 +58,7 @@ class Emitter {
             fn: callback,
             ctx: ctx
         })
-        return this;
+        return this; 
     }
 
     once(name, callback, ctx) {
@@ -87,4 +87,3 @@ class Emitter {
         return this;
     }
 }
-
