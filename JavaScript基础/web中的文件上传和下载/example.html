@@ -7,10 +7,46 @@
 </head>
 
 <body>
-    <form id="upload-form" action="https://api2d.d12.zhongyingjuhe.top/ucs/upload" method="post" enctype="multipart/form-data">
-        <input type="file" id="upload" name="upload"/><br/>
+    <form id="upload-form" action="https://api2d.d12.zhongyingjuhe.top/ucs/upload" method="post"
+        enctype="multipart/form-data">
+        <input type="file" id="upload" name="upload" /><br />
         <input type="submit" value="upload">
     </form>
+
+    <progress id="uploadprogress" min="0" max="100" value="23">23</progress>
 </body>
 
 </html>
+<script>
+    let xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = function (event) {
+        if (event.lengthComputable) {
+            var complete = (event.loaded / event.total * 100 | 0);
+            var progress = document.getElementById('uploadprogress');
+            progress.value = progress.innerHTML = complete;
+        }
+    }
+
+    let upload = document.getElementById('upload');
+    upload.addEventListener('change', function () {
+        console.log(upload.files);
+        if (typeof FileReader !== 'undefined') {
+            var acceptedTypes = {
+                'image/png': true,
+                'image/jpeg': true,
+                'image/gif': true,
+                "image/webp": true
+            };
+            if (acceptedTypes[upload.files[0].type] === true) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var image = new Image();
+                    image.src = event.target.result;
+                    image.width = 100;
+                    document.body.appendChild(image);
+                };
+                reader.readAsDataURL(document.getElementById('upload').files[0]);
+            }
+        }
+    })
+</script>
