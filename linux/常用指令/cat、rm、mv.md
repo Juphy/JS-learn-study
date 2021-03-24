@@ -52,3 +52,22 @@ rm test 无法删除test目录
 rm -r test 删除目录test
 
 rm -r * 删除当前目录下所有文件及目录
+
+## mv
+mv(move file)用来为文件或目录改名、或将文件或目录移入其它位置。
+```
+mv [options] source dest
+mv [options] source... directory
+```
+  - -b 当目标文件或目录存在时，在执行覆盖前，会为其创建一个备份
+  - -i 如果指定移动的源目录或文件 与目标的目录或文件同名，则会先询问是否覆盖旧文件，输入y表示直接覆盖，输入n表示取消该操作
+  - -f 如果指定移动的源目录或文件 与目标的目录或文件同名，不会询问，直接覆盖旧文件
+  - -n 不要覆盖任何已存在的文件或目录
+  - -u 当源文件比目标文件新或目标文件不存在时，才执行此操作
+
+```
+mv source_file(文件) dest_file(文件)  // 将源文件名source_file改为目标文件名dest_file
+mv source_file(文件) dest_directory(目录)   //将文件source_file移动到目标文件夹dest_directory中
+mv source_directory(目录) dest_directory(目录)  // 如果文件夹dest_directory已存在，将source_directory移动到文件夹dest_directory中，如果文件夹dest_directory不存在则source_directory改名为dest_directory
+mv source_directory(目录)  dest_file(文件)  // 出错
+```
