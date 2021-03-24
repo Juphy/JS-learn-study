@@ -22,7 +22,7 @@ Cookie会根据响应报文里的一个Set-Cookie的首部字段信息，通知�
 当用户第一次浏览某个使用cookie的网站时，该网站的服务器就进行如下的工作：
 - 该用户生成唯一的识别码（Cookie ID），创建一个Cookie对象。
 - 默认情况下它是一个会话级别的cookie，存储在浏览器的内存中，用户退出浏览器之后被删除，如果网站希望浏览器将该Cookie存储在磁盘上，则需要设置最大时效（maxAge）,并给出一个以秒为单位的时间（将最大时效设为0则是命令浏览器删除该cookie）
-- 将cookie放入到HTTP响应报头，将Cookie插入到一个Set-Cookie HTTP请求报头中
+- 将cookie放入到HTTP请求报头，将Cookie插入到一个Set-Cookie HTTP响应报头中
 - 发送该HTTP响应报文
 
 2.设置存储Cookie
@@ -67,22 +67,47 @@ document.cookie = 'fontSize=14; '
 ```
 写入Cookie的时候，同时设置了`expires`属性。属性值的等号两边，也是不能有空格的。
 
-> 作用
-
-1.对话管理：保存登录、购物车等需要记录的信息
-2.个性化：保存用户的偏好，比如网页的字体大小、背景色等
-3.追踪：记录和分析用户行为
-
 浏览器可以设置不接受Cookie，也可以设置不想服务器发送Cookie。
 `window.navigator.cookieEnabled`属性返回一个布尔值，表示浏览器是否打开Cookie功能。
 `document.cookie`属性返回当前网页的Cookie。
 
 不同浏览器器对Cookie数量和大小的限制，是不一样的。一般来说，单个域名设置的Cookie不应超过30个，每个Cookie的大小不能超过4KB。超过限制以后，Cookie将被忽略，不会被设置。浏览器的同源政策规定，两个网址只要域名相同和端口相同，就可以共享Cookie。不要求协议相同，`http://example.com`设置的Cookie，可以被`https://example.com`读取。
 
+> 作用
+
+1.对话管理：记住密码，保存登录、购物车等需要记录的信息
+2.个性化：保存用户的偏好，比如网页的字体大小、背景色等
+3.追踪：记录和分析用户行为，记录用户浏览数据，进行商品推荐
+
+> 缺陷
+
+1.Cookie会被附加在每个HTTP请求中，所以无形中增加了流量
+2.由于在HTTP请求中的Cookie是明文传递的，所以安全性有问题（除非用HTTPS）
+3.Cookie的大小限制在4KB左右，对于复杂的存储需求来说是不够用的
+
 
 ### Session
+Session代表服务器与浏览器的一次会话过程，这个过程是连续的，也可以时断时续。Session是一种服务端机制，Session对象用来存储特定用户会话所需的信息。
 
+Session有服务端生成，保存在服务器的内存、缓存、硬盘或数据中。
+
+> 创建Session
+
+当用户访问一个服务器，如果服务器启用Session，服务器就要为该用户创建一个SESSION，在创建这个SESSION的时候，服务器首先检查这个用户发送来的请求里是否包含了一个SESSION ID，如果包含了一个SESSION ID则说明之前该用户已经登陆过并为此用户创建过SESSION，那服务器就按照这个SESSION ID把这个SESSION在服务器的内存中查找出来（如果找不到，就有可能为他新创建一个），如果客户端请求里面不包含SESSION ID，则为该客户端创建一个SESSION并生成一个与此SESSION相关的SESSION ID。这个`SESSION ID是唯一的、不重复的、不容易找到规律的字符串`
+
+`URL重写`：把Session id直接附加在URL路径的后面作为URL路径的附加信息，表现形式为：http://…./xxx;jSession=ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764
+`作为查询字符串附加在URL后面`：http://…../xxx?jSession=ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764
+`表单隐藏字段`，服务器会自动修改表单，添加一个隐藏字段，以便在表单提交时能够把Session id传递回服务器。
+
+> 作用：Session的根本作用是在服务端存储用户和服务器会话的一些信息
+
+1.判断用户是否登录
+2.购物车功能
 
 ### Cookie和Session的区别
 1.存放位置：Cookie保存在客户端，Session保存在服务端
-2.
+2.存取方式不同：Cookie只能保存ASCII字符串，假如需求存取Unicode字符或者二进制数据，需要先进行编码。而Session中能够存取任何类型的数据，包括而不限于String、Integer、list、Map等。
+3.安全性：Cookie存储在浏览器中，对客户端是可见的，客户端的一些程序可能会复制或者修改Cookie中的内容。而Session存储在服务器上，对客户端是透明的，不存在敏感信息泄露的风险。
+4.有效期：Cookie的有效期依赖于过期时间属性，Session依赖于名为JSESSIONID的cookie，而Cookie JSESSIONID的过期时间默许为-1，只需要关闭浏览器（一次会话结束），该Session就会失效。
+5.对服务器造成的压力不同：Session是存储在服务器端的，每个用户都会产生一个Session，假如并发访问的用户非常多，会产生非常多的Session，耗费大量的内存，而Cookie存储在客户端，不占用服务器资源。
+6.跨域支持上的不同：Cookie支持跨域名访问，例如将domain属性设置为'baidu.com'，则以"baidu.com"为后缀的一切域名均能够访问该Cookie。跨域名Cookie如今被普遍用于网络中，而Session则不会支持跨域名访问。Session仅在它所在的域名内有效。
