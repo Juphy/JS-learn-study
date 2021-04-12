@@ -138,36 +138,47 @@ isNaN()函数，经测试发现，该函数会尝试将参数值用 Number()进�
 
 举例说明：
 
-' 1 '==1.0 // true
+'1'==1.0 // true
 
 '12.10'==12.1 // true
 
-[1,2,NaN].indexOf(NaN) // -1
+`[1,2,NaN].indexOf(NaN) // -1`
 
-[1,2,NaN].includes(NaN) // true
+`[1,2,NaN].includes(NaN) // true`
 
-[1,2]+[3,4] == "1,23,4"
+`[1,2]+[3,4] == "1,23,4"`
 
-[1,2,{}] == "1,2,[object, Object]"
+`[1,2,{}] == "1,2,[object, Object]"`
 
-[]+[] == ''
+`[]+[] == ''`
 
 []+{} == '[object Object]'
 
 {}+{} == NaN （在 firefox 中，javascript 把第一个{}解释成空的代码块，并忽略了它，NaN 其实就是+{}的计算结果，这里的+号不是二元运算符，而是一元运算符，作用是将它后面的操作数转换成数字）
 
-{}+{} == "[object Object][object object]"
+`{}+{} == "[object Object][object object]"`
 
 +"3.65" == 3.65
 
-++[[]][+[]]+[+[]] == '10'
+`++[[]][+[]]+[+[]] == '10'`
 
-[]==false// true  
-!![]==true// true  
-!!''==false// true  
-[1]=='1'// true  
-''==0// true  
-''==false// true  
-[1]==true// true  
-null==0// false  
-null==''// false
+`[]==false// true`
+`!![]==true// true`
+`!!''==false// true`
+`[1]=='1'// true`
+`''==0// true`
+`''==false// true`
+`[1]==true// true`
+`null==0// false`
+`null==''// false`
+
+|   -   | 比较场景     | 结果            | 说明                                                        |
+| :---: | :----------- | :-------------- | :---------------------------------------------------------- |
+|   1   | 两边类型相同 | 同全等(===)规则 | (值类型)类型相同，值相等true<br/>(引用类型)引用同一对象才为true |
+|2|`null`与`undefined`|true||
+|3|`Number`与`String`|number == `toNumber(string)`|`0==''`// true<br/>'01'==1 // true|
+|4|`Boolean`和`(any)`|toNumber(bool)==(any)|true==1// true<br/>false==0//true<br/>false==''//true|
+|5|`String`/`Number`与`Object`|x == toPrimitive(object)|"[object Object]" == {} // true <br/> 1 == { valueOf: function(){return "1"}} // true|
+|6|其它情况|false|0 == null <br/> "" == undefined<br/> undefined == {}|
+toPrimitive规则：
+优先调用对象的`valueOf`方法转换，如果对象没有`valueOf`方法，或者`valueOf`方法返回的值不是原数据类型，则调用`toString`方法转换。
