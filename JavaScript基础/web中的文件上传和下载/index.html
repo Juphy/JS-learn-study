@@ -1,0 +1,41 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+</head>
+
+<body>
+    <button onclick="fn()">点击</button>
+</body>
+
+</html>
+<script>
+    function fn(e) {
+        $.ajax({
+            url: 'https://api2d.d12.zhongyingjuhe.top/dockmgr/download_pdf',
+            method: 'post',
+            data: {
+                shipper: "1",
+                task_id: 21783
+            },
+            cache: false,
+            xhrFields: { responseType: 'blob' },
+            success: function (data) {
+                let url = window.URL.createObjectURL(new Blob([data], { type: 'application/pdf' }));
+                let ele = document.createElement("a");
+                ele.href = url;
+                ele.download = '默认文件.pdf'
+                document.body.appendChild(ele);
+                ele.click();
+                document.body.removeChild(ele);
+                window.open(url);
+            },
+            error: function () {
+            }
+        })
+    }
+</script>

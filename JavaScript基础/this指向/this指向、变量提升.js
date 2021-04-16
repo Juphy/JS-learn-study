@@ -50,3 +50,20 @@ console.log(this);
 this.num = 10;
 console.log(module.exports);
 console.log(module.exports.num);
+
+let person = {
+    foo: function(){
+        console.log(this);
+    },
+    test: () => {
+        console.log(this)
+    },
+    fn() {
+        return () => {
+            console.log(this)
+        }
+    }
+}
+person.test()  // window
+person.fn()()  // person对象
+person.foo()  // person对象
