@@ -93,3 +93,103 @@ process.on('unhandleRejection', function(err, p){
     throw err;
 })
 ```
+
+
+
+
+
+
+### Promise.prototype.finally()
+
+### Promise.all()
+用于将多个Promise实例，包装成一个新的Promise实例。
+`Promise.all()`方法的参数可以不是数组，但必须具有Iterator接口，且返回的每个成员都是Promise实例。
+```
+const p = Promise.all([p1, p2, p3]);
+```
+p的状态有p1、p2、p3决定，分成两种情况：
+- 只有p1、p2、p3的状态都变成`fulfilled`，p的状态才会变成`fulfilled`，此时`p1`、`p2`、`p3`的返回值组成一个数组，传递给`p`的回调函数。
+- 只有p1、p2、p3之中有一个被`rejected`，`p`的状态就变成了`rejected`，此时第一个被`rejected`的实例的返回值，会传递给`p`的回调函数。
+```
+// 生成一个Promise对象的数组
+const promises = [2,3,5,7,11,13].map(function(id){
+    return getJSON(`/post/${id}.json`);
+})
+Promise.all(promises).then(function(post){
+    //...
+}).catch(function(reason){
+    //...
+})
+```
+> 如果作为参数的Promise的实例，自己定义了`catch`方法，那么它一旦被`rejected`，并不会触发`Promise.all()`的`catch`方法。
+
+```
+const p1 = new Promise((resolve, reject)=>{
+    resolve('hello')
+})
+.then(result => result)
+.catch(e => e)
+
+const p2 = new Promise((resolve, reject)=>{
+    throw new Error('报错了')
+})
+.then(result => result)
+.catch(e => e)
+
+Promise.all([p1, p2])
+.then(result => console.log(result))
+.catch(e => console.log(e))
+// ["hello", Error: 报错了]
+```
+
+> 如果p2没有自己的`catch`方法，就会调用`Promise.all()`的`catch`方法
+
+```
+const p1 =  new Promise((resolve, reject)=>{
+    resolve('hello')
+})
+.then(result => result)
+
+const p2 = new Promise((resolve, reject)=>{
+    throw new Error('报错了')
+})
+.then(result => result);
+
+Promise.all([p1, p2])
+.then(result => console.log(result))
+.catch(e => console.log(e))
+```
+### Promise.race()
+将多个Promise实例，包装成一个新的Promise实例。
+```
+const p = Promise.race([p1, p2, p3]);
+```
+**只要`p1`, `p2`, `p3`之中有一个实例率先改变状态，`p`的状态就跟着改变。率先改变的Promise实例的返回值，就传递给`p`的回调函数。**
+`Promise.race()`方法的参数与`Promise.all()`方法一样，如果不是Promise实例，就先调用`Promise.resolve()`方法，将参数转为Promise实例，再进一步处理。
+```
+const p = Promise.race([
+    fetch('/resource-that-may-take-a-while'),
+    new Promise(function(resolve, reject){
+        setTimeout(() => reject(new Error('request timeout')), 5000)
+    })
+])
+p.then(console.log).catch(console.error)
+```
+
+### Promise.allSettled()
+`Promise.allSettled()`方法接受一组Promise实例作为参数，包装成一个新的Promise实例。只有等到所有这些参数实例都返回结果，不管是`fulfilled`还是`rejected`，包装实例才会结束。
+```
+const promises = [
+    fetch('/api-1'),
+    fetch('/api-2'),
+    fetch('/api-3')
+];
+await Promise.allSettled(promise);
+
+```
+
+
+
+### Promise.allSettled()
+
+### Promise.any()

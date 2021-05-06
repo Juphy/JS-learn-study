@@ -1,0 +1,52 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        选择文件：<input type="file" id="inputFile" onchange="handleChange(event)">
+        <p id="realFileType"></p>
+    </div>
+</body>
+
+</html>
+<script>
+    // 逐字节对比
+    function check(headers) {
+        return (buffers, options = { offset: 0 }) => headers.every(
+            (header, index) => header === buffers[options.offset + index]
+        )
+    }
+
+    // 读取文件中指定范围的二进制数据
+    function readBuffer(file, start = 0, end = 2) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve(reader.result);
+            }
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file.slice(start, end));
+        })
+    }
+
+    function stringToBytes(string) {
+        return [...string].map((character) => character.charCodeAt(0));
+    }
+
+    const isPNG = check([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    const isPDF = check(stringToBytes('%PDF'));
+    const realFileElement = document.querySelector('#realFileType');
+    async function handleChange(event) {
+        const file = event.target.files[0];
+        const buffers = await readBuffer(file, 0, 8);
+        console.log(buffers);
+        const uint8Array = new Uint8Array(buffers);
+        realFileElement.innerText = `${file.name}文件的类型是：${isPNG(uint8Array) ? "image/png" : (isPDF(uint8Array) ? 'application/pdf' : file.type)}`;
+    }
+</script>
