@@ -14,10 +14,10 @@ Blob表示的不一定是JavaScript原生格式的数据。比如`File`接口基
 
 #### 构造函数
 Blob(blobParts[,options]): 返回一个新创建的Blob对象，其内容由参数中给定的数组串联组成。
-- blobParts：一个由ArrayBuffer, ArrayBufferView Blob DOMString等对象构成的数组。DOMString会被编码为UTF-8
+- blobParts：一个由ArrayBuffer, ArrayBufferView，Blob，DOMString等对象构成的数组。DOMString会被编码为UTF-8
 - options: 一个可选的对象，包含以下两个属性：
-    - type: 默认值为""，它将代表了将会被放入到blob中的数组内容的MIME类型
-    - endings: 默认值为"transparents"，用于指定包含行结束符`\n`的字符串如何被写入。它是以下两个值中的一个："native"代表行结束符会被更改为适合宿主操作系统文件系统的换行符，或者"transparent"代表会保持blob中保存的结束符不变。
+    - type: 默认值为`""`，它将代表了将会被放入到blob中的数组内容的MIME类型
+    - endings: 默认值为`transparents`，用于指定包含行结束符`\n`的字符串如何被写入。它是以下两个值中的一个：`native`代表行结束符会被更改为适合宿主操作系统文件系统的换行符，或者`transparent`代表会保持blob中保存的结束符不变。
 
 #### 属性
 - Blob.size: 只读。Blob对象中所包含数据的大小（字节）
@@ -25,8 +25,8 @@ Blob(blobParts[,options]): 返回一个新创建的Blob对象，其内容由参�
 - Blob.type: 只读。一个字符串，表明该blob对象所包含数据的MIME类型。如果类型未知，则该值为空字符串。
 
 #### 方法
-- Blob.slice(): 返回一个新的Blob对象，包含了源Blob对象中指定范围内的数据
-- Blob.stream()：返回一个能读取Blob内容的ReadableStream
+- Blob.slice(): 返回一个新的Blob对象，包含了源Blob对象中指定范围内的数据。
+- Blob.stream()：返回一个能读取Blob内容的`ReadableStream`。
 - Blob.text()：返回一个promise且包含blob所有内容的UTF-8格式的`USVString`
 - Blob.arrayBuffer()：返回一个Promise对象且包含blob所有内容的二进制的`ArrayBuffer`
 
@@ -119,7 +119,23 @@ fetch(myRequest)
         let objectURL = URL.createObjectURL(myBlob);
         myImage.src = objectURL;
     })
-当fetch请求成功的时候，调用response对象的`blob()`方法，从response对象中读取一个Blob对象，然后使用`createObjectURL()`方法创建一个objectURL，然后把它赋值给img元素的src属性从而显示这张图片。    
+当fetch请求成功的时候，调用response对象的`blob()`方法，从response对象中读取一个Blob对象，然后使用`createObjectURL()`方法创建一个objectURL，然后把它赋值给img元素的src属性从而显示这张图片。
+```
+fetch API的Response对象，该对象除了提供`blob()`方法之外，还提供了`json()`、`text()`、`formData()`和`arrayBuffer()`等方法，用于把响应转换为不同的数据格式。
+```
+<h3>获取远程图片预览示例</h3>
+<img id="previewContainer" style="width: 50%;"/>
+
+<script>
+   const image = document.querySelector("#previewContainer");
+   fetch("https://avatars3.githubusercontent.com/u/4220799")
+     .then((response) => response.arrayBuffer())
+     .then((buffer) => {
+        const blob = new Blob([buffer]);
+        const objectURL = URL.createObjectURL(blob);
+        image.src = objectURL;
+   });
+</script>
 ```
 3. Blob用作URL
 
@@ -394,3 +410,76 @@ function GET(url, callback) {
   };
 }
 ```
+Blob与ArrayBuffer相互转换：
+- Blob -> ArrayBuffer
+```
+var blob = new Blob(['\x01\x02\x03\x04']),
+      fileReader =  new FileReader(),
+      array;
+fileReader.onload = function(){
+  array = this.result;
+  console.log("Array contains", array.byteLength, "bytes.")
+}
+fileReader.readAsArrayBuffer(blob);
+```
+- ArrayBuffer -> Blob
+```
+var array = new Uint8Array([0x01, 0x02, 0x03, 0x04]);
+var blob = new Blob([array]);
+```
+> DataView
+
+DataView视图是一个从二进制ArrayBuffer对象中读写多种数值类型的底层接口，使用它时，不用考虑不同平台的字节序问题。
+```
+字节顺序，又称端序或尾序（英语：Endianness），在计算机科学领域中，指存储器中或在数字通信链路中，组成多字节的字的字节的排列顺序。
+字节的排列方式有两个通用规则。例如，一个多位的整数，按照存储地址从低到高排序的字节中，如果该整数的最低有效字节（类似于最低有效位）在最高有效字节的前面，则称小端序；反之则称大端序。在网络应用中，字节序是一个必须被考虑的因素，因为不同机器类型可能采用不同标准的字节序，所以均按照网络标准转化。
+例如假设上述变量 x 类型为int，位于地址 0x100 处，它的值为 0x01234567，地址范围为 0x100~0x103字节，其内部排列顺序依赖于机器的类型。大端法从首位开始将是：0x100: 01, 0x101: 23,..。而小端法将是：0x100: 67, 0x101: 45,..。
+```
+- DataView构造函数：new DataView(buffer[, byteOffset [, byteLength]])
+  - buffer: 一个已经存在的 ArrayBuffer 或 SharedArrayBuffer 对象，DataView对象的数据源
+  - byteOffset(可选)：此DataView对象的第一个字节在buffer中的字节偏移。如果未指定，则默认从第一个字节开始。
+  - byteLength: 此DataView对象的字节长度。如果未指定，这个视图的长度将匹配buffer的长度。
+
+DataView返回值：使用 new 调用 DataView 构造函数后，会返回一个表示指定数据缓存区的新`DataView`对象。返回的对象可以看成一个二进制字节缓存区array buffer的“解释器”—— 它知道如何在读取或写入时正确地转换字节码，这意味着它能在二进制层面处理整数与浮点转化、字节顺序等其他有关的细节问题。
+```
+const buffer = new ArrayBuffer(16);
+
+// Create a couple of views
+const view1 = new DataView(buffer);
+const view2 = new DataView(buffer, 12, 4); //from byte 12 for the next 4 bytes
+view1.setInt8(12, 42); // put 42 in slot 12
+
+console.log(view2.getInt8(0)); // expected output: 42
+```
+DataView属性：
+所有DataView实例都继承自DataView.prototype，并且允许向DataView对象中添加额外属性。
+- DataView.prototype.buffer(只读)：指向创建DataView时设定的ArrayBuffer对象
+- DataView.prototype.byteLength(只读)：表示ArrayBuffer 或 SharedArrayBuffer 对象的字节长度
+- DataView.prototype.byteOffset(只读)：表示从ArrayBuffer 读取时的偏移字节长度
+
+DataView方法：
+DataView 对象提供了getInt8()、getUint8()、setInt8()、setUint8()等方法来操作数据。
+```
+const buffer = new ArrayBuffer(16);
+const view = new DateView(buffer, 0);
+
+view.setInt8(1, 68);
+view.getInt8(1); // 68
+```
+
+ArrayBuffer、TypedArray 和 DataView 之间的关系：
+![ArrayBuffer、TypedArray 和 DataView](../assets/images/pic12.jpg)
+
+### 图片灰度化
+> getImageData
+
+利用 CanvasRenderingContext2D 提供的`getImageData`来获取图片像素数据，其中 getImageData() 返回一个 ImageData 对象，用来描述canvas 区域隐含的像素数据，这个区域通过矩形表示，起始点为 (sx, sy)、宽为 sw、高为 sh。
+其中`getImageData`方法的语法如下：
+```
+ctx.getImageData(sx, sy, sw, sh);
+```
+相应的参数说明：
+- sx：将要被提取的图像数据矩形区域的左上角 x 坐标。
+- sy：将要被提取的图像数据矩形区域的左上角 y 坐标。
+- sw：将要被提取的图像数据矩形区域的宽度。
+- sh：将要被提取的图像数据矩形区域的高度。
