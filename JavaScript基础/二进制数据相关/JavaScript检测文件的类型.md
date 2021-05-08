@@ -66,5 +66,23 @@ function stringToBytes(string){
 }
 const isPDF = check(stringToBytes('%PDF'));
 ```
+**文件类型是多种多样的，也可以使用现成的第三方库来实现文件检测的功能，比如`file-type`。如果想要判断一张图片是否为PNG类型，这时可以使用is-png库。**
+```JavaScript
+// nodejs npm install read-chunk
+const readChunk = require('read-chunk');
+const isPng = require('is-png');
+const buffer= readChunk.sync('unicorn.png', 0, 8);
 
-> 文件类型是多种多样的，也可以使用现成的第三方库来实现文件检测的功能，比如`file-type`
+isPng(buffer); // => true
+
+// browser
+(async () => {
+    const response = await fetch('unicorn.png');
+    const buffer = await response.arrayBuffer();
+
+    isPng(new Uint8Array(buffer)); // => true
+})();
+```
+
+
+

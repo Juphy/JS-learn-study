@@ -81,9 +81,10 @@ var text = await (new Response(blob).text());
 File对象是特殊类型的Blob，且可以用在任意的Blob类型的上下文中。所以针对大文件传输的场景，可以使用slice方法对大文件进行切割，然后分片进行长传
 ```
 const file = new File(['a'.repeat(1000000)], 'test.txt');
-const chunkSIze = 40000;
 
+const chunkSIze = 40000;
 const url = "https://httpbin.org/post";
+
 async function chunkUpload(){
     for(let start = 0; start < file.size; start += chunSize){
         const chunk = file.slice(start, start + chunkSize+1);
@@ -137,7 +138,7 @@ fetch API的Response对象，该对象除了提供`blob()`方法之外，还提�
    });
 </script>
 ```
-3. Blob用作URL
+3. Blob用作URL，实现文件下载
 
 Blob URL/Object URL是一种伪协议，允许Blob和File对象用作图像，下载二进制数据链接等的URL源。在浏览器中，使用`URL.createObjectURL`方法来创建Blob URL，该方法接收一个`Blob`对象，并为其创建一个唯一的URL，其形式为`blob:<origin>/<uuid>`，对应的示例：
 ```
@@ -470,16 +471,3 @@ view.getInt8(1); // 68
 ArrayBuffer、TypedArray 和 DataView 之间的关系：
 ![ArrayBuffer、TypedArray 和 DataView](../assets/images/pic12.jpg)
 
-### 图片灰度化
-> getImageData
-
-利用 CanvasRenderingContext2D 提供的`getImageData`来获取图片像素数据，其中 getImageData() 返回一个 ImageData 对象，用来描述canvas 区域隐含的像素数据，这个区域通过矩形表示，起始点为 (sx, sy)、宽为 sw、高为 sh。
-其中`getImageData`方法的语法如下：
-```
-ctx.getImageData(sx, sy, sw, sh);
-```
-相应的参数说明：
-- sx：将要被提取的图像数据矩形区域的左上角 x 坐标。
-- sy：将要被提取的图像数据矩形区域的左上角 y 坐标。
-- sw：将要被提取的图像数据矩形区域的宽度。
-- sh：将要被提取的图像数据矩形区域的高度。
