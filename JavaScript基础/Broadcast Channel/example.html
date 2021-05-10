@@ -1,0 +1,46 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3 id="title">hello, </h3>
+    <input id="userName" placeholder="请输入你的名字">
+</body>
+
+</html>
+<script>
+    const bc = new BroadcastChannel('my_channel');
+
+    (() => {
+        const title = document.querySelector('#title'),
+            userName = document.querySelector('#userName');
+
+        const setTitle = (userName) => {
+            title.innerHTML = "你好，" + userName;
+        }
+
+        bc.onmessage = (messageEvent) => {
+            if (messageEvent.data === "update_title") {
+                setTitle(localStorage.getItem('title'));
+            }
+        }
+
+        if (localStorage.getItem(title)) {
+            setTitle(localStorage.getItem(title));
+        } else {
+            setTitle("请填写你的名字")
+        }
+
+        userName.addEventListener('input', function (e) {
+            const inputValue = e.target.value;
+            localStorage.setItem("title", inputValue);
+            setTitle(inputValue);
+            bc.postMessage("update_title");
+        })
+    })()
+</script>

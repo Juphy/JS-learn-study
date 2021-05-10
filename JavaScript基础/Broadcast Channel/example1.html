@@ -1,0 +1,34 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3 id="status">当前状态：已登录</h3>
+    <button onclick="logout()">退出</button>
+</body>
+
+</html>
+<script>
+    const status = document.querySelector('#status'),
+        logoutChannel = new BroadcastChannel("logout_channel");
+
+    logoutChannel.onmessage = function (e) {
+        if (e.data.cmd === "logout") {
+            doLogout();
+        }
+    }
+
+    function logout(){
+        doLogout();
+        logoutChannel.postMessage({ cmd: "logout", user: "name" });
+    }
+
+    function doLogout(){
+        status.innerText = "当前状态：已退出";
+    }
+</script>
