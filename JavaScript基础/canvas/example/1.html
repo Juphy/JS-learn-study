@@ -1,0 +1,48 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+
+</html>
+<script>
+    let canvas = document.getElementById('canvas');
+    canvas.width = 400;
+    canvas.height = 400;
+    let context = canvas.getContext('2d');
+    context.fillStyle = "rgb(222, 155, 155)";
+
+    let gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+
+    gradient.addColorStop(0, "rgb(100, 200, 155)");
+    gradient.addColorStop(0.5, "rgb(200, 120, 155)");
+    gradient.addColorStop(1.0, "rgb(200, 220, 255)");
+    context.fillStyle = gradient;
+
+    gradient = context.createLinearGradient(0, 0, 900, 800);
+    gradient.addColorStop(0, "rgb(100, 200, 155)");
+    gradient.addColorStop(0.5, "rgb(200, 120, 155)");
+    gradient.addColorStop(1.0, "rgb(200, 220, 255)");
+    context.fillStyle = gradient;
+
+    gradient = context.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, 20);
+    gradient.addColorStop(0, "rgb(100, 200, 155)");
+    gradient.addColorStop(0.8, "rgb(200, 120, 155)");
+    gradient.addColorStop(1.0, "rgb(00, 120, 105)");
+    context.fillStyle = gradient;
+
+    gradient = context.createRadialGradient(canvas.width / 2, canvas.height / 2, 20, canvas.width / 2, canvas.height / 2, 50);
+    gradient.addColorStop(0, "rgb(100, 200, 155)");
+    gradient.addColorStop(0.8, "rgb(200, 120, 155)");
+    gradient.addColorStop(1.0, "rgb(00, 120, 105)");
+    context.fillStyle = gradient;
+
+    context.fillRect(0, 0, canvas.width, canvas.height);
+</script>
