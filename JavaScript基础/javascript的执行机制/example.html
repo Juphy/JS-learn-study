@@ -1,0 +1,72 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            margin-bottom: 16px;
+        }
+
+        div label {
+            display: inline-block;
+            width: 100px;
+            text-align: left;
+        }
+
+        div input {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <form name="form">
+        <div>
+            <label for="ideal">理想时间：</label>
+            <input type="text" name="ideal">
+        </div>
+        <div>
+            <label for="real">实际时间：</label>
+            <input type="text" name="real">
+        </div>
+        <div>
+            <label for="diff">差异：</label>
+            <input type="text" name="diff">
+        </div>
+    </form>
+    <div>
+        <button id="start" onclick="start()">正常模式</button>
+        <button id="stop" onclick="stop()">停止</button>
+    </div>
+</body>
+
+</html>
+<script>
+    let form = document.querySelector('form'), timer;
+    function start() {
+        var speed = 50, // 设定间隔
+            counter = 1, // 计数
+            start = new Date().getTime();
+
+        function instance() {
+            var ideal = counter * speed,
+                real = new Date().getTime() - start,
+                diff = real - ideal;
+
+            counter++;
+            form.ideal.value = ideal.toString();
+            form.real.value = real;
+            form.diff.value = diff;
+            clearTimeout(timer);
+            timer = setTimeout(function () { instance() }, speed);
+        }
+        timer = setTimeout(function () { instance() }, speed);
+    }
+
+    function stop() {
+        clearTimeout(timer)
+    }
+</script>

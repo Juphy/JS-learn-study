@@ -46,3 +46,21 @@ var person1 = {
 var person2 = changeAgeAndReference(person1);
 console.log(person1);
 console.log(person2);
+
+// 
+function compareMembers(person1, person2 = person) {
+    if (person1 !== person2) {
+        console.log("Not the same!")
+    } else {
+        person1['name1'] = "tom";
+        person2['name2'] = "jerry";
+        console.log("They are the same!")
+    }
+}
+
+const person = {
+    name: "Lydia"
+}
+
+compareMembers(person);
+console.log(person);
