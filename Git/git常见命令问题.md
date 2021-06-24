@@ -6,7 +6,9 @@
       id_ed25519.pub\
       id_rsa.pub
 - cat ~/.ssh/id_rsa.pub 查看当前的ssh密钥
-- ssh-keygen -t rsa -C "your_email@example" 创建新的ssh密钥
+- ssh-keygen -t rsa -C "your_email@example" 创建新的ssh密钥 
+  - ssh-keygen -t ed25519 -C "your_email@example.com"
+  - 如果使用的旧系统不支持Ed25519算法: ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 
 
 - git remote set-url 原连接名 新的连接  修改连接地址

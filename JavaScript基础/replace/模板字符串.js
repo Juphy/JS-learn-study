@@ -14,5 +14,7 @@ let _parseString = function (str, obj) {
         }
     )
 };
+
 console.log(_parseString(str, obj));
 console.log(_parseString(str1, obj));
+console.log(__parseString(str1, obj));

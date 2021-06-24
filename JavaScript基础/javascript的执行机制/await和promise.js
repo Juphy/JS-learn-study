@@ -27,26 +27,26 @@ new Promise(function (resolve) {
 
 console.log('script end');
 
-// process.nextTick(function A() {
-//     console.log(1);
-//     process.nextTick(function B() {
-//         console.log(2);
-//     });
-//     process.nextTick(function D() {
-//         console.log(5)
-//     })
-// });
+process.nextTick(function A() {
+    console.log(1);
+    process.nextTick(function B() {
+        console.log(2);
+    });
+    process.nextTick(function D() {
+        console.log(5)
+    })
+});
 
 setTimeout(function timeout() {
     console.log('TIMEOUT FIRED');
 }, 0);
 
-// process.nextTick(function C() {
-//     console.log(3);
-//     process.nextTick(function D() {
-//         console.log(4);
-//     });
-// });
+process.nextTick(function C() {
+    console.log(3);
+    process.nextTick(function D() {
+        console.log(4);
+    });
+});
 
 setTimeout(function () {
     console.log('定时器开始啦')

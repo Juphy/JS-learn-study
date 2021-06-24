@@ -62,7 +62,7 @@ let addTwoNumbers = function(l1, l2) {
     return dummy['next'];
 }
 
-// 3、最长无重复的字符串
+// 3、最长无重复的字符串:给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
 // Time Limit Exceeded
 let lengthOfLongestSubstring = function(s) {
     let allUnique = function(str, start, end) {
