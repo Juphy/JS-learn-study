@@ -105,13 +105,13 @@ Node中，磁盘I/O的异步操作步骤如下：
 当我们没有使用定时器时，则完全不用关心定时器事件这个队列。当我们进行定时器调用时，首先会设置一个定时器watcher。事件循环的过程中，会去调用该watcher，检查它的事件队列上是否产生事件（比对时间的方式）。当我们进行磁盘IO的时候，则首先设置一个io watcher，磁盘IO完成后，会在该io watcher的事件队列上添加一个事件。事件循环的过程中从该watcher上处理事件。处理完已有的事件后，处理下一个watcher。检查完所有watcher后，进入下一轮检查。对某类事件不关心时，则没有相关watcher。
 
 ### 执行机制
-> macro-task（宏任务）：包括整体代码script，setTimeout，setInterval，async
+> macro-task（宏任务）：包括整体代码script，setTimeout，setInterval，async, new Promise()resolve之前的内容
 
 > micro-task（微任务）：Promise，process.nextTick（当前loop宏任务结束之后最先执行，先于promise的then执行）
 
 > async中的await fn().then()此处相当于promise的then，在这之后的代码是在本次loop的最后执行。
 
-因此代码整体的运行顺序，script(主程序代码，new Promise(……)，async函数的await之前的部分)—> process.nextTick—>promise().then—>async function(){await fn();……}省略号处的代码—>setTimeout/setInterval
+因此代码整体的运行顺序，script(主程序代码，new Promise(……)，async函数的await之前的部分包括函数本身)—> process.nextTick—>promise().then—>async function(){await fn();……}省略号处的代码—>setTimeout/setInterval
 
 ![event_loop](https://ws1.sinaimg.cn/large/8b2b1aafly1fyma0l75shj20m80ia793.jpg)
 

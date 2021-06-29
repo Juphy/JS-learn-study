@@ -1,0 +1,49 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="dv1">
+    <div id="dv2">
+      <div id="dv3">click</div>
+    </div>
+  </div>
+</body>
+
+</html>
+<script>
+  // 冒泡
+  var dv1 = document.getElementById('dv1'),
+    dv2 = document.getElementById('dv2'),
+    dv3 = document.getElementById('dv3');
+  dv1.onclick = function () { console.log(this.id) };
+  dv2.onclick = function () { console.log(this.id) };
+  dv3.onclick = function () { console.log(this.id) };
+
+  // 阻止冒泡
+  /**
+   * 1. e.stopPropagation()
+   * 2. window.event.cancelBubble = true （谷歌，IE8兼容，火狐不支持）
+   * 3. return false; 在原生JS中return false只会阻止默认行为，在Jquery中即阻止默认行为又防止对象冒泡。
+   //
+</script>
+
+<script>
+  // 捕获
+  var dv1 = document.getElementById('dv1'),
+    dv2 = document.getElementById('dv2'),
+    dv3 = document.getElementById('dv3');
+  dv1.addEventListener('click', f1, true);
+  dv2.addEventListener('click', f1, true);
+  dv3.addEventListener('click', f1, true);
+  // 默认是false，表示在事件冒泡的阶段调用事件处理函数
+  // true，表示在事件捕获的阶段调用事件处理函数
+  function f1(){
+    console.log(this.id);
+  }
+</script>

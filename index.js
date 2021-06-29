@@ -11,7 +11,7 @@ let reverselist = (head) => {
 }
 
 let reverselist1 = (head) => {
-    if(head === null || head.next === null){
+    if (head === null || head.next === null) {
         return head;
     }
     let newHead = reverselist1(head.next);
@@ -19,3 +19,14 @@ let reverselist1 = (head) => {
     head.next = null;
     return newHead;
 }
+
+let f = function (a) {
+    if (a > 18) {
+        const m = 'a'
+    } else {
+        const m = "b";
+    }
+    return m;
+}
+console.log(f(21));
+console.log(m);

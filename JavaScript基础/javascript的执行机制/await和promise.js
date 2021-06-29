@@ -62,3 +62,17 @@ new Promise(function (resolve) {
 });
 
 console.log('代码执行结束');
+
+function sleep(interval) {
+    return new Promise(resolve => {
+        setTimeout(resolve, interval)
+    })
+}
+
+async function fn() {
+    for (let i = 0; i < 5; i++) {
+        console.log(i, new Date())
+        await sleep(1000)
+    }
+}
+fn();
