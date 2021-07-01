@@ -33,3 +33,18 @@ let mergeArr = (arr1, arr2) => {
 }
 
 console.log(mergeArr([1, 3, 5, 7], [2, 4, 6, 8]));
+
+async function sleep(time) {
+    return new Promise((resolve) => {
+        setTimeout(function(){
+            resolve()
+        }, time)
+    })
+}
+
+(async function(){
+    console.log(new Date());
+    await sleep(1000);
+    console.log(new Date());
+})()
+

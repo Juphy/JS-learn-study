@@ -139,4 +139,4 @@ JS的执行机制：
 
 [详见代码](./await和promise.js)
 
-
+[JS如何运行的](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/)

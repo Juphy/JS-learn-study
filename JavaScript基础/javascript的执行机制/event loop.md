@@ -18,7 +18,7 @@ Event Loop 是一个执行模型，在不同的地方有不同的实现。浏览
 - process.nextTick(Node独有)
 - Promise
 - Object.observe
-- MutationObserver
+- MutationObserver(监视对DOM树)
 
 ####
 [123](https://segmentfault.com/a/1190000016278115)
