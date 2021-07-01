@@ -1,7 +1,7 @@
-let reverselist = (head) => {
-    let pre = null,
-        cur = head;
-    while (cur !== null) {
+// 反转链表
+let reverse = (arr) => {
+    let pre, cur = arr;
+    while (cur) {
         let next = cur.next;
         cur.next = pre;
         pre = cur;
@@ -10,23 +10,26 @@ let reverselist = (head) => {
     return pre;
 }
 
-let reverselist1 = (head) => {
-    if (head === null || head.next === null) {
-        return head;
+let reserve1 = (arr) => {
+    if (arr === null && arr.next === null) {
+        return arr;
     }
-    let newHead = reverselist1(head.next);
-    head.next.next = head;
-    head.next = null;
-    return newHead;
+    let newArr = reverse1(arr.next);
+    arr.next.next = arr;
+    arr.next = null;
+    return newArr
 }
 
-let f = function (a) {
-    if (a > 18) {
-        const m = 'a'
-    } else {
-        const m = "b";
+let mergeArr = (arr1, arr2) => {
+    let m = arr1.length - 1, n = arr2.length - 1, len = m + n + 1;
+    while (n > -1) {
+        if (m < 0) {
+            arr1[len--] = arr2[n--];
+            continue;
+        }
+        arr1[len--] = arr1[m] > arr2[n] ? arr1[m--] : arr2[n--];
     }
-    return m;
+    return arr1;
 }
-console.log(f(21));
-console.log(m);
+
+console.log(mergeArr([1, 3, 5, 7], [2, 4, 6, 8]));
