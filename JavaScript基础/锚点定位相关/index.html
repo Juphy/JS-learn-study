@@ -1,0 +1,82 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            scroll-behavior: smooth;
+        }
+
+        div {
+            height: 800px;
+            width: 400px;
+            border: 2px solid black;
+        }
+
+        h2 {
+            position: fixed;
+            margin: 50px 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>
+        <a href="#div1">to div1</a>
+        <a href="#div2">to div2</a>
+        <a href="#div3">to div3</a>
+
+        <a id="div1Link">to div1</a>
+        <a id="div2Link">to div2</a>
+        <a id="div3Link">to div3</a>
+
+        <a id="Link1">to div1</a>
+        <a id="Link2">to div2</a>
+        <a id="Link3">to div3</a>
+    </h2>
+    <div id="div1" style="background: brown">div1</div>
+    <div id="div2" style="background: burlywood">div2</div>
+    <div id="div3" style="background: cadetblue">div3</div>
+</body>
+
+</html>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#div1Link").click(function () {
+            $("html, body").animate({
+                scrollTop: $("#div1").offset().top
+            }, { duration: 500, easing: "swing" });
+            return false;
+        });
+        $("#div2Link").click(function () {
+            $("html, body").animate({
+                scrollTop: $("#div2").offset().top
+            }, { duration: 500, easing: "swing" });
+            return false;
+        });
+        $("#div3Link").click(function () {
+            $("html, body").animate({
+                scrollTop: $("#div3").offset().top
+            }, { duration: 500, easing: "swing" });
+            return false;
+        });
+    });
+</script>
+
+<script>
+    document.querySelector('#Link1').onclick = function () {
+        document.querySelector('#div1').scrollIntoView(true);
+    }
+    document.querySelector('#Link2').onclick = function () {
+        document.querySelector('#div2').scrollIntoView(true);
+    }
+    document.querySelector('#Link3').onclick = function () {
+        document.querySelector('#div3').scrollIntoView(true);
+    }
+</script>

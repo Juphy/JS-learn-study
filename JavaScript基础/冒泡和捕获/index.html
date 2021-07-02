@@ -14,9 +14,7 @@
     </div>
   </div>
 </body>
-
-</html>
-<script>
+<!-- <script>
   // 冒泡
   var dv1 = document.getElementById('dv1'),
     dv2 = document.getElementById('dv2'),
@@ -31,7 +29,7 @@
    * 2. window.event.cancelBubble = true （谷歌，IE8兼容，火狐不支持）
    * 3. return false; 在原生JS中return false只会阻止默认行为，在Jquery中即阻止默认行为又防止对象冒泡。
    //
-</script>
+</script> -->
 
 <script>
   // 捕获
@@ -43,7 +41,9 @@
   dv3.addEventListener('click', f1, true);
   // 默认是false，表示在事件冒泡的阶段调用事件处理函数
   // true，表示在事件捕获的阶段调用事件处理函数
-  function f1(){
+  function f1() {
     console.log(this.id);
   }
 </script>
+
+</html>
