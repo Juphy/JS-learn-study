@@ -1,0 +1,45 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+</head>
+
+<body>
+    <img id='xiu' src="http://www.daqianduan.com/wp-content/uploads/2014/11/hs-xiu.jpg">
+</body>
+
+</html>
+<script>
+    console.log(0, new Date().getTime());
+    $(document).ready(function () {
+        $('#xiu').load(function () {
+            console.log(1, new Date().getTime());
+        })
+    })
+    // 原生 onload
+    xiu.onload = function () {
+        console.log(2, new Date().getTime());
+    }
+
+    xiu.onreadystatechange = function () {
+        if (this.readyState == 'loaded' || this.readyState == 'complete') {
+            console.log(3, new Date().getTime());
+        }
+    }
+
+    function imgLoad(xiu, callback) {
+        var timer = setInterval(function () {
+            if (xiu.complete) {
+                callback()
+                clearInterval(timer)
+            }
+        }, 1)
+    }
+    imgLoad(xiu, function () {
+        console.log(4, new Date().getTime());
+    })
+</script>
