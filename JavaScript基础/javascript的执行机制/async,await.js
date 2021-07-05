@@ -29,40 +29,40 @@ new Promise(resolve => {
     console.log(5);
 });
 
-new Promise(function (resolve, reject) {
-    console.log('Promise');
-    resolve();
-    new Promise(function (resolve, reject) {
-        console.log('Promise>>>');
-        resolve();
-    }).then(function () {
-        console.log('resolved.>>>');
-    })
-}).then(function () {
-    console.log('resolved.');
-})
+// new Promise(function (resolve, reject) {
+//     console.log('Promise');
+//     resolve();
+//     new Promise(function (resolve, reject) {
+//         console.log('Promise>>>');
+//         resolve();
+//     }).then(function () {
+//         console.log('resolved.>>>');
+//     })
+// }).then(function () {
+//     console.log('resolved.');
+// })
 
-new Promise(function (resolve, reject) {
-    console.log('Promise');
-    resolve();
-    new Promise(function (resolve, reject) {
-        console.log('Promise>>>');
-        resolve();
-    }).then(function () {
-        console.log('resolved.>>> 0');
-    }).then(function () {
-        console.log('resolved.>>> 1');
-    }).then(function () {
-        console.log('resolved.>>> 2');
-    }).then(function () {
-        console.log('resolved.>>> 3');
-    })
-}).then(function () {
-    console.log('resolved. 0');
-}).then(function () {
-    console.log('resolved. 1');
-}).then(function () {
-    console.log('resolved. 2');
-}).then(function () {
-    console.log('resolved. 3');
-})
+// new Promise(function (resolve, reject) {
+//     console.log('Promise');
+//     resolve();
+//     new Promise(function (resolve, reject) {
+//         console.log('Promise>>>');
+//         resolve();
+//     }).then(function () {
+//         console.log('resolved.>>> 0');
+//     }).then(function () {
+//         console.log('resolved.>>> 1');
+//     }).then(function () {
+//         console.log('resolved.>>> 2');
+//     }).then(function () {
+//         console.log('resolved.>>> 3');
+//     })
+// }).then(function () {
+//     console.log('resolved. 0');
+// }).then(function () {
+//     console.log('resolved. 1');
+// }).then(function () {
+//     console.log('resolved. 2');
+// }).then(function () {
+//     console.log('resolved. 3');
+// })

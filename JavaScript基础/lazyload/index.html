@@ -1,0 +1,40 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #container {
+      height: 100px;
+      background-color: lime;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+</body>
+
+</html>
+<script>
+  let debounce = function (cb, delay, flag = false) {
+    let timer = null;
+    return function () {
+      console.log(this, arguments)
+      if (flag && !timer) {
+        cb.apply(this, arguments);
+      }
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        console.log(this, arguments);
+        cb.apply(this, arguments)
+      }, delay)
+    }
+  }
+  let fn = function (e) {
+    console.log(e)
+  }
+  container.onmousemove = debounce(fn, 100, false);
+</script>

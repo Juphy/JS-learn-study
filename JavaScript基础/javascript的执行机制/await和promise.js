@@ -63,16 +63,35 @@ new Promise(function (resolve) {
 
 console.log('代码执行结束');
 
-function sleep(interval) {
-    return new Promise(resolve => {
-        setTimeout(resolve, interval)
-    })
-}
+// function sleep(interval) {
+//     return new Promise(resolve => {
+//         setTimeout(resolve, interval)
+//     })
+// }
 
-async function fn() {
-    for (let i = 0; i < 5; i++) {
-        console.log(i, new Date())
-        await sleep(1000)
-    }
-}
-fn();
+// async function fn() {
+//     for (let i = 0; i < 5; i++) {
+//         console.log(i, new Date())
+//         await sleep(1000)
+//     }
+// }
+// fn();
+
+
+/**
+ * script start
+ * async1 start
+ * async2
+ * promise1
+ * script end
+ * 马上执行for循环啦
+ * 代码执行结束
+ * 1 3 2 4 5
+ * async2 promise
+ * promise2
+ * 执行then函数啦
+ * async1 end
+ * setTimeout
+ * TIMEOUT FIRED
+ * 定时器开始啦
+ */
