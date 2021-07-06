@@ -1,5 +1,3 @@
-const { Callbacks } = require("jquery");
-
 // 反转链表
 let reverse = (arr) => {
     let pre, cur = arr;
@@ -176,4 +174,31 @@ Function.prototype.bind = function (context) {
     return function () {
         that.apply(context, args);
     }
+}
+
+function bubbleSort(arr) {
+    let len = arr.length;
+    for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+            }
+        }
+    }
+    return arr;
+}
+
+console.log(bubbleSort([34,56,1,45,9]))
+
+function quickSort(arr){
+    let mid = arr.splice(Math.floor(arr.length/2), 1)[0];
+    let left = [], right = [];
+    for(let i = 0;i<arr.length;i++){
+        if(arr[i]<mid){
+            left.push(arr[i])
+        }else{
+            right.push(arr[i])
+        }
+    }
+    return quickSort(left).concat(mid, quickSort(right))
 }

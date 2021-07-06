@@ -42,4 +42,19 @@ let ch = (num) => {
   return s;
 }
 
-console.log(ch(9), ch(1), ch(4))
+console.log(ch(9), ch(1), ch(4));
+
+function getUrlParam(sUrl, sKey) {
+  let p = sUrl.split('?')[1].split('#')[0].split('&');
+  let res = {};
+  p.forEach(item => {
+    let o = item.split('=');
+    res[o[0]] = res[o[0]] || [];
+    res[o[0]].push(o[1]);
+  });
+  if (sKey) {
+    return res[sKey] ? (res[sKey].length === 1 ? res[sKey][0] : res[sKey]) : ''
+  } else {
+    return res
+  }
+}
