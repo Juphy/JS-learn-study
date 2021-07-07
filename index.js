@@ -188,17 +188,64 @@ function bubbleSort(arr) {
     return arr;
 }
 
-console.log(bubbleSort([34,56,1,45,9]))
+console.log(bubbleSort([34, 56, 1, 45, 9]))
 
-function quickSort(arr){
-    let mid = arr.splice(Math.floor(arr.length/2), 1)[0];
+function quickSort(arr) {
+    if (arr.length <= 1) {
+        return arr;
+    }
+    let mid = arr.splice(Math.floor(arr.length / 2), 1)[0];
     let left = [], right = [];
-    for(let i = 0;i<arr.length;i++){
-        if(arr[i]<mid){
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] < mid) {
             left.push(arr[i])
-        }else{
+        } else {
             right.push(arr[i])
         }
     }
     return quickSort(left).concat(mid, quickSort(right))
 }
+console.log(quickSort([34, 56, 1, 45, 9]))
+
+function selectSort(arr) {
+    let len = arr.length;
+    for (let i = 0; i < len - 1; i++) {
+        let minIndex = i;
+        for (let j = i + 1; j < len; j++) {
+            if (arr[minIndex] > arr[j]) {
+                minIndex = j;
+            }
+        }
+        [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+    }
+    return arr;
+}
+console.log(selectSort([34, 56, 1, 45, 9]))
+
+function stackSort(arr) {
+    var tmp = [];
+    while (arr.length) {
+        let peak = arr.pop();
+        while (tmp && tmp.slice(-1) > peak) {
+            arr.push(tmp.pop())
+        }
+        tmp.push(peak);
+    }
+    return tmp;
+}
+
+// 插入排序
+function insertSort(arr) {
+    let preIndex, current;
+    for (let i = 1; i < arr.length; i++) {
+        preIndex = i - 1;
+        current = arr[i];
+        while (preIndex >= 0 && arr[preIndex] > current) {
+            arr[preIndex + 1] = arr[preIndex];
+            preIndex--;
+        }
+        arr[preIndex + 1] = current;
+    }
+    return arr;
+}
+console.log(insertSort([34, 56, 1, 45, 9]))
