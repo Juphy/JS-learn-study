@@ -165,3 +165,24 @@ function removeNthFormEnd(head, n) {
   }
   slow.next = slow.next.next;
 }
+
+// 寻找数组中重复最多的数及其次数
+function numss(arr) {
+  let obj = {};
+  for (let i = 0; i < arr.length; i++) {
+    let num = arr[i]
+    if (obj[num]) {
+      obj[num]++
+    } else {
+      obj[num] = 1;
+    }
+  }
+  let max = 0, res;
+  for (let key in obj) {
+    if (obj[key] > max) {
+      max = obj[key];
+      res = Number(key);
+    }
+  }
+  return [res, max];
+}
