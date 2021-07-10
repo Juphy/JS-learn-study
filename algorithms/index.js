@@ -186,3 +186,83 @@ function numss(arr) {
   }
   return [res, max];
 }
+
+// LazyMan 链式调用
+// LazyMan('Tony');
+// // Hi I am Tony
+
+// LazyMan('Tony').sleep(10).eat('lunch');
+// // Hi I am Tony
+// // 等待了10秒...
+// // I am eating lunch
+
+// LazyMan('Tony').eat('lunch').sleep(10).eat('dinner');
+// // Hi I am Tony
+// // I am eating lunch
+// // 等待了10秒...
+// // I am eating diner
+
+// LazyMan('Tony').eat('lunch').eat('dinner').sleepFirst(5).sleep(10).eat('junk food');
+// // Hi I am Tony
+// // 等待了5秒...
+// // I am eating lunch
+// // I am eating dinner
+// // 等待了10秒...
+// // I am eating junk food
+
+class LazyManClass {
+  constructor(name) {
+    this.name = name;
+    this.taskList = [];
+    this.init();
+  }
+
+  init() {
+    console.log(`Hi I am ${this.name}`);
+    // 异步操作，待所有任务都在任务队列中时调用this.next()执行
+    setTimeout(() => {
+      this.next();
+    }, 0);
+  }
+
+  next() {
+    let task = this.taskList.shift(); // 先进先出
+    task && task();
+  }
+
+  eat(name) {
+    let task = () => {
+      console.log(`I am eating ${name}`);
+      this.next();
+    }
+    this.taskList.push(task);
+    return this;
+  }
+
+  sleepFirst(time) {
+    let task = () => {
+      setTimeout(() => {
+        console.log(`等待了${time}秒...`);
+        this.next();
+      }, time * 1000);
+    }
+    this.taskList.unshift(task);
+    return this;
+  }
+
+  sleep(time) {
+    let task = () => {
+      setTimeout(() => {
+        console.log(`等待了${time}秒...`);
+        this.next();
+      }, time * 1000);
+    }
+    this.taskList.push(task);
+    return this;
+  }
+}
+
+function LazyMan(name) {
+  return new LazyManClass(name);
+}
+LazyMan('Tony').eat('lunch').eat('dinner').sleepFirst(5).sleep(4).eat('junk food');
