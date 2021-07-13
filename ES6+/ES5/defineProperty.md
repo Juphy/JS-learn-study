@@ -1,4 +1,4 @@
-### Object,defineProperty(obj, prop, descriptor)
+### Object.defineProperty(obj, prop, descriptor)
 
 - obj: 必需。目标对象
 - prop: 必需。定义或修改属性的名字

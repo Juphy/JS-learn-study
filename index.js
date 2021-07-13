@@ -1,3 +1,7 @@
+const {
+    ajax
+} = require("jquery");
+
 // 反转链表
 let reverse = (arr) => {
     let pre, cur = arr;
@@ -21,7 +25,9 @@ let reserve1 = (arr) => {
 }
 
 let mergeArr = (arr1, arr2) => {
-    let m = arr1.length - 1, n = arr2.length - 1, len = m + n + 1;
+    let m = arr1.length - 1,
+        n = arr2.length - 1,
+        len = m + n + 1;
     while (n > -1) {
         if (m < 0) {
             arr1[len--] = arr2[n--];
@@ -38,12 +44,73 @@ async function sleep(timer) {
     return new Promise(resolve => {
         setTimeout(resolve, timer);
     })
-}
+};
 (async function () {
     console.log(new Date());
     await sleep(1000);
     console.log(new Date());
 })();
+
+// 指定时间之后执行
+async function asyncDone(cb, delay, ...rest) {
+    await sleep(delay);
+    cb.apply(this, rest);
+}
+
+function a() {
+    console.log(arguments); // {0:1, 1:2, 2:3}
+};
+asyncDone(a, 1000, 1, 2, 3, 4);
+
+class Sleep {
+    constructor(delay) {
+        this.delay = delay;
+    }
+
+    then(resolve, reject) {
+        let start = Date.now();
+        setTimeout(() => {
+            resolve(Date.now() - start);
+        }, this.delay);
+    }
+}
+(async function () {
+    let sleep = await new Sleep(1000);
+    console.log(sleep);
+})();
+
+async function one() {
+    for (let i = 1; i < 5; i++) {
+        console.log('x', i);
+        await sleep(1000)
+    }
+}
+one();
+
+// 多次重复尝试发送请求
+async function test(url, num) {
+    for (let i = 0; i < num; i++) {
+        try {
+            await fetch(url);
+            break;
+        } catch (error) {
+
+        }
+    }
+}
+test();
+
+var foo = await getFoo();
+var bar = await getBar();
+
+var [foo, bar] = await Promise.all([getFoo(), getBar()]);
+//==>
+var fooPromise = getFoo();
+var barPromise = getBar();
+var foo = await fooPromise;
+var bar = await barPromise;
+
+
 
 
 // function debounce(cb, delay, flag) {
@@ -132,7 +199,7 @@ let throttle = function (cb, delay, flag) {
 }
 
 let inherit = (function () {
-    let F = function () { };
+    let F = function () {};
     return function (target, origin) {
         F.prototype = origin.prototype;
         target.prototype = new F();
@@ -140,6 +207,16 @@ let inherit = (function () {
         target.prototype.uber = origin.prototype;
     }
 })()
+
+function build(Fn, ...rest) {
+    let result = new Object();
+    result.__proto__ = Fn.Prototype;
+    let result2 = Fn.apply(result, rest);
+    if (result2 !== null && (typeof result2 === 'object' || typeof result2 === 'function')) {
+        return result2;
+    }
+    return result;
+}
 
 // 类型检测
 let types = {};
@@ -195,7 +272,8 @@ function quickSort(arr) {
         return arr;
     }
     let mid = arr.splice(Math.floor(arr.length / 2), 1)[0];
-    let left = [], right = [];
+    let left = [],
+        right = [];
     for (let i = 0; i < arr.length; i++) {
         if (arr[i] < mid) {
             left.push(arr[i])

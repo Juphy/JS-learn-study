@@ -22,7 +22,6 @@
   let debounce = function (cb, delay, flag = false) {
     let timer = null;
     return function () {
-      console.log(this, arguments)
       if (flag && !timer) {
         cb.apply(this, arguments);
       }
@@ -34,7 +33,7 @@
     }
   }
   let fn = function (e) {
-    console.log(e)
+    console.log(this, e)
   }
   container.onmousemove = debounce(fn, 100, false);
 </script>

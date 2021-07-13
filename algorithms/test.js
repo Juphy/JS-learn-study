@@ -1,11 +1,11 @@
-
 function ListNode(val, head) {
   this.val = (val === undefined ? 0 : val);
   this.next = (head === undefined ? null : head);
 }
 
 function merge(num1, num2) {
-  let len1 = num1.length - 1, len2 = num2.length - 1,
+  let len1 = num1.length - 1,
+    len2 = num2.length - 1,
     len = len1 + len2 + 1;
   while (len2 >= 0) {
     if (len1 < 0) {
@@ -69,7 +69,8 @@ console.log(unique2([1, 2, 3, 4, 5, 5, 4, 3, 2, 6, 1, 2]));
 function twoSum(nums, target) {
   let map = new Map();
   for (let i = 0; i < nums.length; i++) {
-    let num = nums[i], k = target - num;
+    let num = nums[i],
+      k = target - num;
     if (map.has(k)) {
       return [map.get(k), i]
     } else {
@@ -97,7 +98,8 @@ console.log(minsertsection([1, 2, 3, 4, 4], [4, 5, 6, 2, 3], [1, 4, 5, 6, 2]));
 
 // 反转链表
 function reverseList(head) {
-  let prev = null, cur = head;
+  let prev = null,
+    cur = head;
   while (cur) {
     let next = cur.next;
     cur.next = prev;
@@ -129,7 +131,8 @@ function hasCycle(head) {
 
 // 链表的中间节点
 function midNode(head) {
-  let slow = head, fast = head;
+  let slow = head,
+    fast = head;
   while (fast && fast.head) {
     slow = slow.next;
     fast = fast.next.next;
@@ -140,7 +143,8 @@ function midNode(head) {
 // 删除链表倒数第n个节点
 function removeNthFromEnd(head, n) {
   let dummy = new ListNode(null, head);
-  let fast = dummy, slow = dummy;
+  let fast = dummy,
+    slow = dummy;
   while (fast.next) {
     n--;
     fast = fast.next;
@@ -150,4 +154,15 @@ function removeNthFromEnd(head, n) {
   }
   slow.next = slow.next.next;
   return dummy.next;
+}
+
+Array.prototype.reduce = function (cb, initValue) {
+  if (initValue === undefined && !this.length) {
+    throw new Error('Reduce empty Array with no initial value')
+  }
+  let result = initValue === undefined ? this[0] : initValue;
+  for (let i = initValue === undefined ? 1 : 0; i < this.length; i++) {
+    result = cb(result, this[i], i, this)
+  }
+  return result;
 }
