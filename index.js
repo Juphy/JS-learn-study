@@ -1,7 +1,3 @@
-const {
-    ajax
-} = require("jquery");
-
 // 反转链表
 let reverse = (arr) => {
     let pre, cur = arr;
@@ -29,6 +25,7 @@ let mergeArr = (arr1, arr2) => {
         n = arr2.length - 1,
         len = m + n + 1;
     while (n > -1) {
+        console.log(len, m, n);
         if (m < 0) {
             arr1[len--] = arr2[n--];
             continue;
@@ -38,7 +35,7 @@ let mergeArr = (arr1, arr2) => {
     return arr1;
 }
 
-console.log(mergeArr([1, 3, 5, 7], [2, 4, 6, 8]));
+console.log(mergeArr([1, 3, 5, 7, 9], [2, 4, 6, 8]));
 
 async function sleep(timer) {
     return new Promise(resolve => {
@@ -100,15 +97,13 @@ async function test(url, num) {
 }
 test();
 
-var foo = await getFoo();
-var bar = await getBar();
 
-var [foo, bar] = await Promise.all([getFoo(), getBar()]);
-//==>
-var fooPromise = getFoo();
-var barPromise = getBar();
-var foo = await fooPromise;
-var bar = await barPromise;
+// var [foo, bar] = await Promise.all([getFoo(), getBar()]);
+// //==>
+// var fooPromise = getFoo();
+// var barPromise = getBar();
+// var foo = await fooPromise;
+// var bar = await barPromise;
 
 
 

@@ -10,10 +10,13 @@ function add(...p1) {
   fn.valueOf = function () {
     return p1.reduce((a, b) => a + b);
   }
+  fn.toString = function () {
+    return p1.reduce((a, b) => a + b);
+  }
   return fn;
 }
 
-console.log(add(1)(2)(3).valueOf())
+console.log(add(1)(2)(3))
 console.log(add(1, 2, 3)(4).valueOf())
 console.log(add(1)(2)(3)(4)(5).valueOf())
 
@@ -26,3 +29,9 @@ function add(...p1) {
   };
   return fn;
 }
+
+function curry(){
+  
+}
+
+// 1. 参数复用；2. 提前返回；3. 延迟计算 / 运行。

@@ -1,7 +1,7 @@
-function ListNode(val, head) {
-  this.val = (val === undefined ? 0 : val);
-  this.next = (head === undefined ? null : head);
-}
+// function ListNode(val, head) {
+//   this.val = (val === undefined ? 0 : val);
+//   this.next = (head === undefined ? null : head);
+// }
 
 function merge(num1, num2) {
   let len1 = num1.length - 1,
@@ -156,13 +156,24 @@ function removeNthFromEnd(head, n) {
   return dummy.next;
 }
 
-Array.prototype.reduce = function (cb, initValue) {
-  if (initValue === undefined && !this.length) {
-    throw new Error('Reduce empty Array with no initial value')
+// Array.prototype.reduce = function (cb, initValue) {
+//   if (initValue === undefined && !this.length) {
+//     throw new Error('Reduce empty Array with no initial value')
+//   }
+//   let result = initValue === undefined ? this[0] : initValue;
+//   for (let i = initValue === undefined ? 1 : 0; i < this.length; i++) {
+//     result = cb(result, this[i], i, this)
+//   }
+//   return result;
+// }
+
+function add(...a) {
+  let fn = function (...b) {
+    let args = a.concat(b);
+    return add(args)
   }
-  let result = initValue === undefined ? this[0] : initValue;
-  for (let i = initValue === undefined ? 1 : 0; i < this.length; i++) {
-    result = cb(result, this[i], i, this)
-  }
-  return result;
+  fn.valueOf = a.reduce((a, b) => a + b);
+  return fn();
 }
+
+console.log(add(1,2)(3)(4)());
