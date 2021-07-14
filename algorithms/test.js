@@ -176,4 +176,109 @@ function add(...a) {
   return fn();
 }
 
-console.log(add(1,2)(3)(4)());
+console.log(add(1, 2)(3)(4)());
+
+const arr = [{
+  id: 1,
+  name: '部门1',
+  pid: 0
+}, {
+  id: 2,
+  name: '部门2',
+  pid: 1
+},
+{
+  id: 3,
+  name: '部门3',
+  pid: 1
+},
+{
+  id: 4,
+  name: '部门4',
+  pid: 3
+},
+{
+  id: 5,
+  name: '部门5',
+  pid: 4
+},
+];
+
+let fn = function (arr, result, pid) {
+  for (let a of arr) {
+    if (a.pid === pid) {
+      let res = {
+        ...a,
+        children: []
+      };
+      result.push(res);
+      fn(arr, res.children, a.id);
+    }
+  }
+}
+
+function arrayToTree(data, pid) {
+  let result = [];
+  fn(data, result, pid);
+  return result;
+}
+
+function arrayToTree(items) {
+  let result = [],
+    itemMap = {};
+  items.forEach(item => {
+    itemMap[item.id] = {
+      ...item,
+      children: []
+    }
+  })
+
+  items.forEach(item => {
+    let id = item.id,
+      pid = item.pid,
+      treeItem = itemMap[id];
+    if (pid === 0) {
+      result.push(treeItem)
+    } else {
+      // if (!itemMap[pid]) {
+      //   itemMap[pid] = {
+      //     children: []
+      //   }
+      // }
+      itemMap[pid].children.push(treeItem)
+    }
+  })
+  return result;
+}
+
+function arrayToTree(arr) {
+  let result = [],
+    map = {};
+  arr.forEach(item => {
+    let id = item.id,
+      pid = item.pid;
+    if (!map[id]) {
+      map[id] = {
+        children: []
+      }
+    }
+    map[id] = {
+      ...item,
+      children: map[id].children || []
+    }
+    let newItem = map[id]; // 利用索引
+    if (pid === 0) {
+      result.push(newItem);
+    } else {
+      if (!map[pid]) {
+        map[pid] = {
+          children: []
+        }
+      }
+      map[pid].children.push(newItem);
+    }
+  })
+  return result;
+}
+
+console.log(arrayToTree(arr))
