@@ -12,6 +12,11 @@ css引入伪类和伪元素概念是为了格式化文档树以外的信息。
 
 伪类与伪元素的区别在于：有没有创建一个文档树之外的元素。
 
+> 新增的伪类
+
+:nth-child(n) :nth-last-child(n) :last-child :only-child :nth-of-type(n) :first-of-type 
+:last-of-type :only-of-type :empty :target :not(elem) :enabled :disabled :checked
+
 2. 页面导入样式时，使用link和@import有什么区别？
 - 从属关系的区别：`@import`是CSS提供的语法规则，只能导入样式表的作用；`link`是HTML提供的标签，不仅可以加载CSS文件，还可以定义RSS、rel连接属性。
 - 加载顺序区别：加载页面时，`link`标签引入的CSS被同时加载，`@import`引入的CSS将在页面加载完毕后被加载
@@ -38,3 +43,87 @@ Load 事件是当所有资源加载完成后触发的。
 <script> src="http://html5shim.googlecode.com/svn/trunk/html5.js"</script>
 <![endif]-->
 ```
+6. 伪类LVHA的解释？
+a标签有四种状态：链接访问前，链接访问后，鼠标滑过，激活，分别对应四种伪类`:link`,`:visited`,`:hover`,`:active`
+当链接未访问过时：
+(1)当鼠标点击激活a链接时，满足`:link`和`:hover`两种状态，要改变a标签的颜色，就必须将`:hover`伪类放在
+`:link`伪类后面声明。
+(2)当鼠标点击激活a链接时同时满足`:link`,`:hover`,`:active`三种状态，要显示a标签激活时的样式(`:active`) ,
+必须将`:active`声明放到`:link`和`:hover`之后。
+
+当访问链接时，情况基本同上，只不过需要将`:link`换成`:visited`。
+
+7. li 与 li 之间有看不见的空白间隔是什么原因引起的？
+浏览器会把inline元素间的空白字符（空格、换行、Tab等）渲染成一个空格。
+而为了美观。我们通常是一个`<li>`放在一行，这导致`<li>`换行后产生换行字符，
+它变成一个空格，占用了一个字符的宽度。
+- 为li设置float:left。 不足：有些容器是不能设置浮动的，如左右切换的焦点图
+- 将所有li写在同一行。 不足：代码不美观
+- 将ul内的字符尺寸直接设为0，即font-size: 0。 不足：ul中的其他字符也被设为0，需要额外重新设定其他字符尺寸
+- 消除ul的字符间距letter-spaceing: -8px。 不足：这也设置li内的字符间隔，因此需要将li内字符间隔设为默认letter-spaceing: normal
+
+8. 图片base64编码的优点和缺点
+优点：减少一个图片的HTTP请求
+缺点：1.根据base64的编码原理，编码后的大小会比原文件大小打1/3，如果把大图片编码到html/css中，不仅会造成文件体
+积的增加，影响文件的加载速度，还会增加浏览器对html或css文件解析渲染的时间。
+2.使用base64无法直接缓存，要缓存只能缓存包含base64的文件，比如HTML或者CSS，这相比于直接缓存图片的效果要差很多
+3.兼容性问题，IE8以前的浏览器不支持。
+一般一些网站的小图标可以使用base64图片来引入。
+
+9. margin重叠问题
+`margin必须是相邻的。`
+- 相邻兄弟元素margin合并：设置块状格式化上下文元素（BFC）
+- 父级和第一个或者最后一个子元素的margin合并
+  - 父元素设置块级格式化上下文元素
+  - 父元素设置border-top/bottom值或者padding-top/bottom
+  - 父元素和第一个元素或者最后一个元素添加内联元素
+- 空块级元素的margin合并
+  - 设置垂直方向上的border或者padding
+  - 里面设置内联元素
+  - 设置height或者min-height
+
+
+10. 溢出的省略
+```CSS
+// 单行省略
+div{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// 多行省略
+div{
+  display: -webkit-box; // 对象作为弹性盒子模型显示
+  -webkit-box-orient: vertical; // 设置或检索伸缩对象的子元素的排列方式
+  -webkit-line-clamp: 3; // 设置省略的界限
+  overflow: hidden;
+}
+```
+
+11. 两栏布局
+- 利用浮动: 左边宽度设置为200px，并且设置左浮动，将右边元素的margin-left设置为200px,宽度设置为auto
+- flex布局: 将左边元素的放大和缩小比例设置为0，基础大小设置为200px。将右边元素的放大比例设置为1
+```CSS
+.outer{
+  display: flex;
+  height: 100px
+}
+
+.left{
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: 200px;
+  background: tomato;
+}
+
+.right{
+  flex: 1 1 auto
+}
+```
+- 绝对定位的布局方式，将父级元素设置相对位置。左边元素absolute，右边元素margin-left。或者左边正常设置宽度，右边absolute。
+
+12. 三栏布局
+- 利用绝对定位的方式，左右两栏设置为绝对定位，中间设置对应方向上的margin值。
+- flex布局，左右两栏的放大和缩小比例设置为0，基础大小设置为固定大小，中间一栏设置为auto
+- 浮动方式，左右设置为固定大小，并设置对应方向的浮动，中建议一栏设置左右两个方向的margin值
